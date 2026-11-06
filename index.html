@@ -214,6 +214,24 @@ applyWebsiteSettings();
 })();
 </script>
 
+  <script>
+(async function(){
+  const { data, error } = await window.supabase
+    .createClient(
+      "https://piagvuicgazqgjkgrvjr.supabase.co",
+      "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+    )
+    .from("site_sections")
+    .select("section_key")
+    .eq("section_key", "about")
+    .eq("enabled", true)
+    .maybeSingle();
+
+  if (error || !data) {
+    document.getElementById("aboutContent").style.display = "none";
+  }
+})();
+  </script>
 
 </body>
 </html>
