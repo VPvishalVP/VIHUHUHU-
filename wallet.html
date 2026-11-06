@@ -138,6 +138,48 @@ async function submitDeposit(){
  }
 
  if(!/^[A-Za-z0-9]{8,64}$/.test(utr)){
+  message.textContent="Enter a valid UTR.";
+  return;
+ }
+
+ message.textContent="Submitting...";
+
+ const {data:{session}}=await client.auth.getSession();
+
+ const {data,error}=await client.functions.invoke("wallet-deposit",{
+  body:{amount,utr}
+ });
+
+ if(error){
+  message.textContent="Error: "+error.message;
+  return;
+ }
+
+ if(!data?.success){
+  message.textContent=data?.error||"Request failed";
+  return;
+ }
+
+ message.textContent="Deposit request submitted. Status: PENDING";
+ await loadWallet();
+}
+ const message=document.getElementById("message");
+ const amount=Number(document.getElementById("amount").value);
+ const utr=document.getElementById("utr").value.trim();
+
+ message.textContent="";
+
+ if(!currentUser){
+  message.textContent="Please login first.";
+  return;
+ }
+
+ if(!Number.isSafeInteger(amount)||amount<1||amount>100000){
+  message.textContent="Enter a valid amount.";
+  return;
+ }
+
+ if(!/^[A-Za-z0-9]{8,64}$/.test(utr)){
   message.textContent="Enter a valid UTR reference.";
   return;
  }
