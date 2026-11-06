@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIHUHUHU | Elite Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --purple: #9d4dff;
+  --gold: #ffcf70;
+  --bg: #080611;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  overflow-x: hidden;
+  font-family: 'Rajdhani', sans-serif;
+  color: white;
+  background:
+    radial-gradient(ellipse at 50% 10%, #40166d66, transparent 50%),
+    radial-gradient(ellipse at 10% 90%, #5422a344, transparent 45%),
+    #080611;
+}
+
+/* Animated background */
+
+.background {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .3;
+  animation: float 8s infinite alternate ease-in-out;
+}
+
+.orb.one {
+  background: #8a2cff;
+  top: -100px;
+  left: -100px;
+}
+
+.orb.two {
+  background: #d79b35;
+  bottom: -120px;
+  right: -100px;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  to {
+    transform: translate(100px, 80px) scale(1.3);
+  }
+}
+
+/* Main Card */
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  padding: 45px 35px;
+  border-radius: 26px;
+  background: linear-gradient(
+    145deg,
+    #211833ee,
+    #100d1eee
+  );
+  border: 1px solid #b17aff55;
+  box-shadow:
+    0 0 30px #8d35ff22,
+    0 25px 80px #000b,
+    inset 0 1px 1px #ffffff22;
+  backdrop-filter: blur(25px);
+  animation: appear 1s ease;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 3D Logo */
+
+.logo {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.logo h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(29px, 8vw, 43px);
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #ffdf9c 22%,
+    #d89538 48%,
+    #fff0bd 65%,
+    #9b581b 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 0 #754015)
+          drop-shadow(0 7px 0 #39200e)
+          drop-shadow(0 0 17px #e7a13b77);
+  animation: shine 4s infinite linear;
+}
+
+@keyframes shine {
+  50% {
+    filter: drop-shadow(0 3px 0 #754015)
+            drop-shadow(0 7px 0 #39200e)
+            drop-shadow(0 0 28px #ffc65cbb);
+  }
+}
+
+.tagline {
+  color: #c2a6ed;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  margin-top: 12px;
+}
+
+/* Badge */
+
+.badge {
+  display: table;
+  margin: 30px auto 22px;
+  padding: 7px 18px;
+  border-radius: 30px;
+  border: 1px solid #bd85ff66;
+  background: #8e42ff1c;
+  color: #d9b9ff;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  box-shadow: 0 0 15px #9e4dff22;
+}
+
+/* Heading */
+
+.heading {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 15px;
+  color: #a9a0bc;
+  margin-bottom: 30px;
+}
+
+/* Inputs */
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  color: #d4c4eb;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap input {
+  width: 100%;
+  height: 53px;
+  padding: 0 48px 0 16px;
+  color: white;
+  background: #090714;
+  border: 1px solid #514069;
+  border-radius: 12px;
+  outline: none;
+  font-size: 16px;
+  transition: .3s;
+}
+
+.input-wrap input:focus {
+  border-color: #bb80ff;
+  box-shadow: 0 0 15px #9e4dff44;
+}
+
+.input-wrap input::placeholder {
+  color: #766c89;
+}
+
+.toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #c3a0ed;
+  font-size: 12px;
+  user-select: none;
+}
+
+/* Button */
+
+.login-btn {
+  width: 100%;
+  height: 56px;
+  margin-top: 8px;
+  border: 1px solid #ffe0a1;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #25132b;
+  background: linear-gradient(
+    120deg,
+    #b978ff,
+    #f5d18c,
+    #a968e8
+  );
+  box-shadow:
+    0 5px 0 #55306c,
+    0 10px 25px #9d4dff44;
+  transition: .2s;
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 0 #55306c,
+    0 15px 30px #b66cff66;
+}
+
+.login-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #55306c;
+}
+
+.login-btn:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+/* Message */
+
+#message {
+  min-height: 22px;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+  color: #ff8d9d;
+}
+
+.footer {
+  text-align: center;
+  color: #756d83;
+  font-size: 12px;
+  margin-top: 32px;
+  letter-spacing: 1px;
+}
+
+.footer span {
+  color: #e4b96e;
+}
+
+/* Mobile */
+
+@media(max-width:480px) {
+  .container {
+    padding: 35px 23px;
+  }
+
+  .logo h1 {
+    letter-spacing: 2px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="background">
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+</div>
+
+<div class="container">
+
+  <div class="logo">
+    <h1>VIHUHUHU</h1>
+    <div class="tagline">ELITE DIGITAL EXPERIENCE</div>
+  </div>
+
+  <div class="badge">✦ AUTHORIZED ACCESS ONLY ✦</div>
+
+  <h2 class="heading">ADMIN PORTAL</h2>
+  <p class="subtitle">Welcome back, Administrator</p>
+
+  <form id="loginForm">
+
+    <div class="field">
+      <label>EMAIL ADDRESS</label>
+      <div class="input-wrap">
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter admin email"
+          autocomplete="username"
+          required
+        >
+      </div>
+    </div>
+
+    <div class="field">
+      <label>PASSWORD</label>
+      <div class="input-wrap">
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter secure password"
+          autocomplete="current-password"
+          required
+        >
+        <span class="toggle" id="togglePassword">SHOW</span>
+      </div>
+    </div>
+
+    <button class="login-btn" id="loginBtn" type="submit">
+      ENTER ADMIN PANEL →
+    </button>
+
+    <div id="message"></div>
+
+  </form>
+
+  <div class="footer">
+    POWERED BY <span>VIHUHUHU</span> © 2026
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL =
+'https://piagvuicgazqgjkgrvjr.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ';
+
+const client = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const form = document.getElementById('loginForm');
+const message = document.getElementById('message');
+const loginBtn = document.getElementById('loginBtn');
+
+document.getElementById('togglePassword')
+.addEventListener('click', () => {
+  const password = document.getElementById('password');
+  const show = password.type === 'password';
+
+  password.type = show ? 'text' : 'password';
+
+  document.getElementById('togglePassword').textContent =
+    show ? 'HIDE' : 'SHOW';
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  message.textContent = '';
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'VERIFYING...';
+
+  try {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    const { data, error } = await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    const { data: profile, error: profileError } = await client
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single();
+
+    if (profileError || profile?.role !== 'admin') {
+      await client.auth.signOut();
+      throw new Error('You are not authorized as an Admin.');
+    }
+
+    window.location.replace('admin-dashboard.html');
+
+  } catch (error) {
+    message.textContent =
+      error.message || 'Login failed. Please try again.';
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'ENTER ADMIN PANEL →';
+  }
+});
+</script>
+
+</body>
+</html>
