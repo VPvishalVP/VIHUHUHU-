@@ -453,5 +453,91 @@ async function loadSections(){
 document.getElementById("loadSections")
 .addEventListener("click",loadSections);
 </script>
+ 
+<div class="card">
+  <h2>💰 Wallet Deposit Requests</h2>
+  <button id="walletRefresh">Refresh Requests</button>
+  <div id="walletRequests">Loading...</div>
+</div>
+
+<script>
+async function loadWalletRequests(){
+  const box=document.getElementById("walletRequests");
+  box.textContent="Loading...";
+
+  try{
+    const {data:{session}}=await client.auth.getSession();
+
+    if(!session) throw new Error("Please login first");
+
+    const {data,error}=await client.functions.invoke("wallet-admin",{
+      body:{action:"list"}
+    });
+
+    if(error) throw error;
+    if(!data?.requests) throw new Error(data?.error||"Unable to load");
+
+    box.innerHTML="";
+
+    data.requests.forEach(item=>{
+      const row=document.createElement("div");
+      row.style.cssText="padding:14px;border-bottom:1px solid #49345f";
+
+      const details=document.createElement("p");
+      details.textContent=
+        "Amount: ₹"+(item.amount_paise/100).toFixed(2)+
+        " | UTR: "+item.payment_reference+
+        " | Status: "+item.status;
+
+      row.append(details);
+
+      if(item.status==="pending"){
+        ["Approve","Reject"].forEach(action=>{
+          const btn=document.createElement("button");
+          btn.textContent=action;
+          btn.style.margin="5px";
+          btn.onclick=()=>reviewWallet(item.id,action==="Approve");
+          row.append(btn);
+        });
+      }
+
+      box.append(row);
+    });
+
+    if(!data.requests.length) box.textContent="No deposit requests";
+  }catch(error){
+    box.textContent="Error: "+error.message;
+  }
+}
+
+async function reviewWallet(id,approve){
+  if(approve && !confirm("Bank record se payment verify kiya hai?")) return;
+  if(!approve && !confirm("Reject this request?")) return;
+
+  try{
+    const {data,error}=await client.functions.invoke("wallet-admin",{
+      body:{
+        action:"review",
+        transaction_id:id,
+        approve:approve
+      }
+    });
+
+    if(error) throw error;
+    if(!data?.success) throw new Error(data?.error||"Review failed");
+
+    alert(approve?"Deposit approved":"Deposit rejected");
+    loadWalletRequests();
+  }catch(error){
+    alert("Error: "+error.message);
+  }
+}
+
+document.getElementById("walletRefresh")
+.addEventListener("click",loadWalletRequests);
+
+loadWalletRequests();
+</script>
+ 
 </body>
 </html>
