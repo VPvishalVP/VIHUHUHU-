@@ -4,24 +4,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIHUHUHU Admin Dashboard</title>
+<title>VIHUHUHU Admin Panel</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#100b20;color:white;font-family:Arial,sans-serif;padding:20px}
-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+body{
+ margin:0;padding:18px;
+ background:#100b20;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;flex-wrap:wrap;gap:12px;
+}
 h1{color:#d6a6ff}
-button{border:0;padding:11px 16px;border-radius:9px;background:#a855f7;color:white;font-weight:bold;cursor:pointer}
-.card{background:#211638;padding:18px;border-radius:14px;margin-top:20px}
-.stats{font-size:25px;color:#d6a6ff;font-weight:bold}
-input{width:100%;padding:12px;border-radius:8px;border:1px solid #76539b;background:#160e27;color:white;margin-top:10px}
+button{
+ padding:12px 17px;border:0;border-radius:9px;
+ background:linear-gradient(90deg,#9333ea,#ec4899);
+ color:white;font-weight:bold;cursor:pointer;
+}
+.card{
+ background:#211638;padding:18px;
+ border-radius:14px;margin-top:20px;
+ border:1px solid #49345f;
+}
+input,select{
+ width:100%;padding:13px;margin:9px 0;
+ background:#160e27;color:white;
+ border:1px solid #76539b;border-radius:8px;
+}
+.stats{font-size:26px;color:#d6a6ff;font-weight:bold}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;margin-top:15px;min-width:650px}
-th,td{padding:12px;text-align:left;border-bottom:1px solid #49345f}
+table{width:100%;border-collapse:collapse;min-width:650px}
+td,th{padding:12px;text-align:left;border-bottom:1px solid #49345f}
 th{color:#d6a6ff}
-#status{color:#facc15}
+#status,#editorStatus{color:#facc15}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -31,7 +52,7 @@ th{color:#d6a6ff}
 
 <div class="card">
 <h2>Welcome, Administrator</h2>
-<p>Registered Users Management</p>
+<p>Admin Dashboard</p>
 <div class="stats" id="total">Loading...</div>
 <p>Total Registered Users</p>
 <button id="refresh">Refresh Users</button>
@@ -39,8 +60,9 @@ th{color:#d6a6ff}
 </div>
 
 <div class="card">
-<h2>Registered Users</h2>
+<h2>👥 Registered Users</h2>
 <input id="search" placeholder="Search users...">
+
 <div class="table-wrap">
 <table>
 <thead>
@@ -53,106 +75,240 @@ th{color:#d6a6ff}
 </tr>
 </thead>
 <tbody id="users">
-<tr><td colspan="5">Loading users...</td></tr>
+<tr><td colspan="5">Loading...</td></tr>
 </tbody>
 </table>
 </div>
 </div>
 
+<div class="card">
+<h2>🎨 Website Editor</h2>
+<p>Website का मुख्य Title बदलें</p>
+
+<input id="heroTitle" maxlength="200"
+placeholder="Enter website title">
+
+<p>Website Background चुनें</p>
+
+<select id="background">
+<option value="rainbow">🌈 Rainbow</option>
+<option value="purple">💜 Purple</option>
+<option value="ocean">🌊 Ocean Blue</option>
+<option value="dark">🌑 Dark</option>
+</select>
+
+<button id="saveSettings">Save Website Settings</button>
+<p id="editorStatus">Loading settings...</p>
+</div>
+
 <script>
-const SUPABASE_URL = "https://piagvuicgazqgjkgrvjr.supabase.co";
-const SUPABASE_KEY = "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
-const ADMIN_API = "https://piagvuicgazqgjkgrvjr.supabase.co/functions/v1/clever-endpoint";
+const SUPABASE_URL =
+"https://piagvuicgazqgjkgrvjr.supabase.co";
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY =
+"sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
 
-let allUsers = [];
+const ADMIN_API =
+"https://piagvuicgazqgjkgrvjr.supabase.co/functions/v1/clever-endpoint";
+
+const SETTINGS_API =
+"https://piagvuicgazqgjkgrvjr.supabase.co/functions/v1/admin-settings";
+
+const client = supabase.createClient(
+SUPABASE_URL,SUPABASE_KEY
+);
+
+let allUsers=[];
+
+async function getSession(){
+const {data,error}=await client.auth.getSession();
+
+if(error || !data.session){
+location.href="admin.html";
+return null;
+}
+return data.session;
+}
 
 async function loadUsers(){
- const status = document.getElementById("status");
- const tbody = document.getElementById("users");
+const status=document.getElementById("status");
 
- try{
-  status.textContent = "Checking session...";
-  const {data:{session},error} = await client.auth.getSession();
+try{
+const session=await getSession();
+if(!session)return;
 
-  if(error || !session){
-   location.href = "admin.html";
-   return;
-  }
+status.textContent="Loading users...";
 
-  status.textContent = "Loading registered users...";
+const response=await fetch(ADMIN_API,{
+method:"POST",
+headers:{
+"Authorization":"Bearer "+session.access_token,
+"apikey":SUPABASE_KEY,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({})
+});
 
-  const response = await fetch(ADMIN_API,{
-   method:"POST",
-   headers:{
-    "Authorization":"Bearer "+session.access_token,
-    "apikey":SUPABASE_KEY,
-    "Content-Type":"application/json"
-   },
-   body:JSON.stringify({})
-  });
+const result=await response.json();
 
-  const result = await response.json();
+if(!response.ok){
+throw new Error(result.error || "Could not load users");
+}
 
-  if(!response.ok){
-   throw new Error(result.error || "Could not load users");
-  }
+allUsers=result.users || [];
 
-  allUsers = result.users || [];
-  document.getElementById("total").textContent = result.total ?? allUsers.length;
-  showUsers(allUsers);
-  status.textContent = "Admin access verified ✓";
+document.getElementById("total").textContent=
+result.total ?? allUsers.length;
 
- }catch(error){
-  status.textContent = "Error: " + error.message;
-  tbody.innerHTML = "";
- }
+showUsers(allUsers);
+
+status.textContent="Admin access verified ✓";
+
+}catch(error){
+status.textContent="Error: "+error.message;
+}
 }
 
 function showUsers(list){
- const tbody = document.getElementById("users");
- tbody.innerHTML = "";
+const tbody=document.getElementById("users");
+tbody.innerHTML="";
 
- if(!list.length){
-  const tr = document.createElement("tr");
-  const td = document.createElement("td");
-  td.colSpan = 5;
-  td.textContent = "No users found";
-  tr.appendChild(td);
-  tbody.appendChild(tr);
-  return;
- }
+if(!list.length){
+const tr=document.createElement("tr");
+const td=document.createElement("td");
+td.colSpan=5;
+td.textContent="No users found";
+tr.appendChild(td);
+tbody.appendChild(tr);
+return;
+}
 
- list.forEach(user=>{
-  const tr = document.createElement("tr");
+list.forEach(user=>{
+const tr=document.createElement("tr");
 
-  [user.full_name,user.username,user.email,user.phone,user.role].forEach(value=>{
-   const td = document.createElement("td");
-   td.textContent = value || "—";
-   tr.appendChild(td);
-  });
+[
+user.full_name,
+user.username,
+user.email,
+user.phone,
+user.role
+].forEach(value=>{
+const td=document.createElement("td");
+td.textContent=value || "—";
+tr.appendChild(td);
+});
 
-  tbody.appendChild(tr);
- });
+tbody.appendChild(tr);
+});
 }
 
 document.getElementById("search").addEventListener("input",function(){
- const q = this.value.toLowerCase();
- showUsers(allUsers.filter(user=>
-  [user.full_name,user.username,user.email,user.phone,user.role]
-  .some(value=>(value || "").toLowerCase().includes(q))
- ));
+const q=this.value.toLowerCase();
+
+showUsers(allUsers.filter(user=>
+[
+user.full_name,user.username,user.email,
+user.phone,user.role
+].some(value=>(value || "").toLowerCase().includes(q))
+));
 });
 
-document.getElementById("refresh").addEventListener("click",loadUsers);
+async function loadSettings(){
+const editorStatus=document.getElementById("editorStatus");
 
-document.getElementById("logout").addEventListener("click",async()=>{
- await client.auth.signOut();
- location.href = "admin.html";
+try{
+const session=await getSession();
+if(!session)return;
+
+const {data,error}=await client
+.from("site_settings")
+.select("hero_title, background")
+.eq("id",1)
+.single();
+
+if(error)throw error;
+
+document.getElementById("heroTitle").value=
+data.hero_title || "";
+
+document.getElementById("background").value=
+data.background || "rainbow";
+
+editorStatus.textContent="Settings loaded ✓";
+
+}catch(error){
+editorStatus.textContent="Error: "+error.message;
+}
+}
+
+async function saveSettings(){
+const editorStatus=document.getElementById("editorStatus");
+
+try{
+const session=await getSession();
+if(!session)return;
+
+const hero_title=
+document.getElementById("heroTitle").value.trim();
+
+const background=
+document.getElementById("background").value;
+
+if(!hero_title){
+editorStatus.textContent="Title cannot be empty";
+return;
+}
+
+editorStatus.textContent="Saving...";
+
+const response=await fetch(SETTINGS_API,{
+method:"POST",
+headers:{
+"Authorization":"Bearer "+session.access_token,
+"apikey":SUPABASE_KEY,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+hero_title,
+background
+})
 });
 
-loadUsers();
+const result=await response.json();
+
+if(!response.ok){
+throw new Error(result.error || "Could not save settings");
+}
+
+editorStatus.textContent="Settings saved successfully ✓";
+
+}catch(error){
+editorStatus.textContent="Error: "+error.message;
+}
+}
+
+document.getElementById("refresh")
+.addEventListener("click",loadUsers);
+
+document.getElementById("saveSettings")
+.addEventListener("click",saveSettings);
+
+document.getElementById("logout")
+.addEventListener("click",async()=>{
+await client.auth.signOut();
+location.href="admin.html";
+});
+
+async function start(){
+const session=await getSession();
+if(!session)return;
+
+await loadUsers();
+await loadSettings();
+}
+
+start();
 </script>
+
 </body>
 </html>
