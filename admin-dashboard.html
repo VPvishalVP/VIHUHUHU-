@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIHUHUHU Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body {
+  margin: 0;
+  padding: 25px;
+  background: #080611;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+.card {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 25px;
+  background: #211833;
+  border: 1px solid #9d4dff;
+  border-radius: 18px;
+}
+h1 { color: #d9b9ff; }
+button {
+  padding: 12px 20px;
+  background: #a968e8;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>VIHUHUHU ADMIN</h1>
+  <h2>Welcome, Administrator 👑</h2>
+  <p id="status">Checking Admin Access...</p>
+  <button id="logout">LOGOUT</button>
+</div>
+
+<script>
+const client = supabase.createClient(
+  'https://piagvuicgazqgjkgrvjr.supabase.co',
+  'sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ'
+);
+
+async function checkAdmin() {
+  const { data, error } = await client.auth.getSession();
+  const session = data.session;
+
+  if (error || !session) {
+    location.replace('admin.html');
+    return;
+  }
+
+  const { data: profile, error: profileError } = await client
+    .from('profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .single();
+
+  if (profileError || profile?.role !== 'admin') {
+    await client.auth.signOut();
+    location.replace('admin.html');
+    return;
+  }
+
+  document.getElementById('status').textContent =
+    'Admin Access Verified: ' + session.user.email;
+}
+
+document.getElementById('logout').onclick = async () => {
+  await client.auth.signOut();
+  location.replace('admin.html');
+};
+
+checkAdmin();
+</script>
+
+</body>
+</html>
