@@ -389,5 +389,69 @@ async function start(){
 
 start();
 </script>
+ <div class="card">
+  <h2>🧩 Website Sections Manager</h2>
+  <div id="sectionList">Loading sections...</div>
+  <button id="loadSections">Refresh Sections</button>
+</div>
+
+<script>
+async function loadSections(){
+  const box=document.getElementById("sectionList");
+  box.textContent="Loading...";
+
+  try{
+    const result=await apiCall({action:"get_sections"});
+    box.innerHTML="";
+
+    (result.sections||[]).forEach(section=>{
+      const row=document.createElement("div");
+      row.style.cssText="padding:12px;border-bottom:1px solid #49345f";
+
+      const label=document.createElement("label");
+      label.textContent=section.title||section.section_key;
+
+      const check=document.createElement("input");
+      check.type="checkbox";
+      check.checked=section.enabled;
+      check.style.width="auto";
+
+      const save=document.createElement("button");
+      save.textContent="Save";
+
+      save.onclick=async()=>{
+        try{
+          await apiCall({
+            action:"save_sections",
+            sections:[{
+              section_key:section.section_key,
+              title:section.title,
+              subtitle:section.subtitle,
+              body:section.body,
+              enabled:check.checked,
+              sort_order:section.sort_order
+            }]
+          });
+          status("Section updated successfully");
+        }catch(error){
+          status("Error: "+error.message);
+        }
+      };
+
+      row.append(label,check,save);
+      box.appendChild(row);
+    });
+
+    if(!result.sections?.length){
+      box.textContent="No sections found";
+    }
+  }catch(error){
+    box.textContent=error.message;
+  }
+}
+
+document.getElementById("loadSections")
+.addEventListener("click",loadSections);
+</script>
 </body>
 </html>
