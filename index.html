@@ -46,4 +46,22 @@ footer{margin-top:40px;padding:25px 0;text-align:center;border-top:1px solid #ff
 <section id="process"><h2>Work Process</h2><p class="sub">Simple, clear and transparent steps.</p><div class="grid"><div class="card"><div class="icon">01</div><h3>Send Details</h3><p>Name And Contect Number.</p></div><div class="card"><div class="icon">02</div><h3>Agree on Terms</h3><p>Confirm scope, responsibilities and payment terms in writing.</p></div><div class="card"><div class="icon">03</div><h3>Complete & Review</h3><p>Review the agreed work and settle payment through a lawful, traceable method.</p></div></div></section>
 <section><div class="notice"><strong>Safety & Payment Policy</strong><br>You can take it whenever you want, this money is going only for the trust..</div></section>
 <section id="contact"><div class="card contact"><div><h2>Contact VIHUHUHU</h2><p class="sub" style="margin:0">For work enquiries, message us on Telegram.</p><p style="color:#55e6df;font-weight:bold;margin:8px 0 0">@VIHUHUHU</p></div><a class="btn primary" href="https://t.me/VIHUHUHU" target="_blank" rel="noopener">OPEN TELEGRAM ↗</a></div></section>
-</main><footer>© 2026 VIHUHUHU • All Rights Reserved</footer></div></body></html>'''
+</main><footer>© 2026 VIHUHUHU • All Rights Reserved</footer></</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const supabase = createClient(
+  'https://piagvuicgazqgjkgrvjr.supabase.co',
+  'sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ'
+);
+
+const { data } = await supabase.auth.getSession();
+
+if (!data.session) {
+  window.location.replace('login.html');
+}
+</script>
+
+</body>
+</html>
