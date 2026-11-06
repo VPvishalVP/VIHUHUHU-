@@ -82,12 +82,25 @@ async function applyWebsiteSettings() {
   const title = document.querySelector(".hero h1 .gradient");
   if (title) title.textContent = data.hero_title;
 
-  const themes = {
-    rainbow: "linear-gradient(135deg,#ff0080,#7928ca,#007cf0,#00dfd8,#ffcc00)",
-    purple: "linear-gradient(135deg,#240046,#7b2cbf,#c77dff)",
-    ocean: "linear-gradient(135deg,#001f54,#034078,#1282a2,#00b4d8)",
-    dark: "#070817"
-  };
+  
+const themes = {
+  rainbow: "linear-gradient(135deg,#ff0080,#7928ca,#007cf0,#00dfd8,#ffcc00)",
+  purple: "linear-gradient(135deg,#240046,#7b2cbf,#c77dff)",
+  ocean: "linear-gradient(135deg,#001f54,#034078,#1282a2,#00b4d8)",
+  dark: "#070817",
+  galaxy: "radial-gradient(ellipse at 20% 20%,#9d4edd,transparent 45%),radial-gradient(ellipse at 80% 80%,#240046,transparent 50%),#080018",
+  fire: "linear-gradient(135deg,#310000,#a30000,#ff4500,#ff9d00)",
+  sunset: "linear-gradient(135deg,#240046,#9d174d,#f97316,#facc15)",
+  aurora: "linear-gradient(135deg,#071b33,#087f8c,#00c9a7,#7137a8)",
+  cyber: "linear-gradient(135deg,#09001f,#4c0080,#ff00aa,#00e5ff)",
+  matrix: "linear-gradient(135deg,#001b0a,#004d20,#00a83b,#001b0a)",
+  gold: "linear-gradient(135deg,#171000,#76520b,#d4af37,#4b3100)",
+  pink: "linear-gradient(135deg,#4a044e,#be185d,#f472b6,#fbcfe8)",
+  ice: "linear-gradient(135deg,#001b3d,#075985,#38bdf8,#cffafe)",
+  "3d": "radial-gradient(circle at 20% 20%,#ff00cc,transparent 40%),radial-gradient(circle at 80% 30%,#00ccff,transparent 40%),radial-gradient(circle at 50% 90%,#7c3aed,transparent 50%),#090018",
+  emerald: "linear-gradient(135deg,#022c22,#047857,#10b981,#a7f3d0)"
+};
+  
 
   const bg = themes[data.background];
 
