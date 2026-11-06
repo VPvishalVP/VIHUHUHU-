@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIHUHUHU Register</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+body{
+min-height:100vh;display:flex;align-items:center;
+justify-content:center;background:#050510;color:white;
+padding:20px;overflow-x:hidden
+}
+body:before{
+content:"";position:fixed;width:500px;height:500px;
+background:conic-gradient(red,orange,yellow,lime,cyan,blue,violet,red);
+filter:blur(100px);opacity:.35;animation:spin 8s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card{
+position:relative;width:100%;max-width:390px;padding:30px;
+border-radius:24px;background:#ffffff12;
+backdrop-filter:blur(20px);
+border:1px solid #ffffff40;
+box-shadow:0 20px 60px #0008
+}
+h1{text-align:center;font-size:30px;text-shadow:0 0 15px cyan}
+.sub{text-align:center;color:#bbb;margin:10px 0 25px}
+label{display:block;font-size:13px;margin:14px 0 7px}
+input{
+width:100%;padding:13px;border-radius:10px;
+background:#0007;border:1px solid #666;
+color:white;outline:none;font-size:15px
+}
+input:focus{border-color:cyan;box-shadow:0 0 12px #00ffff55}
+button{
+width:100%;padding:14px;margin-top:22px;
+border:0;border-radius:10px;font-weight:bold;
+font-size:16px;cursor:pointer;
+background:linear-gradient(90deg,cyan,#a855f7,#ff3cac,yellow);
+color:#080817
+}
+button:disabled{opacity:.6}
+.links{text-align:center;margin-top:20px;color:#ccc;font-size:14px}
+a{color:#55e6ff;text-decoration:none}
+#message{text-align:center;margin-top:15px;font-size:14px;overflow-wrap:anywhere}
+</style>
+</head>
+
+<body>
+<div class="card">
+<h1>VIHUHUHU</h1>
+<p class="sub">Create Your Account</p>
+
+<form id="registerForm">
+
+<label>Full Name</label>
+<input id="name" type="text" required maxlength="80" placeholder="Enter your name">
+
+<label>Username</label>
+<input id="username" type="text" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder="Choose username">
+
+<label>Mobile Number</label>
+<input id="phone" type="tel" required inputmode="numeric"
+maxlength="10" minlength="10" pattern="[0-9]{10}"
+placeholder="Enter 10 digit mobile number">
+
+<label>Email</label>
+<input id="email" type="email" required placeholder="Enter your email">
+
+<label>Password</label>
+<input id="password" type="password" required minlength="8" placeholder="Minimum 8 characters">
+
+<label>Confirm Password</label>
+<input id="confirm" type="password" required placeholder="Confirm password">
+
+<button id="submitBtn" type="submit">CREATE ACCOUNT →</button>
+</form>
+
+<p id="message" role="status"></p>
+
+<div class="links">
+Already have an account?
+<a href="login.html">Login Now</a>
+<br><br>
+<a href="index.html">← Back to Home</a>
+</div>
+</div>
+
+<script type="module">
+import { createClient } from
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://piagvuicgazqgjkgrvjr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const form = document.getElementById('registerForm');
+const message = document.getElementById('message');
+const btn = document.getElementById('submitBtn');
+const phoneInput = document.getElementById('phone');
+
+phoneInput.addEventListener('input', () => {
+  phoneInput.value = phoneInput.value.replace(/\D/g, '').slice(0, 10);
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const username = document.getElementById('username').value.trim().toLowerCase();
+  const phone = phoneInput.value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirm').value;
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    message.textContent = 'Mobile number must be exactly 10 digits!';
+    return;
+  }
+
+  if (password !== confirm) {
+    message.textContent = 'Passwords do not match!';
+    return;
+  }
+
+  btn.disabled = true;
+  message.textContent = 'Creating your account...';
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username,
+          full_name: name,
+          phone: phone
+        },
+        emailRedirectTo: window.location.origin + '/login.html'
+      }
+    });
+
+    if (error) throw error;
+
+    if (data.user && !data.session) {
+      message.textContent = 'Account created! Please verify your email, then login.';
+    } else if (data.user) {
+      message.textContent = 'Registration successful! Opening login...';
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+    }
+
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
+
+
