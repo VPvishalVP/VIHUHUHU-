@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,79 +7,152 @@
 <title>VIHUHUHU Admin Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body {
-  margin: 0;
-  padding: 25px;
-  background: #080611;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-.card {
-  max-width: 700px;
-  margin: 50px auto;
-  padding: 25px;
-  background: #211833;
-  border: 1px solid #9d4dff;
-  border-radius: 18px;
-}
-h1 { color: #d9b9ff; }
-button {
-  padding: 12px 20px;
-  background: #a968e8;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#100b20;color:white;font-family:Arial,sans-serif;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+h1{color:#d6a6ff}
+button{border:0;padding:11px 16px;border-radius:9px;background:#a855f7;color:white;font-weight:bold;cursor:pointer}
+.card{background:#211638;padding:18px;border-radius:14px;margin-top:20px}
+.stats{font-size:25px;color:#d6a6ff;font-weight:bold}
+input{width:100%;padding:12px;border-radius:8px;border:1px solid #76539b;background:#160e27;color:white;margin-top:10px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin-top:15px;min-width:650px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #49345f}
+th{color:#d6a6ff}
+#status{color:#facc15}
 </style>
 </head>
 <body>
 
+<header>
+<h1>👑 VIHUHUHU ADMIN</h1>
+<button id="logout">LOGOUT</button>
+</header>
+
 <div class="card">
-  <h1>VIHUHUHU ADMIN</h1>
-  <h2>Welcome, Administrator 👑</h2>
-  <p id="status">Checking Admin Access...</p>
-  <button id="logout">LOGOUT</button>
+<h2>Welcome, Administrator</h2>
+<p>Registered Users Management</p>
+<div class="stats" id="total">Loading...</div>
+<p>Total Registered Users</p>
+<button id="refresh">Refresh Users</button>
+<p id="status">Checking admin access...</p>
+</div>
+
+<div class="card">
+<h2>Registered Users</h2>
+<input id="search" placeholder="Search users...">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Username</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody id="users">
+<tr><td colspan="5">Loading users...</td></tr>
+</tbody>
+</table>
+</div>
 </div>
 
 <script>
-const client = supabase.createClient(
-  'https://piagvuicgazqgjkgrvjr.supabase.co',
-  'sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ'
-);
+const SUPABASE_URL = "https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+const ADMIN_API = "https://piagvuicgazqgjkgrvjr.supabase.co/functions/v1/clever-endpoint";
 
-async function checkAdmin() {
-  const { data, error } = await client.auth.getSession();
-  const session = data.session;
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  if (error || !session) {
-    location.replace('admin.html');
-    return;
+let allUsers = [];
+
+async function loadUsers(){
+ const status = document.getElementById("status");
+ const tbody = document.getElementById("users");
+
+ try{
+  status.textContent = "Checking session...";
+  const {data:{session},error} = await client.auth.getSession();
+
+  if(error || !session){
+   location.href = "admin.html";
+   return;
   }
 
-  const { data: profile, error: profileError } = await client
-    .from('profiles')
-    .select('role')
-    .eq('id', session.user.id)
-    .single();
+  status.textContent = "Loading registered users...";
 
-  if (profileError || profile?.role !== 'admin') {
-    await client.auth.signOut();
-    location.replace('admin.html');
-    return;
+  const response = await fetch(ADMIN_API,{
+   method:"POST",
+   headers:{
+    "Authorization":"Bearer "+session.access_token,
+    "apikey":SUPABASE_KEY,
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({})
+  });
+
+  const result = await response.json();
+
+  if(!response.ok){
+   throw new Error(result.error || "Could not load users");
   }
 
-  document.getElementById('status').textContent =
-    'Admin Access Verified: ' + session.user.email;
+  allUsers = result.users || [];
+  document.getElementById("total").textContent = result.total ?? allUsers.length;
+  showUsers(allUsers);
+  status.textContent = "Admin access verified ✓";
+
+ }catch(error){
+  status.textContent = "Error: " + error.message;
+  tbody.innerHTML = "";
+ }
 }
 
-document.getElementById('logout').onclick = async () => {
-  await client.auth.signOut();
-  location.replace('admin.html');
-};
+function showUsers(list){
+ const tbody = document.getElementById("users");
+ tbody.innerHTML = "";
 
-checkAdmin();
+ if(!list.length){
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = 5;
+  td.textContent = "No users found";
+  tr.appendChild(td);
+  tbody.appendChild(tr);
+  return;
+ }
+
+ list.forEach(user=>{
+  const tr = document.createElement("tr");
+
+  [user.full_name,user.username,user.email,user.phone,user.role].forEach(value=>{
+   const td = document.createElement("td");
+   td.textContent = value || "—";
+   tr.appendChild(td);
+  });
+
+  tbody.appendChild(tr);
+ });
+}
+
+document.getElementById("search").addEventListener("input",function(){
+ const q = this.value.toLowerCase();
+ showUsers(allUsers.filter(user=>
+  [user.full_name,user.username,user.email,user.phone,user.role]
+  .some(value=>(value || "").toLowerCase().includes(q))
+ ));
+});
+
+document.getElementById("refresh").addEventListener("click",loadUsers);
+
+document.getElementById("logout").addEventListener("click",async()=>{
+ await client.auth.signOut();
+ location.href = "admin.html";
+});
+
+loadUsers();
 </script>
-
 </body>
 </html>
