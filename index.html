@@ -122,6 +122,96 @@ const themes = {
 applyWebsiteSettings();
 </script>
   
+<script>
+(async function(){
+ const URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+ const KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+
+ const client=window.supabase.createClient(URL,KEY);
+
+ const {data,error}=await client
+  .from("site_settings")
+  .select("*")
+  .eq("id",1)
+  .single();
+
+ if(error || !data)return;
+
+ if(data.hero_title){
+  const title=document.querySelector(".hero h1 .gradient");
+  if(title)title.textContent=data.hero_title;
+ }
+
+ if(data.hero_description){
+  const description=document.querySelector(".hero p");
+  if(description)description.textContent=data.hero_description;
+ }
+
+ const themes={
+  rainbow:"linear-gradient(120deg,#ff0080,#7928ca,#00d4ff)",
+  purple:"linear-gradient(120deg,#240046,#9d4edd)",
+  ocean:"linear-gradient(120deg,#0077b6,#00b4d8)",
+  dark:"#080808",
+  galaxy:"radial-gradient(circle,#512da8,#080018)",
+  fire:"linear-gradient(120deg,#8b0000,#ff4500)",
+  sunset:"linear-gradient(120deg,#ff512f,#dd2476)",
+  aurora:"linear-gradient(120deg,#00c9a7,#845ec2)",
+  cyber:"linear-gradient(120deg,#000428,#004e92)",
+  matrix:"linear-gradient(120deg,#001a00,#00aa00)",
+  gold:"linear-gradient(120deg,#5c4000,#d4af37)",
+  pink:"linear-gradient(120deg,#ff758c,#ff7eb3)",
+  ice:"linear-gradient(120deg,#caf0f8,#0077b6)",
+  "3d":"linear-gradient(120deg,#ff0080,#00d4ff,#ffe600)",
+  emerald:"linear-gradient(120deg,#004d40,#00c853)"
+ };
+
+ if(themes[data.background]){
+  document.body.style.background=themes[data.background];
+ }
+
+ if(data.logo_url){
+  let logo=document.getElementById("admin-site-logo");
+
+  if(!logo){
+   logo=document.createElement("img");
+   logo.id="admin-site-logo";
+   logo.alt="VIHUHUHU Logo";
+   logo.style.cssText="max-width:130px;max-height:100px;object-fit:contain";
+   const heading=document.querySelector(".hero h1");
+   if(heading)heading.before(logo);
+  }
+
+  logo.src=data.logo_url;
+ }
+
+ if(data.telegram_url){
+  document.querySelectorAll('a[href*="t.me/"]').forEach(link=>{
+   link.href=data.telegram_url;
+  });
+ }
+
+ const buttons=[
+  {
+   text:data.primary_button_text,
+   url:data.primary_button_url,
+   selector:".hero .btn.primary"
+  },
+  {
+   text:data.secondary_button_text,
+   url:data.secondary_button_url,
+   selector:".hero .btn:not(.primary)"
+  }
+ ];
+
+ buttons.forEach(item=>{
+  const button=document.querySelector(item.selector);
+  if(!button)return;
+  if(item.text)button.textContent=item.text;
+  if(item.url)button.href=item.url;
+ });
+})();
+</script>
+
 
 </body>
 </html>
