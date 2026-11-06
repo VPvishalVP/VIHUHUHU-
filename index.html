@@ -63,6 +63,52 @@ if (!data.session) {
   window.location.replace('login.html');
 }
 </script>
+  
+<script>
+const db = window.supabase.createClient(
+  "https://piagvuicgazqgjkgrvjr.supabase.co",
+  "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+);
+
+async function applyWebsiteSettings() {
+  const { data, error } = await db
+    .from("site_settings")
+    .select("hero_title, background")
+    .eq("id", 1)
+    .single();
+
+  if (error || !data) return;
+
+  const title = document.querySelector(".hero h1 .gradient");
+  if (title) title.textContent = data.hero_title;
+
+  const themes = {
+    rainbow: "linear-gradient(135deg,#ff0080,#7928ca,#007cf0,#00dfd8,#ffcc00)",
+    purple: "linear-gradient(135deg,#240046,#7b2cbf,#c77dff)",
+    ocean: "linear-gradient(135deg,#001f54,#034078,#1282a2,#00b4d8)",
+    dark: "#070817"
+  };
+
+  const bg = themes[data.background];
+
+  if (bg) {
+    let style = document.getElementById("admin-theme");
+
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "admin-theme";
+      document.head.appendChild(style);
+    }
+
+    style.textContent = `body:before {
+      background: ${bg} !important;
+    }`;
+  }
+}
+
+applyWebsiteSettings();
+</script>
+  
 
 </body>
 </html>
