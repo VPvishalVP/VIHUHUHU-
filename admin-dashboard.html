@@ -4,74 +4,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIHUHUHU Admin Panel</title>
+<title>VIHUHUHU PRO ADMIN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;padding:18px;
- background:#100b20;color:white;
- font-family:Arial,sans-serif;
-}
-header{
- display:flex;justify-content:space-between;
- align-items:center;flex-wrap:wrap;gap:12px;
-}
+body{margin:0;padding:16px;background:#100b20;color:white;font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 h1{color:#d6a6ff}
-button{
- padding:12px 17px;border:0;border-radius:9px;
- background:linear-gradient(90deg,#9333ea,#ec4899);
- color:white;font-weight:bold;cursor:pointer;
-}
-.card{
- background:#211638;padding:18px;
- border-radius:14px;margin-top:20px;
- border:1px solid #49345f;
-}
-input,select{
- width:100%;padding:13px;margin:9px 0;
- background:#160e27;color:white;
- border:1px solid #76539b;border-radius:8px;
-}
+.card{background:#211638;padding:18px;border-radius:15px;margin-top:18px;border:1px solid #49345f}
+h2{color:#d6a6ff}
+input,select,textarea{width:100%;padding:12px;margin:8px 0 14px;background:#160e27;color:white;border:1px solid #76539b;border-radius:8px}
+textarea{min-height:90px;resize:vertical}
+label{display:block;color:#e9d5ff;margin-top:8px}
+button{border:0;padding:12px 16px;border-radius:9px;background:#a855f7;color:white;font-weight:bold;cursor:pointer;margin:5px 3px}
+button.secondary{background:#49345f}
 .stats{font-size:26px;color:#d6a6ff;font-weight:bold}
+#status{color:#facc15;white-space:pre-wrap}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
-td,th{padding:12px;text-align:left;border-bottom:1px solid #49345f}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{padding:11px;text-align:left;border-bottom:1px solid #49345f}
 th{color:#d6a6ff}
-#status,#editorStatus{color:#facc15}
+small{color:#c4b5d9}
+.checkrow{display:flex;align-items:center;gap:10px;margin:12px 0}
+.checkrow input{width:auto;margin:0}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>👑 VIHUHUHU ADMIN</h1>
+<h1>👑 VIHUHUHU PRO ADMIN</h1>
 <button id="logout">LOGOUT</button>
 </header>
 
+<p id="status">Checking admin access...</p>
+
 <div class="card">
-<h2>Welcome, Administrator</h2>
-<p>Admin Dashboard</p>
+<h2>📊 Users Management</h2>
 <div class="stats" id="total">Loading...</div>
 <p>Total Registered Users</p>
 <button id="refresh">Refresh Users</button>
-<p id="status">Checking admin access...</p>
-</div>
-
-<div class="card">
-<h2>👥 Registered Users</h2>
 <input id="search" placeholder="Search users...">
-
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-<th>Name</th>
-<th>Username</th>
-<th>Email</th>
-<th>Phone</th>
-<th>Role</th>
+<th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th>
 </tr>
 </thead>
 <tbody id="users">
@@ -82,15 +61,15 @@ th{color:#d6a6ff}
 </div>
 
 <div class="card">
-<h2>🎨 Website Editor</h2>
-<p>Website का मुख्य Title बदलें</p>
+<h2>🌐 Website Editor</h2>
 
-<input id="heroTitle" maxlength="200"
-placeholder="Enter website title">
+<label>Website Main Title</label>
+<input id="hero_title" placeholder="Welcome to VIHUHUHU">
 
-<p>Website Background चुनें</p>
+<label>Website Description</label>
+<textarea id="hero_description" placeholder="Write website description"></textarea>
 
-
+<label>Background Theme</label>
 <select id="background">
 <option value="rainbow">🌈 Rainbow</option>
 <option value="purple">💜 Purple Neon</option>
@@ -109,219 +88,306 @@ placeholder="Enter website title">
 <option value="emerald">💎 Emerald Green</option>
 </select>
 
+<label>Logo Image URL</label>
+<input id="logo_url" placeholder="https://example.com/logo.png">
 
-<button id="saveSettings">Save Website Settings</button>
-<p id="editorStatus">Loading settings...</p>
+<label>Telegram URL</label>
+<input id="telegram_url" placeholder="https://t.me/yourusername">
+
+<label>Contact Button Text</label>
+<input id="contact_label" placeholder="Contact VIHUHUHU">
+
+<h2>🔗 Primary Button</h2>
+<label>Button Text</label>
+<input id="primary_button_text" placeholder="Get Started">
+<label>Button URL</label>
+<input id="primary_button_url" placeholder="https://example.com">
+
+<h2>🔗 Secondary Button</h2>
+<label>Button Text</label>
+<input id="secondary_button_text" placeholder="Contact Us">
+<label>Button URL</label>
+<input id="secondary_button_url" placeholder="https://t.me/yourusername">
+
+<button id="saveSettings">💾 SAVE WEBSITE SETTINGS</button>
+</div>
+
+<div class="card">
+<h2>➕ Add Website Section</h2>
+<small>यहाँ नया Section बना सकते हो। Section Key English में लिखना।</small>
+
+<label>Section Key</label>
+<input id="section_key" placeholder="example: portfolio">
+
+<label>Section Title</label>
+<input id="section_title" placeholder="My Portfolio">
+
+<label>Section Subtitle</label>
+<input id="section_subtitle" placeholder="Our latest work">
+
+<label>Section Description</label>
+<textarea id="section_body" placeholder="Write section details"></textarea>
+
+<label class="checkrow">
+<input type="checkbox" id="section_enabled" checked>
+Section Enabled
+</label>
+
+<button id="saveSection">➕ SAVE NEW SECTION</button>
 </div>
 
 <script>
-const SUPABASE_URL =
-"https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
 
-const SUPABASE_KEY =
-"sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+const SETTINGS_API=SUPABASE_URL+"/functions/v1/admin-settings";
+const USERS_API=SUPABASE_URL+"/functions/v1/clever-endpoint";
 
-const ADMIN_API =
-"https://piagvuicgazqgjkgrvjr.supabase.co/functions/v1/clever-endpoint";
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const SETTINGS_API =
-"https://piagvuicgazqgjkgrvjr.supabase.co/functions/v1/admin-settings";
-
-const client = supabase.createClient(
-SUPABASE_URL,SUPABASE_KEY
-);
-
+let session=null;
 let allUsers=[];
 
+function status(message){
+ document.getElementById("status").textContent=message;
+}
+
 async function getSession(){
-const {data,error}=await client.auth.getSession();
+ const {data,error}=await client.auth.getSession();
 
-if(error || !data.session){
-location.href="admin.html";
-return null;
-}
-return data.session;
-}
+ if(error || !data.session){
+  location.href="admin.html";
+  return null;
+ }
 
-async function loadUsers(){
-const status=document.getElementById("status");
-
-try{
-const session=await getSession();
-if(!session)return;
-
-status.textContent="Loading users...";
-
-const response=await fetch(ADMIN_API,{
-method:"POST",
-headers:{
-"Authorization":"Bearer "+session.access_token,
-"apikey":SUPABASE_KEY,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({})
-});
-
-const result=await response.json();
-
-if(!response.ok){
-throw new Error(result.error || "Could not load users");
+ session=data.session;
+ return session;
 }
 
-allUsers=result.users || [];
+async function apiCall(payload){
+ const current=await getSession();
+ if(!current) throw new Error("Login required");
 
-document.getElementById("total").textContent=
-result.total ?? allUsers.length;
+ const response=await fetch(SETTINGS_API,{
+  method:"POST",
+  headers:{
+   "Authorization":"Bearer "+current.access_token,
+   "apikey":SUPABASE_KEY,
+   "Content-Type":"application/json"
+  },
+  body:JSON.stringify(payload)
+ });
 
-showUsers(allUsers);
+ const result=await response.json();
 
-status.textContent="Admin access verified ✓";
+ if(!response.ok){
+  throw new Error(result.error || "Request failed");
+ }
 
-}catch(error){
-status.textContent="Error: "+error.message;
+ return result;
 }
-}
-
-function showUsers(list){
-const tbody=document.getElementById("users");
-tbody.innerHTML="";
-
-if(!list.length){
-const tr=document.createElement("tr");
-const td=document.createElement("td");
-td.colSpan=5;
-td.textContent="No users found";
-tr.appendChild(td);
-tbody.appendChild(tr);
-return;
-}
-
-list.forEach(user=>{
-const tr=document.createElement("tr");
-
-[
-user.full_name,
-user.username,
-user.email,
-user.phone,
-user.role
-].forEach(value=>{
-const td=document.createElement("td");
-td.textContent=value || "—";
-tr.appendChild(td);
-});
-
-tbody.appendChild(tr);
-});
-}
-
-document.getElementById("search").addEventListener("input",function(){
-const q=this.value.toLowerCase();
-
-showUsers(allUsers.filter(user=>
-[
-user.full_name,user.username,user.email,
-user.phone,user.role
-].some(value=>(value || "").toLowerCase().includes(q))
-));
-});
 
 async function loadSettings(){
-const editorStatus=document.getElementById("editorStatus");
+ const {data,error}=await client
+  .from("site_settings")
+  .select("*")
+  .eq("id",1)
+  .single();
 
-try{
-const session=await getSession();
-if(!session)return;
+ if(error){
+  status("Settings load error: "+error.message);
+  return;
+ }
 
-const {data,error}=await client
-.from("site_settings")
-.select("hero_title, background")
-.eq("id",1)
-.single();
-
-if(error)throw error;
-
-document.getElementById("heroTitle").value=
-data.hero_title || "";
-
-document.getElementById("background").value=
-data.background || "rainbow";
-
-editorStatus.textContent="Settings loaded ✓";
-
-}catch(error){
-editorStatus.textContent="Error: "+error.message;
-}
+ [
+  "hero_title",
+  "hero_description",
+  "background",
+  "logo_url",
+  "telegram_url",
+  "contact_label",
+  "primary_button_text",
+  "primary_button_url",
+  "secondary_button_text",
+  "secondary_button_url"
+ ].forEach(key=>{
+  const element=document.getElementById(key);
+  if(element && data[key]!==null){
+   element.value=data[key] || "";
+  }
+ });
 }
 
 async function saveSettings(){
-const editorStatus=document.getElementById("editorStatus");
+ const button=document.getElementById("saveSettings");
+ button.disabled=true;
+ button.textContent="Saving...";
 
-try{
-const session=await getSession();
-if(!session)return;
+ try{
+  const fields=[
+   "hero_title",
+   "hero_description",
+   "background",
+   "logo_url",
+   "telegram_url",
+   "contact_label",
+   "primary_button_text",
+   "primary_button_url",
+   "secondary_button_text",
+   "secondary_button_url"
+  ];
 
-const hero_title=
-document.getElementById("heroTitle").value.trim();
+  const payload={action:"save_settings"};
 
-const background=
-document.getElementById("background").value;
+  fields.forEach(key=>{
+   payload[key]=document.getElementById(key).value.trim();
+  });
 
-if(!hero_title){
-editorStatus.textContent="Title cannot be empty";
-return;
+  await apiCall(payload);
+  status("✅ Website settings saved successfully!");
+
+ }catch(error){
+  status("❌ "+error.message);
+ }finally{
+  button.disabled=false;
+  button.textContent="💾 SAVE WEBSITE SETTINGS";
+ }
 }
 
-editorStatus.textContent="Saving...";
+async function saveSection(){
+ const button=document.getElementById("saveSection");
+ button.disabled=true;
 
-const response=await fetch(SETTINGS_API,{
-method:"POST",
-headers:{
-"Authorization":"Bearer "+session.access_token,
-"apikey":SUPABASE_KEY,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-hero_title,
-background
-})
+ try{
+  const section={
+   section_key:document.getElementById("section_key").value.trim(),
+   title:document.getElementById("section_title").value.trim(),
+   subtitle:document.getElementById("section_subtitle").value.trim(),
+   body:document.getElementById("section_body").value.trim(),
+   enabled:document.getElementById("section_enabled").checked,
+   sort_order:0
+  };
+
+  if(!section.section_key){
+   throw new Error("Section Key is required");
+  }
+
+  await apiCall({
+   action:"save_sections",
+   sections:[section]
+  });
+
+  status("✅ Section saved successfully!");
+  document.getElementById("section_key").value="";
+  document.getElementById("section_title").value="";
+  document.getElementById("section_subtitle").value="";
+  document.getElementById("section_body").value="";
+
+ }catch(error){
+  status("❌ "+error.message);
+ }finally{
+  button.disabled=false;
+ }
+}
+
+async function loadUsers(){
+ const tbody=document.getElementById("users");
+
+ try{
+  const current=await getSession();
+  if(!current)return;
+
+  const response=await fetch(USERS_API,{
+   method:"POST",
+   headers:{
+    "Authorization":"Bearer "+current.access_token,
+    "apikey":SUPABASE_KEY,
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({})
+  });
+
+  const result=await response.json();
+
+  if(!response.ok){
+   throw new Error(result.error || "Could not load users");
+  }
+
+  allUsers=result.users || [];
+  document.getElementById("total").textContent=
+   result.total ?? allUsers.length;
+
+  showUsers(allUsers);
+  status("✅ Admin access verified");
+
+ }catch(error){
+  status("Users error: "+error.message);
+  tbody.innerHTML="<tr><td colspan='5'>Could not load users</td></tr>";
+ }
+}
+
+function showUsers(list){
+ const tbody=document.getElementById("users");
+ tbody.innerHTML="";
+
+ if(!list.length){
+  tbody.innerHTML="<tr><td colspan='5'>No users found</td></tr>";
+  return;
+ }
+
+ list.forEach(user=>{
+  const tr=document.createElement("tr");
+
+  [
+   user.full_name,
+   user.username,
+   user.email,
+   user.phone,
+   user.role
+  ].forEach(value=>{
+   const td=document.createElement("td");
+   td.textContent=value || "—";
+   tr.appendChild(td);
+  });
+
+  tbody.appendChild(tr);
+ });
+}
+
+document.getElementById("search").addEventListener("input",function(){
+ const q=this.value.toLowerCase();
+
+ showUsers(allUsers.filter(user=>
+  [
+   user.full_name,
+   user.username,
+   user.email,
+   user.phone,
+   user.role
+  ].some(value=>(value || "").toLowerCase().includes(q))
+ ));
 });
 
-const result=await response.json();
+document.getElementById("saveSettings").addEventListener("click",saveSettings);
+document.getElementById("saveSection").addEventListener("click",saveSection);
+document.getElementById("refresh").addEventListener("click",loadUsers);
 
-if(!response.ok){
-throw new Error(result.error || "Could not save settings");
-}
-
-editorStatus.textContent="Settings saved successfully ✓";
-
-}catch(error){
-editorStatus.textContent="Error: "+error.message;
-}
-}
-
-document.getElementById("refresh")
-.addEventListener("click",loadUsers);
-
-document.getElementById("saveSettings")
-.addEventListener("click",saveSettings);
-
-document.getElementById("logout")
-.addEventListener("click",async()=>{
-await client.auth.signOut();
-location.href="admin.html";
+document.getElementById("logout").addEventListener("click",async()=>{
+ await client.auth.signOut();
+ location.href="admin.html";
 });
 
 async function start(){
-const session=await getSession();
-if(!session)return;
+ const current=await getSession();
+ if(!current)return;
 
-await loadUsers();
-await loadSettings();
+ await Promise.all([
+  loadSettings(),
+  loadUsers()
+ ]);
 }
 
 start();
 </script>
-
 </body>
 </html>
