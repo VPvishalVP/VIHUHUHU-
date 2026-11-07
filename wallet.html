@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090817">
-<title>VIHUHUHU Wallet</title>
+<meta name="theme-color" content="#050505">
+<title>VIHUHUHU Gothic Wallet</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -14,7 +15,7 @@ html,body{
  margin:0;
  min-height:100%;
  background:#050505;
- color:white;
+ color:#fff;
  font-family:Arial,sans-serif;
 }
 
@@ -39,7 +40,7 @@ body::before{
  content:"";
  position:fixed;
  inset:0;
- background:rgba(0,0,0,.68);
+ background:rgba(0,0,0,.55);
  z-index:-1;
  pointer-events:none;
 }
@@ -58,38 +59,41 @@ header{
  font-size:30px;
  font-weight:bold;
  color:#fff;
- text-shadow:0 0 15px #a78bfa;
- letter-spacing:2px;
+ text-shadow:0 0 8px #fff,0 0 22px #aaa;
+ letter-spacing:3px;
 }
 
 .small{
  font-size:13px;
- color:#d2c9e8;
+ color:#c7c7c7;
 }
 
 .card{
- background:rgba(12,10,25,.76);
- border:1px solid rgba(255,255,255,.2);
+ background:rgba(8,8,8,.78);
+ border:1px solid rgba(230,230,230,.35);
  border-radius:20px;
  padding:20px;
  margin-bottom:18px;
- backdrop-filter:blur(12px);
- -webkit-backdrop-filter:blur(12px);
- box-shadow:0 8px 30px rgba(0,0,0,.3);
+ backdrop-filter:blur(14px);
+ -webkit-backdrop-filter:blur(14px);
+ box-shadow:0 8px 30px rgba(0,0,0,.65);
 }
 
 .balance{
  background:linear-gradient(
   135deg,
-  rgba(109,40,217,.82),
-  rgba(8,145,178,.78)
+  rgba(0,0,0,.94),
+  rgba(75,75,75,.88),
+  rgba(10,10,10,.95)
  );
- border:1px solid rgba(255,255,255,.3);
+ border:1px solid #ddd;
 }
 
 .balance h1{
  font-size:36px;
  margin:12px 0;
+ color:#fff;
+ text-shadow:0 0 12px rgba(255,255,255,.45);
 }
 
 input{
@@ -97,28 +101,37 @@ input{
  padding:14px;
  margin:9px 0;
  border-radius:11px;
- background:rgba(5,5,15,.85);
- border:1px solid #70618e;
- color:white;
+ background:rgba(0,0,0,.85);
+ border:1px solid #777;
+ color:#fff;
  font-size:16px;
  outline:none;
 }
 
+input::placeholder{
+ color:#aaa;
+}
+
 input:focus{
- border-color:#a78bfa;
- box-shadow:0 0 10px rgba(167,139,250,.3);
+ border-color:#fff;
+ box-shadow:0 0 10px rgba(255,255,255,.25);
 }
 
 button{
  width:100%;
  padding:14px;
- border:0;
+ border:1px solid #fff;
  border-radius:12px;
- background:linear-gradient(135deg,#a78bfa,#67e8f9);
- color:#100b20;
+ background:linear-gradient(135deg,#fff,#aaa);
+ color:#050505;
  font-weight:bold;
  font-size:15px;
  cursor:pointer;
+ transition:.2s;
+}
+
+button:active{
+ transform:scale(.98);
 }
 
 button:disabled{
@@ -127,14 +140,25 @@ button:disabled{
 }
 
 .secondary{
- background:rgba(50,43,75,.9);
- color:white;
+ background:rgba(15,15,15,.9);
+ color:#fff;
  margin-top:10px;
- border:1px solid #76678f;
+ border:1px solid #aaa;
+}
+
+#upiId{
+ padding:12px;
+ border-radius:10px;
+ background:rgba(0,0,0,.7);
+ border:1px dashed #ddd;
+ text-align:center;
+ font-weight:bold;
+ letter-spacing:1px;
+ color:#fff;
 }
 
 #message{
- color:#67e8f9;
+ color:#ff7777;
  font-size:14px;
  overflow-wrap:anywhere;
 }
@@ -144,18 +168,8 @@ button:disabled{
  justify-content:space-between;
  gap:10px;
  padding:13px 0;
- border-bottom:1px solid rgba(255,255,255,.15);
+ border-bottom:1px solid rgba(255,255,255,.2);
  font-size:13px;
-}
-
-#upiId{
- padding:12px;
- border-radius:10px;
- background:rgba(0,0,0,.4);
- border:1px dashed #a78bfa;
- text-align:center;
- font-weight:bold;
- letter-spacing:1px;
 }
 
 footer{
@@ -175,13 +189,13 @@ footer{
 
 <body>
 
-<img id="bgImage" src="wallet-bg.jpg" alt="Wallet Background">
+<img id="bgImage" src="./wallet-bg.jpg" alt="Wallet Background">
 
 <div class="container">
 
 <header>
  <div class="logo">VIHUHUHU</div>
- <p class="small">SECURE DIGITAL WALLET</p>
+ <p class="small">GOTHIC DARK • DIGITAL WALLET</p>
 </header>
 
 <div class="card balance">
@@ -233,7 +247,7 @@ footer{
 </div>
 
 <footer>
- VIHUHUHU WALLET • SECURE EXPERIENCE
+ VIHUHUHU WALLET • GOTHIC DARK
 </footer>
 
 </div>
