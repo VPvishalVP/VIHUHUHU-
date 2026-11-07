@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications | VIHUHUHU</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#080b18,#17113a,#071d2c);
+  color:#fff;
+  min-height:100vh;
+  padding:20px;
+}
+.container{max-width:700px;margin:30px auto}
+.header{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:25px
+}
+h1{font-size:25px;margin:0}
+button,.back{
+  background:linear-gradient(90deg,#7c3aed,#06b6d4);
+  color:white;border:0;padding:11px 16px;
+  border-radius:9px;font-weight:bold;
+  text-decoration:none;cursor:pointer
+}
+.notice{
+  background:#ffffff10;border:1px solid #ffffff25;
+  border-radius:14px;padding:18px;margin-bottom:15px;
+  box-shadow:0 8px 25px #0003;
+}
+.notice h2{font-size:18px;margin:0 0 10px;color:#67e8f9}
+.notice p{line-height:1.6;margin:0 0 12px;color:#e5e7eb;white-space:pre-wrap}
+.notice small{color:#a5b4fc}
+#status{text-align:center;color:#c4b5fd;margin:25px 0}
+.empty{text-align:center;padding:30px;color:#cbd5e1}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🔔 Notifications</h1>
+    <a class="back" href="index.html">← Home</a>
+  </div>
+
+  <div id="status">Notifications loading...</div>
+  <div id="notifications"></div>
+  <button onclick="loadNotifications()" style="width:100%">↻ Refresh</button>
+</div>
+
+<script>
+const client = supabase.createClient(
+  "https://piagvuicgazqgjkgrvjr.supabase.co",
+  "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+);
+
+async function loadNotifications(){
+  const status = document.getElementById("status");
+  const container = document.getElementById("notifications");
+
+  status.textContent = "Loading...";
+  container.replaceChildren();
+
+  const {data:{user},error:authError} = await client.auth.getUser();
+
+  if(authError || !user){
+    status.textContent = "Please login to view notifications.";
+    return;
+  }
+
+  const {data,error} = await client
+    .from("notifications")
+    .select("id,title,message,created_at")
+    .eq("is_active",true)
+    .order("created_at",{ascending:false});
+
+  if(error){
+    status.textContent = "Notifications load nahi hui: " + error.message;
+    return;
+  }
+
+  if(!data || data.length === 0){
+    status.textContent = "";
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "📭 Abhi koi notification nahi hai.";
+    container.appendChild(empty);
+    return;
+  }
+
+  status.textContent = data.length + " notification(s)";
+
+  data.forEach(item=>{
+    const card = document.createElement("div");
+    card.className = "notice";
+
+    const title = document.createElement("h2");
+    title.textContent = "🔔 " + item.title;
+
+    const message = document.createElement("p");
+    message.textContent = item.message;
+
+    const date = document.createElement("small");
+    date.textContent = item.created_at
+      ? new Date(item.created_at).toLocaleString()
+      : "";
+
+    card.append(title,message,date);
+    container.appendChild(card);
+  });
+}
+
+loadNotifications();
+</script>
+</body>
+</html>
