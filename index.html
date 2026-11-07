@@ -1,410 +1,496 @@
 
+<!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#070817"><title>VIHUHUHU | Official Website</title>
-<style>
-:root{--p:#a78bfa;--c:#55e6df;--w:#f7f7ff;--m:#b9bdd4}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;overflow-x:hidden;background:#070817;color:var(--w);font-family:Arial,sans-serif}
-body:before{content:"";position:fixed;inset:0;z-index:-3;background:radial-gradient(ellipse at 15% 15%,#5635a966,transparent 35%),radial-gradient(ellipse at 85% 35%,#087f8b55,transparent 32%),radial-gradient(ellipse at 50% 100%,#4b267966,transparent 42%),#070817}
-body:after{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.2;background-image:linear-gradient(#fff1 1px,transparent 1px),linear-gradient(90deg,#fff1 1px,transparent 1px);background-size:48px 48px}
-.orb{position:fixed;z-index:-1;width:280px;height:280px;border-radius:50%;opacity:.3;pointer-events:none;animation:float 12s ease-in-out infinite}
-.one{top:13%;left:-130px;background:radial-gradient(circle at 35% 30%,#e2d8ff,#8d5cff 35%,#31106e 68%,transparent 72%);box-shadow:inset -25px -20px 45px #08031e,0 0 80px #8657ff}
-.two{right:-145px;top:55%;width:340px;height:340px;animation-delay:-5s;background:radial-gradient(circle at 35% 30%,#c1fffb,#37c9ce 34%,#07516a 68%,transparent 72%);box-shadow:inset -30px -20px 50px #031b2a,0 0 90px #36d9d0}
-@keyframes float{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(25px,-35px) rotate(12deg)}}
-.wrap{width:min(1080px,92%);margin:auto}
-header{display:flex;justify-content:space-between;align-items:center;padding:22px 0;gap:18px}
-.brand{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:900;letter-spacing:2px}
-.logo{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;color:#080817;font-size:25px;font-weight:1000;background:linear-gradient(135deg,#d8caff,#9a78ff 48%,#55e6df);box-shadow:0 9px 0 #4c328b,0 15px 30px #9b7cff66;transform:perspective(300px) rotateX(12deg)}
-nav{display:flex;gap:20px;flex-wrap:wrap}nav a{color:var(--m);text-decoration:none;font-size:14px}nav a:hover{color:white}
-.hero{text-align:center;padding:85px 15px 75px;perspective:900px}
-.pill{display:inline-block;padding:7px 15px;border:1px solid #b9a2ff66;background:#9b7cff18;border-radius:99px;color:#ded4ff;font-size:12px;letter-spacing:2px}
-h1{font-size:clamp(48px,10vw,94px);letter-spacing:4px;margin:24px 0 12px;line-height:1.05;color:#d9ccff;text-shadow:0 2px 0 #8e71d8,0 5px 0 #6545a8,0 10px 18px #000,0 0 40px #9b7cffaa;transform:rotateX(8deg)}
-.gradient{background:linear-gradient(100deg,#fff 5%,#c8b6ff 40%,#62eee4 85%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{max-width:650px;margin:auto;color:var(--m);font-size:17px;line-height:1.8}
-.actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:28px}
-.btn{display:inline-block;padding:13px 22px;border-radius:12px;text-decoration:none;font-weight:800;transition:.25s;box-shadow:0 8px 22px #0005}.btn:hover{transform:translateY(-4px)}
-.primary{background:linear-gradient(100deg,#a78bfa,#55e6df);color:#080817}.secondary{border:1px solid #ffffff35;background:#ffffff0b;color:white;backdrop-filter:blur(12px)}
-section{padding:38px 0;scroll-margin-top:20px}h2{font-size:clamp(27px,5vw,38px);margin:0 0 10px}.sub{color:var(--m);margin:0 0 23px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px}
-.card{position:relative;overflow:hidden;padding:23px;border-radius:19px;background:linear-gradient(145deg,#ffffff18,#ffffff08);border:1px solid #ffffff24;box-shadow:0 18px 40px #0005;backdrop-filter:blur(13px);transition:transform .25s,border-color .25s}
-.card:before{content:"";position:absolute;width:130px;height:130px;right:-70px;top:-70px;border-radius:50%;background:radial-gradient(circle,#9b7cff55,transparent 70%)}
-.card:hover{transform:translateY(-6px);border-color:#9b7cff88}.card h3{margin:9px 0}.card p{color:var(--m);line-height:1.7;margin:0}.icon{font-size:28px}
-.notice{padding:22px;border:1px solid #55e6df55;border-radius:18px;background:#55e6df0d;color:#e2fafa;line-height:1.7}.notice strong{color:var(--c)}
-.contact{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
-footer{margin-top:40px;padding:25px 0;text-align:center;border-top:1px solid #ffffff20;color:#9da3bd;font-size:13px}
-@media(max-width:650px){header{align-items:flex-start;flex-direction:column}nav{gap:14px}.hero{padding:60px 10px 50px}h1{letter-spacing:1px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
-</style></head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070817">
+<title>VIHUHUHU | Study Portal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<body><div class="orb one"></div><div class="orb two"></div><div class="wrap">
+
+<style>
+:root{
+  --p:#a78bfa;
+  --c:#55e6df;
+  --w:#f7f7ff;
+  --m:#b9bdd4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;
+  background:#070817;color:var(--w);
+  font-family:Arial,sans-serif;
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:
+  radial-gradient(ellipse at 15% 15%,#5635a966,transparent 35%),
+  radial-gradient(ellipse at 85% 35%,#087f8b55,transparent 32%),
+  #070817;
+}
+.wrap{width:min(1100px,92%);margin:auto}
+header{
+  display:flex;justify-content:space-between;
+  align-items:center;padding:20px 0;gap:15px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-size:20px;font-weight:900;letter-spacing:2px;
+}
+#profilePhoto{
+  width:48px;height:48px;border-radius:50%;
+  object-fit:cover;border:2px solid var(--p);
+  display:none;
+}
+.logo{
+  width:48px;height:48px;display:grid;
+  place-items:center;border-radius:15px;
+  color:#080817;font-size:25px;font-weight:1000;
+  background:linear-gradient(135deg,#d8caff,#55e6df);
+}
+nav{display:flex;gap:17px;flex-wrap:wrap}
+nav a{
+  color:var(--m);text-decoration:none;font-size:13px;
+}
+nav a:hover{color:white}
+.hero{text-align:center;padding:65px 10px 45px}
+.hero h1{
+  font-size:clamp(45px,9vw,85px);
+  margin:15px 0;color:#d9ccff;
+  text-shadow:0 0 35px #9b7cff99;
+}
+.gradient{
+  background:linear-gradient(100deg,#fff,#c8b6ff,#62eee4);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{color:var(--m);line-height:1.8}
+.btn{
+  display:inline-block;padding:12px 20px;
+  border-radius:11px;text-decoration:none;
+  font-weight:bold;background:linear-gradient(100deg,#a78bfa,#55e6df);
+  color:#080817;margin:8px;
+}
+section{padding:30px 0;scroll-margin-top:20px}
+h2{font-size:29px;margin:0 0 10px;color:#d7c7ff}
+.sub{color:var(--m);line-height:1.7}
+.panel{
+  padding:22px;margin:18px 0;
+  border-radius:18px;background:#ffffff0d;
+  border:1px solid #ffffff22;
+}
+input,select{
+  width:100%;padding:13px;margin:8px 0;
+  border-radius:10px;border:1px solid #66558f;
+  background:#15182e;color:white;
+}
+button{
+  padding:12px 16px;border:1px solid #8e70d5;
+  border-radius:10px;background:#292044;color:white;
+  cursor:pointer;
+}
+button.active{background:#8054d6}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:14px;margin-top:20px;
+}
+.card{
+  padding:20px 14px;text-align:center;
+  border-radius:16px;background:#ffffff0d;
+  border:1px solid #ffffff25;
+}
+.card .emoji{font-size:31px}
+.card h3{font-size:17px;color:#d8c5ff}
+.card p{font-size:13px;color:var(--m);line-height:1.5}
+.card button{width:100%;margin-top:8px}
+.result{
+  padding:17px;background:#171b35;
+  border-radius:12px;margin-top:15px;
+  line-height:1.8;color:#e6e5ff;
+}
+.lang{
+  display:flex;justify-content:center;
+  gap:10px;margin:18px 0;
+}
+footer{
+  margin-top:35px;padding:25px 0;
+  text-align:center;border-top:1px solid #ffffff20;
+  color:#9da3bd;font-size:13px;
+}
+@media(max-width:650px){
+  header{align-items:flex-start;flex-direction:column}
+  nav{gap:12px}
+  .hero{padding-top:45px}
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
 
 <header>
   <div class="brand">
-    <img id="indexProfilePhoto"
-         src=""
-         alt="Profile Photo"
-         style="display:none;width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #9b5cff;">
-
+    <img id="profilePhoto" src="" alt="Profile Photo">
+    <div id="defaultLogo" class="logo">V</div>
     <div>
       <span>VIHUHUHU</span>
-      <div style="font-size:12px;color:#b9bdd4;letter-spacing:0;font-weight:400;">
+      <div style="font-size:11px;color:#b9bdd4;font-weight:400;letter-spacing:0">
         My Profile
       </div>
     </div>
   </div>
 
   <nav>
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#process">Work Process</a>
-    <a href="#contact">Contact</a>
-    <a href="profile.html">👤 My Profile</a>
-    <a href="user-notifications.html">🔔 Notifications</a>
-    <a href="user-dashboard.html">My Dashboard</a>
+    <a href="#home">Home</a>
+    <a href="#study">Study</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#planner">Planner</a>
+    <a href="profile.html">My Profile</a>
+    <a href="user-notifications.html">Notifications</a>
+    <a href="user-dashboard.html">Dashboard</a>
   </nav>
 </header>
 
-  
-<!-- VIHUHUHU STUDY ZONE -->
-<section id="study-zone" class="study-zone">
-  <style>
-    .study-zone {
-      padding: 45px 18px;
-      margin: 30px auto;
-      max-width: 1100px;
-      color: #f7f7ff;
-      background: linear-gradient(135deg,#10132b,#21143c);
-      border: 1px solid #7652bd;
-      border-radius: 22px;
-      font-family: Arial,sans-serif;
-    }
-    .study-zone h2 {text-align:center;color:#c4a5ff;font-size:30px}
-    .study-zone .sub {text-align:center;color:#c4c8df}
-    .study-zone .lang {display:flex;justify-content:center;gap:10px;margin:20px}
-    .study-zone button,.study-zone select {
-      padding:11px 16px;border:1px solid #9b75ee;
-      border-radius:10px;background:#282044;color:white;
-      cursor:pointer;
-    }
-    .study-zone button.active {background:#8054d6}
-    .study-zone .study-grid {
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
-      gap:13px;margin-top:25px;
-    }
-    .study-zone .study-card {
-      padding:20px 12px;text-align:center;
-      background:#1b1d39;border:1px solid #45416d;
-      border-radius:15px;
-    }
-    .study-zone .study-card .emoji {font-size:30px}
-    .study-zone .study-card h3 {font-size:17px;color:#d8c5ff}
-    .study-zone .study-card p {font-size:13px;color:#c5c7d8}
-    .study-zone .study-card button {margin-top:8px}
-    .study-zone .study-info {
-      margin-top:25px;padding:20px;background:#17182f;
-      border-radius:14px;line-height:1.7;
-    }
-    .study-zone a {color:#a9e9ff}
-  </style>
+<main>
 
-  <h2 id="studyTitle">📚 VIHUHUHU Study Zone</h2>
-  <p class="sub" id="studySub">Learn • Practice • Grow</p>
+<div class="hero" id="home">
+  <div style="color:#55e6df;letter-spacing:3px;font-size:12px">
+    OFFICIAL LEARNING PLATFORM
+  </div>
+  <h1><span class="gradient">VIHUHUHU</span></h1>
+  <p id="heroText">
+    Learn Something New Every Day.
+    पढ़ें, सीखें और अपना ज्ञान बढ़ाएँ।
+  </p>
+  <a class="btn" href="#study">Explore Study Zone</a>
+</div>
+
+<section id="study">
+  <h2 id="studyTitle">📚 Study Zone</h2>
+  <p class="sub" id="studySub">
+    आपकी पढ़ाई का नया साथी • Your Learning Partner
+  </p>
 
   <div class="lang">
-    <button id="studyHindi" class="active" onclick="studyLanguage('hi')">हिन्दी</button>
-    <button id="studyEnglish" onclick="studyLanguage('en')">English</button>
+    <button id="hiBtn" class="active" onclick="changeLanguage('hi')">हिन्दी</button>
+    <button id="enBtn" onclick="changeLanguage('en')">English</button>
   </div>
 
-  <div class="study-info">
-    <h3 id="studyWelcome">आपका स्वागत है!</h3>
-    <p id="studyDescription">यहाँ पढ़ाई करें, अभ्यास करें और अपना ज्ञान बढ़ाएँ।</p>
-    <label id="classLabel">अपनी कक्षा चुनें:</label>
-    <select id="studyClass">
-      <option>Class 9</option>
+  <div class="panel">
+    <h3 id="welcome">अपनी पढ़ाई शुरू करें 🎓</h3>
+    <label id="classLabel">अपनी कक्षा चुनें</label>
+    <select id="classSelect">
+      <option>Class 6</option>
+      <option>Class 7</option>
+      <option>Class 8</option>
+      <option selected>Class 9</option>
       <option>Class 10</option>
       <option>Class 11</option>
       <option>Class 12</option>
     </select>
+    <input id="searchSubject" placeholder="विषय खोजें / Search subject" oninput="filterSubjects()">
   </div>
 
-  <div class="study-grid" id="studyGrid">
-    <div class="study-card"><div class="emoji">📘</div><h3>Notes</h3><p>Study Notes</p><button onclick="studyMessage('notes')">Open</button></div>
-    <div class="study-card"><div class="emoji">🧮</div><h3>Mathematics</h3><p>Math Practice</p><button onclick="studyMessage('math')">Open</button></div>
-    <div class="study-card"><div class="emoji">🔬</div><h3>Science</h3><p>Learn Science</p><button onclick="studyMessage('science')">Open</button></div>
-    <div class="study-card"><div class="emoji">🌍</div><h3>Social Science</h3><p>History & Geography</p><button onclick="studyMessage('sst')">Open</button></div>
-    <div class="study-card"><div class="emoji">🔤</div><h3>English</h3><p>Grammar & Reading</p><button onclick="studyMessage('english')">Open</button></div>
-    <div class="study-card"><div class="emoji">📝</div><h3>Hindi</h3><p>व्याकरण और साहित्य</p><button onclick="studyMessage('hindi')">Open</button></div>
-    <div class="study-card"><div class="emoji">🎯</div><h3>MCQ Quiz</h3><p>Test Your Knowledge</p><button onclick="studyMessage('quiz')">Open</button></div>
-    <div class="study-card"><div class="emoji">💡</div><h3>Study Tips</h3><p>Smart Learning</p><button onclick="studyMessage('tips')">Open</button></div>
+  <h2 id="subjectHeading">📖 Subjects</h2>
+
+  <div class="grid" id="subjectGrid">
+    <div class="card">
+      <div class="emoji">➗</div>
+      <h3>Mathematics</h3>
+      <p>Maths and Formulas</p>
+      <button onclick="openStudy('math')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">🔬</div>
+      <h3>Science</h3>
+      <p>Physics, Chemistry, Biology</p>
+      <button onclick="openStudy('science')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">🌍</div>
+      <h3>Social Science</h3>
+      <p>History, Geography, Civics</p>
+      <button onclick="openStudy('sst')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">🔤</div>
+      <h3>English</h3>
+      <p>Grammar and Literature</p>
+      <button onclick="openStudy('english')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">📝</div>
+      <h3>Hindi</h3>
+      <p>व्याकरण और साहित्य</p>
+      <button onclick="openStudy('hindi')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">💻</div>
+      <h3>Computer</h3>
+      <p>Computer Learning</p>
+      <button onclick="openStudy('computer')">Open</button>
+    </div>
   </div>
-
-  <div class="study-info">
-    <h3 id="studyNotice">📌 महत्वपूर्ण सूचना</h3>
-    <p id="studyNoticeText">यह Study Zone अभी शुरुआती संस्करण है। Notes और PDF सामग्री जल्द जोड़ी जा सकती है।</p>
-    <p>VIHUHUHU • Learn Something New Every Day</p>
+  <div class="result" id="studyResult">
+    कोई विषय चुनें। / Select a subject.
   </div>
-
-  <script>
-    (function(){
-      const translations = {
-        hi: {
-          title:"📚 VIHUHUHU अध्ययन क्षेत्र",
-          sub:"सीखें • अभ्यास करें • आगे बढ़ें",
-          welcome:"आपका स्वागत है!",
-          description:"यहाँ पढ़ाई करें, अभ्यास करें और अपना ज्ञान बढ़ाएँ।",
-          classLabel:"अपनी कक्षा चुनें:",
-          notice:"📌 महत्वपूर्ण सूचना",
-          noticeText:"यह Study Zone अभी शुरुआती संस्करण है। Notes और PDF सामग्री जल्द जोड़ी जा सकती है।",
-          names:["नोट्स","गणित","विज्ञान","सामाजिक विज्ञान","अंग्रेज़ी","हिन्दी","MCQ क्विज़","पढ़ाई के टिप्स"],
-          desc:["पढ़ाई के नोट्स","गणित का अभ्यास","विज्ञान सीखें","इतिहास और भूगोल","व्याकरण और रीडिंग","व्याकरण और साहित्य","अपना ज्ञान जाँचें","स्मार्ट पढ़ाई"],
-          open:"खोलें",
-          msg:"यह सेक्शन जल्द उपलब्ध होगा।"
-        },
-        en: {
-          title:"📚 VIHUHUHU Study Zone",
-          sub:"Learn • Practice • Grow",
-          welcome:"Welcome to Study Zone!",
-          description:"Study, practice and improve your knowledge here.",
-          classLabel:"Choose your class:",
-          notice:"📌 Important Notice",
-          noticeText:"This Study Zone is an initial version. Notes and PDF resources can be added soon.",
-          names:["Notes","Mathematics","Science","Social Science","English","Hindi","MCQ Quiz","Study Tips"],
-          desc:["Study Notes","Math Practice","Learn Science","History & Geography","Grammar & Reading","Grammar & Literature","Test Your Knowledge","Smart Learning"],
-          open:"Open",
-          msg:"This section will be available soon."
-        }
-      };
-
-      const keys=["notes","math","science","sst","english","hindi","quiz","tips"];
-      window.studyLanguage=function(lang){
-        const t=translations[lang];
-        document.getElementById("studyTitle").textContent=t.title;
-        document.getElementById("studySub").textContent=t.sub;
-        document.getElementById("studyWelcome").textContent=t.welcome;
-        document.getElementById("studyDescription").textContent=t.description;
-        document.getElementById("classLabel").textContent=t.classLabel;
-        document.getElementById("studyNotice").textContent=t.notice;
-        document.getElementById("studyNoticeText").textContent=t.noticeText;
-        document.getElementById("studyHindi").classList.toggle("active",lang==="hi");
-        document.getElementById("studyEnglish").classList.toggle("active",lang==="en");
-        document.querySelectorAll("#studyGrid .study-card").forEach((card,i)=>{
-          card.querySelector("h3").textContent=t.names[i];
-          card.querySelector("p").textContent=t.desc[i];
-          card.querySelector("button").textContent=t.open;
-        });
-        window.studyCurrentLanguage=lang;
-      };
-      window.studyCurrentLanguage="hi";
-      window.studyMessage=function(key){
-        const lang=window.studyCurrentLanguage||"hi";
-        const cls=document.getElementById("studyClass").value;
-        alert(cls+" • "+key.toUpperCase()+"\n"+translations[lang].msg);
-      };
-    })();
-  </script>
 </section>
-<!-- END STUDY ZONE -->
-  
-<main>
-<div class="hero"><span class="pill">OFFICIAL • WORK • UPI</span><h1><span class="gradient">VIHUHUHU</span></h1><p class="lead">Welcome to VIHUHUHU — a place to discuss work opportunities, digital services and genuine collaborations with clear communication.</p><div class="actions"><a class="btn primary" href="https://t.me/VIHUHUHU" target="_blank" rel="noopener">CONTACT ON TELEGRAM ↗</a><a class="btn secondary" href="#services">EXPLORE SERVICES</a></div></div>
+
+<section id="features">
+  <h2 id="featureHeading">🚀 Learning Features</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="emoji">📘</div>
+      <h3>Chapter Notes</h3>
+      <p>Chapter-wise study notes</p>
+      <button onclick="openStudy('notes')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">🧠</div>
+      <h3>MCQ Quiz</h3>
+      <p>Test your knowledge</p>
+      <button onclick="document.getElementById('quiz').scrollIntoView()">Start</button>
+    </div>
+    <div class="card">
+      <div class="emoji">📄</div>
+      <h3>Practice Papers</h3>
+      <p>Practice questions</p>
+      <button onclick="openStudy('papers')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">📅</div>
+      <h3>Study Planner</h3>
+      <p>Plan your daily study</p>
+      <button onclick="document.getElementById('planner').scrollIntoView()">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">📖</div>
+      <h3>Dictionary</h3>
+      <p>Word meanings</p>
+      <button onclick="openStudy('dictionary')">Open</button>
+    </div>
+    <div class="card">
+      <div class="emoji">🧮</div>
+      <h3>Formula Library</h3>
+      <p>Important formulas</p>
+      <button onclick="openStudy('formulas')">Open</button>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <h2>🧠 Quick MCQ Quiz</h2>
+  <p class="sub">अपना ज्ञान जाँचें • Test your knowledge</p>
+  <div class="panel">
+    <h3 id="question">भारत की राजधानी क्या है?</h3>
+    <div id="answers" class="grid">
+      <button onclick="checkAnswer(0)">Mumbai</button>
+      <button onclick="checkAnswer(1)">New Delhi</button>
+      <button onclick="checkAnswer(2)">Kolkata</button>
+    </div>
+    <div class="result" id="quizResult">अपना उत्तर चुनें।</div>
+    <button onclick="nextQuestion()">Next Question →</button>
+  </div>
+</section>
+
+<section id="planner">
+  <h2>📅 Study Planner</h2>
+  <p class="sub">अपनी पढ़ाई का दैनिक लक्ष्य बनाएँ।</p>
+  <div class="panel">
+    <input id="taskInput" placeholder="आज क्या पढ़ना है? / What will you study?">
+    <button onclick="addTask()">Add Task +</button>
+    <div id="taskList" class="result">Your study tasks will appear here.</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  © 2026 VIHUHUHU • All Rights Reserved
+  <p>Learn • Practice • Improve</p>
+</footer>
+
 </div>
-<section id="about"><h2> About VIHUHUHU</h2><p class="sub">TUST IS MOST IMPORTANT</p><div class="card"><p>VIHUHUHU is a personal work First you will get Rs 1000 then the work will start</p></div></section>
-<div id="aboutContent">
-<section id="services"><h2>Our Services</h2><p class="sub">Send your requirements to discuss availability and details.</p><div class="grid"><div class="card"><div class="icon">💻</div><h3>Online Work</h3><p>You give me your Navi account and I will deposit money in your Navi and 50% of that money is yours.</p></div><div class="card"><div class="icon">🤝</div><h3>Collaboration</h3><p>Usdt Sell  Bhi Kar SAKTE price 100rs Safe and secure Payment .</p></div><div class="card"><div class="icon">📋</div><h3>Other Works</h3><p>Share your work-related enquiry for a clear response.</p></div></div></section>
-<section id="process"><h2>Work Process</h2><p class="sub">Simple, clear and transparent steps.</p><div class="grid"><div class="card"><div class="icon">01</div><h3>Send Details</h3><p>Name And Contect Number.</p></div><div class="card"><div class="icon">02</div><h3>Agree on Terms</h3><p>Confirm scope, responsibilities and payment terms in writing.</p></div><div class="card"><div class="icon">03</div><h3>Complete & Review</h3><p>Review the agreed work and settle payment through a lawful, traceable method.</p></div></div></section>
-<section><div class="notice"><strong>Safety & Payment Policy</strong><br>You can take it whenever you want, this money is going only for the trust..</div></section>
-<section id="contact"><div class="card contact"><div><h2>Contact VIHUHUHU</h2><p class="sub" style="margin:0">For work enquiries, message us on Telegram.</p><p style="color:#55e6df;font-weight:bold;margin:8px 0 0">@VIHUHUHU</p></div><a class="btn primary" href="https://t.me/VIHUHUHU" target="_blank" rel="noopener">OPEN TELEGRAM ↗</a></div></section>
-</main><>© 2026 VIHUHUHU • All Rights Reserved</footer></div>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-const supabase = createClient(
-  'https://piagvuicgazqgjkgrvjr.supabase.co',
-  'sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ'
-);
-
-const { data } = await supabase.auth.getSession();
-
-if (!data.session) {
-  window.location.replace('login.html');
-}
-</script>
-  
 <script>
-const db = window.supabase.createClient(
-  "https://piagvuicgazqgjkgrvjr.supabase.co",
-  "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
-);
-
-async function applyWebsiteSettings() {
-  const { data, error } = await db
-    .from("site_settings")
-    .select("hero_title, background")
-    .eq("id", 1)
-    .single();
-
-  if (error || !data) return;
-
-  const title = document.querySelector(".hero h1 .gradient");
-  if (title) title.textContent = data.hero_title;
-
-  
-const themes = {
-  rainbow: "linear-gradient(135deg,#ff0080,#7928ca,#007cf0,#00dfd8,#ffcc00)",
-  purple: "linear-gradient(135deg,#240046,#7b2cbf,#c77dff)",
-  ocean: "linear-gradient(135deg,#001f54,#034078,#1282a2,#00b4d8)",
-  dark: "#070817",
-  galaxy: "radial-gradient(ellipse at 20% 20%,#9d4edd,transparent 45%),radial-gradient(ellipse at 80% 80%,#240046,transparent 50%),#080018",
-  fire: "linear-gradient(135deg,#310000,#a30000,#ff4500,#ff9d00)",
-  sunset: "linear-gradient(135deg,#240046,#9d174d,#f97316,#facc15)",
-  aurora: "linear-gradient(135deg,#071b33,#087f8c,#00c9a7,#7137a8)",
-  cyber: "linear-gradient(135deg,#09001f,#4c0080,#ff00aa,#00e5ff)",
-  matrix: "linear-gradient(135deg,#001b0a,#004d20,#00a83b,#001b0a)",
-  gold: "linear-gradient(135deg,#171000,#76520b,#d4af37,#4b3100)",
-  pink: "linear-gradient(135deg,#4a044e,#be185d,#f472b6,#fbcfe8)",
-  ice: "linear-gradient(135deg,#001b3d,#075985,#38bdf8,#cffafe)",
-  "3d": "radial-gradient(circle at 20% 20%,#ff00cc,transparent 40%),radial-gradient(circle at 80% 30%,#00ccff,transparent 40%),radial-gradient(circle at 50% 90%,#7c3aed,transparent 50%),#090018",
-  emerald: "linear-gradient(135deg,#022c22,#047857,#10b981,#a7f3d0)"
-};
-  
-
-  const bg = themes[data.background];
-
-  if (bg) {
-    let style = document.getElementById("admin-theme");
-
-    if (!style) {
-      style = document.createElement("style");
-      style.id = "admin-theme";
-      document.head.appendChild(style);
-    }
-
-    style.textContent = `body:before {
-      background: ${bg} !important;
-    }`;
-  }
+const translations={
+hi:{
+title:"📚 अध्ययन क्षेत्र",
+sub:"आपकी पढ़ाई का नया साथी",
+welcome:"अपनी पढ़ाई शुरू करें 🎓",
+classLabel:"अपनी कक्षा चुनें",
+subjects:"📖 पढ़ाई के विषय",
+features:"🚀 पढ़ाई के फीचर्स",
+hero:"पढ़ें, सीखें और अपना ज्ञान बढ़ाएँ।",
+search:"विषय खोजें",
+msg:"इस विषय की सामग्री जल्द जोड़ी जाएगी।",
+correct:"सही जवाब! 🎉",
+wrong:"गलत जवाब। फिर कोशिश करें।",
+next:"अगला प्रश्न",
+task:"आज क्या पढ़ना है?",
+empty:"अभी कोई टास्क नहीं है।"
+},
+en:{
+title:"📚 Study Zone",
+sub:"Your Learning Partner",
+welcome:"Start Your Learning Journey 🎓",
+classLabel:"Choose Your Class",
+subjects:"📖 Study Subjects",
+features:"🚀 Learning Features",
+hero:"Learn, practice and improve your knowledge.",
+search:"Search subject",
+msg:"Study content for this subject will be added soon.",
+correct:"Correct Answer! 🎉",
+wrong:"Incorrect answer. Try again.",
+next:"Next Question",
+task:"What will you study today?",
+empty:"No tasks yet."
 }
+};
 
-applyWebsiteSettings();
+let currentLanguage="hi";
+window.changeLanguage=function(lang){
+currentLanguage=lang;
+let t=translations[lang];
+document.getElementById("studyTitle").textContent=t.title;
+document.getElementById("studySub").textContent=t.sub;
+document.getElementById("welcome").textContent=t.welcome;
+document.getElementById("classLabel").textContent=t.classLabel;
+document.getElementById("subjectHeading").textContent=t.subjects;
+document.getElementById("featureHeading").textContent=t.features;
+document.getElementById("heroText").textContent=t.hero;
+document.getElementById("searchSubject").placeholder=t.search;
+document.getElementById("hiBtn").classList.toggle("active",lang==="hi");
+document.getElementById("enBtn").classList.toggle("active",lang==="en");
+};
+
+const subjectNames={
+math:["गणित","Mathematics"],
+science:["विज्ञान","Science"],
+sst:["सामाजिक विज्ञान","Social Science"],
+english:["अंग्रेज़ी","English"],
+hindi:["हिन्दी","Hindi"],
+computer:["कंप्यूटर","Computer"],
+notes:["अध्याय नोट्स","Chapter Notes"],
+papers:["अभ्यास पेपर","Practice Papers"],
+dictionary:["शब्दकोश","Dictionary"],
+formulas:["फॉर्मूला लाइब्रेरी","Formula Library"]
+};
+
+window.openStudy=function(key){
+let name=subjectNames[key];
+let cls=document.getElementById("classSelect").value;
+document.getElementById("studyResult").innerHTML=
+"<b>"+name[currentLanguage==="hi"?0:1]+"</b><br>"+
+cls+"<br>"+translations[currentLanguage].msg;
+};
+
+window.filterSubjects=function(){
+let q=document.getElementById("searchSubject").value.toLowerCase();
+document.querySelectorAll("#subjectGrid .card").forEach(card=>{
+card.style.display=card.innerText.toLowerCase().includes(q)?"block":"none";
+});
+};
+
+const questions=[
+{q:"भारत की राजधानी क्या है? / Capital of India?",a:["Mumbai","New Delhi","Kolkata"],correct:1},
+{q:"2 + 5 = ?",a:["6","7","8"],correct:1},
+{q:"पानी का रासायनिक सूत्र क्या है? / Formula of water?",a:["CO2","H2O","O2"],correct:1}
+];
+let questionIndex=0;
+let answered=false;
+
+function renderQuestion(){
+answered=false;
+let q=questions[questionIndex];
+document.getElementById("question").textContent=q.q;
+document.getElementById("quizResult").textContent="अपना उत्तर चुनें।";
+document.getElementById("answers").innerHTML=q.a.map((a,i)=>
+'<button onclick="checkAnswer('+i+')">'+a+'</button>'
+).join("");
+}
+window.checkAnswer=function(index){
+if(answered)return;
+answered=true;
+let correct=questions[questionIndex].correct;
+document.getElementById("quizResult").textContent=
+index===correct?translations[currentLanguage].correct:translations[currentLanguage].wrong;
+};
+window.nextQuestion=function(){
+questionIndex=(questionIndex+1)%questions.length;
+renderQuestion();
+};
+
+window.addTask=function(){
+let input=document.getElementById("taskInput");
+let value=input.value.trim();
+if(!value)return;
+let tasks=JSON.parse(localStorage.getItem("vihuStudyTasks")||"[]");
+tasks.push(value);
+localStorage.setItem("vihuStudyTasks",JSON.stringify(tasks));
+input.value="";
+renderTasks();
+};
+function renderTasks(){
+let tasks=JSON.parse(localStorage.getItem("vihuStudyTasks")||"[]");
+document.getElementById("taskList").innerHTML=tasks.length?
+tasks.map((t,i)=>'<div style="padding:8px;border-bottom:1px solid #ffffff22">📚 '+escapeHTML(t)+' <button onclick="removeTask('+i+')">×</button></div>').join("")
+:translations[currentLanguage].empty;
+}
+function escapeHTML(s){
+return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+window.removeTask=function(i){
+let tasks=JSON.parse(localStorage.getItem("vihuStudyTasks")||"[]");
+tasks.splice(i,1);
+localStorage.setItem("vihuStudyTasks",JSON.stringify(tasks));
+renderTasks();
+};
+
+changeLanguage("hi");
+renderQuestion();
+renderTasks();
 </script>
-  
+
 <script>
 (async function(){
- const URL="https://piagvuicgazqgjkgrvjr.supabase.co";
- const KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+  const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+  const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
 
- const client=window.supabase.createClient(URL,KEY);
+  const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
- const {data,error}=await client
-  .from("site_settings")
-  .select("*")
-  .eq("id",1)
-  .single();
+  const {data:sessionData,error:sessionError}=await db.auth.getSession();
 
- if(error || !data)return;
-
- if(data.hero_title){
-  const title=document.querySelector(".hero h1 .gradient");
-  if(title)title.textContent=data.hero_title;
- }
-
- if(data.hero_description){
-  const description=document.querySelector(".hero p");
-  if(description)description.textContent=data.hero_description;
- }
-
- const themes={
-  rainbow:"linear-gradient(120deg,#ff0080,#7928ca,#00d4ff)",
-  purple:"linear-gradient(120deg,#240046,#9d4edd)",
-  ocean:"linear-gradient(120deg,#0077b6,#00b4d8)",
-  dark:"#080808",
-  galaxy:"radial-gradient(circle,#512da8,#080018)",
-  fire:"linear-gradient(120deg,#8b0000,#ff4500)",
-  sunset:"linear-gradient(120deg,#ff512f,#dd2476)",
-  aurora:"linear-gradient(120deg,#00c9a7,#845ec2)",
-  cyber:"linear-gradient(120deg,#000428,#004e92)",
-  matrix:"linear-gradient(120deg,#001a00,#00aa00)",
-  gold:"linear-gradient(120deg,#5c4000,#d4af37)",
-  pink:"linear-gradient(120deg,#ff758c,#ff7eb3)",
-  ice:"linear-gradient(120deg,#caf0f8,#0077b6)",
-  "3d":"linear-gradient(120deg,#ff0080,#00d4ff,#ffe600)",
-  emerald:"linear-gradient(120deg,#004d40,#00c853)"
- };
-
- if(themes[data.background]){
-  document.body.style.background=themes[data.background];
- }
-
- if(data.logo_url){
-  let logo=document.getElementById("admin-site-logo");
-
-  if(!logo){
-   logo=document.createElement("img");
-   logo.id="admin-site-logo";
-   logo.alt="VIHUHUHU Logo";
-   logo.style.cssText="max-width:130px;max-height:100px;object-fit:contain";
-   const heading=document.querySelector(".hero h1");
-   if(heading)heading.before(logo);
+  if(sessionError || !sessionData.session){
+    window.location.replace("login.html");
+    return;
   }
 
-  logo.src=data.logo_url;
- }
+  const user=sessionData.session.user;
 
- if(data.telegram_url){
-  document.querySelectorAll('a[href*="t.me/"]').forEach(link=>{
-   link.href=data.telegram_url;
-  });
- }
-
- const buttons=[
-  {
-   text:data.primary_button_text,
-   url:data.primary_button_url,
-   selector:".hero .btn.primary"
-  },
-  {
-   text:data.secondary_button_text,
-   url:data.secondary_button_url,
-   selector:".hero .btn:not(.primary)"
-  }
- ];
-
- buttons.forEach(item=>{
-  const button=document.querySelector(item.selector);
-  if(!button)return;
-  if(item.text)button.textContent=item.text;
-  if(item.url)button.href=item.url;
- });
-})();
-</script>
-
-<script>
-(async function () {
-  const db = window.supabase.createClient(
-    "https://piagvuicgazqgjkgrvjr.supabase.co",
-    "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
-  );
-
-  const { data: sessionData, error: sessionError } =
-    await db.auth.getSession();
-
-  if (sessionError || !sessionData.session) return;
-
-  const user = sessionData.session.user;
-
-  const { data, error } = await db.storage
+  const {data:photoData,error:photoError}=await db.storage
     .from("avatars")
-    .createSignedUrl(user.id + "/avatar", 3600);
+    .createSignedUrl(user.id+"/avatar",3600);
 
-if (!error && data?.signedUrl) {
-  const photo = document.getElementById("indexProfilePhoto");
-  photo.src = data.signedUrl;
-  photo.style.display = "block";
-}
+  if(!photoError && photoData && photoData.signedUrl){
+    const photo=document.getElementById("profilePhoto");
+    photo.src=photoData.signedUrl;
+    photo.style.display="block";
+    document.getElementById("defaultLogo").style.display="none";
+  }
+
+  const {data:settings}=await db
+    .from("site_settings")
+    .select("hero_title")
+    .eq("id",1)
+    .maybeSingle();
+
+  if(settings && settings.hero_title){
+    document.querySelector(".hero h1 .gradient").textContent=settings.hero_title;
+  }
 })();
 </script>
+
 </body>
 </html>
