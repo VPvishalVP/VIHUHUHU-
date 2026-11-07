@@ -28,6 +28,8 @@ th{color:#d6a6ff}
 small{color:#c4b5d9}
 .checkrow{display:flex;align-items:center;gap:10px;margin:12px 0}
 .checkrow input{width:auto;margin:0}
+.quick-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.quick-buttons button{flex:1;min-width:180px;padding:15px}
 </style>
 </head>
 
@@ -37,6 +39,15 @@ small{color:#c4b5d9}
 <h1>👑 VIHUHUHU PRO ADMIN</h1>
 <button id="logout">LOGOUT</button>
 </header>
+
+<div class="card">
+<h2>⚡ Quick Admin Access</h2>
+<div class="quick-buttons">
+<button onclick="location.href='admin-activity.html'">📊 User Activity</button>
+<button onclick="location.href='admin-notifications.html'">🔔 Notifications Manager</button>
+<button onclick="location.href='user-notifications.html'">👁 View Notifications</button>
+</div>
+</div>
 
 <p id="status">Checking admin access...</p>
 
@@ -136,6 +147,18 @@ Section Enabled
 <button id="saveSection">➕ SAVE NEW SECTION</button>
 </div>
 
+<div class="card">
+<h2>🧩 Website Sections Manager</h2>
+<div id="sectionList">Loading sections...</div>
+<button id="loadSections">Refresh Sections</button>
+</div>
+
+<div class="card">
+<h2>💰 Wallet Deposit Requests</h2>
+<button id="walletRefresh">Refresh Requests</button>
+<div id="walletRequests">Loading...</div>
+</div>
+
 <script>
 const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
 const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
@@ -200,16 +223,9 @@ async function loadSettings(){
  }
 
  [
-  "hero_title",
-  "hero_description",
-  "background",
-  "logo_url",
-  "telegram_url",
-  "contact_label",
-  "primary_button_text",
-  "primary_button_url",
-  "secondary_button_text",
-  "secondary_button_url"
+  "hero_title","hero_description","background","logo_url",
+  "telegram_url","contact_label","primary_button_text",
+  "primary_button_url","secondary_button_text","secondary_button_url"
  ].forEach(key=>{
   const element=document.getElementById(key);
   if(element && data[key]!==null){
@@ -225,16 +241,9 @@ async function saveSettings(){
 
  try{
   const fields=[
-   "hero_title",
-   "hero_description",
-   "background",
-   "logo_url",
-   "telegram_url",
-   "contact_label",
-   "primary_button_text",
-   "primary_button_url",
-   "secondary_button_text",
-   "secondary_button_url"
+   "hero_title","hero_description","background","logo_url",
+   "telegram_url","contact_label","primary_button_text",
+   "primary_button_url","secondary_button_text","secondary_button_url"
   ];
 
   const payload={action:"save_settings"};
@@ -268,20 +277,15 @@ async function saveSection(){
    sort_order:0
   };
 
-  if(!section.section_key){
-   throw new Error("Section Key is required");
-  }
+  if(!section.section_key) throw new Error("Section Key is required");
 
-  await apiCall({
-   action:"save_sections",
-   sections:[section]
-  });
+  await apiCall({action:"save_sections",sections:[section]});
 
   status("✅ Section saved successfully!");
-  document.getElementById("section_key").value="";
-  document.getElementById("section_title").value="";
-  document.getElementById("section_subtitle").value="";
-  document.getElementById("section_body").value="";
+  ["section_key","section_title","section_subtitle","section_body"]
+   .forEach(id=>document.getElementById(id).value="");
+
+  loadSections();
 
  }catch(error){
   status("❌ "+error.message);
@@ -309,13 +313,10 @@ async function loadUsers(){
 
   const result=await response.json();
 
-  if(!response.ok){
-   throw new Error(result.error || "Could not load users");
-  }
+  if(!response.ok) throw new Error(result.error || "Could not load users");
 
   allUsers=result.users || [];
-  document.getElementById("total").textContent=
-   result.total ?? allUsers.length;
+  document.getElementById("total").textContent=result.total ?? allUsers.length;
 
   showUsers(allUsers);
   status("✅ Admin access verified");
@@ -338,17 +339,12 @@ function showUsers(list){
  list.forEach(user=>{
   const tr=document.createElement("tr");
 
-  [
-   user.full_name,
-   user.username,
-   user.email,
-   user.phone,
-   user.role
-  ].forEach(value=>{
-   const td=document.createElement("td");
-   td.textContent=value || "—";
-   tr.appendChild(td);
-  });
+  [user.full_name,user.username,user.email,user.phone,user.role]
+   .forEach(value=>{
+    const td=document.createElement("td");
+    td.textContent=value || "—";
+    tr.appendChild(td);
+   });
 
   tbody.appendChild(tr);
  });
@@ -358,19 +354,134 @@ document.getElementById("search").addEventListener("input",function(){
  const q=this.value.toLowerCase();
 
  showUsers(allUsers.filter(user=>
-  [
-   user.full_name,
-   user.username,
-   user.email,
-   user.phone,
-   user.role
-  ].some(value=>(value || "").toLowerCase().includes(q))
+  [user.full_name,user.username,user.email,user.phone,user.role]
+   .some(value=>(value || "").toLowerCase().includes(q))
  ));
 });
+
+async function loadSections(){
+ const box=document.getElementById("sectionList");
+ box.textContent="Loading...";
+
+ try{
+  const result=await apiCall({action:"get_sections"});
+  box.innerHTML="";
+
+  (result.sections||[]).forEach(section=>{
+   const row=document.createElement("div");
+   row.style.cssText="padding:12px;border-bottom:1px solid #49345f";
+
+   const label=document.createElement("label");
+   label.textContent=section.title||section.section_key;
+
+   const check=document.createElement("input");
+   check.type="checkbox";
+   check.checked=section.enabled;
+   check.style.width="auto";
+
+   const save=document.createElement("button");
+   save.textContent="Save";
+
+   save.onclick=async()=>{
+    try{
+     await apiCall({
+      action:"save_sections",
+      sections:[{
+       section_key:section.section_key,
+       title:section.title,
+       subtitle:section.subtitle,
+       body:section.body,
+       enabled:check.checked,
+       sort_order:section.sort_order
+      }]
+     });
+     status("Section updated successfully");
+    }catch(error){
+     status("Error: "+error.message);
+    }
+   };
+
+   row.append(label,check,save);
+   box.appendChild(row);
+  });
+
+  if(!result.sections?.length) box.textContent="No sections found";
+
+ }catch(error){
+  box.textContent=error.message;
+ }
+}
+
+async function loadWalletRequests(){
+ const box=document.getElementById("walletRequests");
+ box.textContent="Loading...";
+
+ try{
+  const {data,error}=await client.functions.invoke("wallet-admin",{
+   body:{action:"list"}
+  });
+
+  if(error) throw error;
+  if(!data?.requests) throw new Error(data?.error||"Unable to load");
+
+  box.innerHTML="";
+
+  data.requests.forEach(item=>{
+   const row=document.createElement("div");
+   row.style.cssText="padding:14px;border-bottom:1px solid #49345f";
+
+   const details=document.createElement("p");
+   details.textContent=
+    "Amount: ₹"+(item.amount_paise/100).toFixed(2)+
+    " | UTR: "+item.payment_reference+
+    " | Status: "+item.status;
+
+   row.append(details);
+
+   if(item.status==="pending"){
+    ["Approve","Reject"].forEach(action=>{
+     const btn=document.createElement("button");
+     btn.textContent=action;
+     btn.onclick=()=>reviewWallet(item.id,action==="Approve");
+     row.append(btn);
+    });
+   }
+
+   box.append(row);
+  });
+
+  if(!data.requests.length) box.textContent="No deposit requests";
+
+ }catch(error){
+  box.textContent="Error: "+error.message;
+ }
+}
+
+async function reviewWallet(id,approve){
+ if(approve && !confirm("Bank record se payment verify kiya hai?")) return;
+ if(!approve && !confirm("Reject this request?")) return;
+
+ try{
+  const {data,error}=await client.functions.invoke("wallet-admin",{
+   body:{action:"review",transaction_id:id,approve:approve}
+  });
+
+  if(error) throw error;
+  if(!data?.success) throw new Error(data?.error||"Review failed");
+
+  alert(approve?"Deposit approved":"Deposit rejected");
+  loadWalletRequests();
+
+ }catch(error){
+  alert("Error: "+error.message);
+ }
+}
 
 document.getElementById("saveSettings").addEventListener("click",saveSettings);
 document.getElementById("saveSection").addEventListener("click",saveSection);
 document.getElementById("refresh").addEventListener("click",loadUsers);
+document.getElementById("loadSections").addEventListener("click",loadSections);
+document.getElementById("walletRefresh").addEventListener("click",loadWalletRequests);
 
 document.getElementById("logout").addEventListener("click",async()=>{
  await client.auth.signOut();
@@ -383,161 +494,14 @@ async function start(){
 
  await Promise.all([
   loadSettings(),
-  loadUsers()
+  loadUsers(),
+  loadSections(),
+  loadWalletRequests()
  ]);
 }
 
 start();
 </script>
- <div class="card">
-  <h2>🧩 Website Sections Manager</h2>
-  <div id="sectionList">Loading sections...</div>
-  <button id="loadSections">Refresh Sections</button>
-</div>
 
-<script>
-async function loadSections(){
-  const box=document.getElementById("sectionList");
-  box.textContent="Loading...";
-
-  try{
-    const result=await apiCall({action:"get_sections"});
-    box.innerHTML="";
-
-    (result.sections||[]).forEach(section=>{
-      const row=document.createElement("div");
-      row.style.cssText="padding:12px;border-bottom:1px solid #49345f";
-
-      const label=document.createElement("label");
-      label.textContent=section.title||section.section_key;
-
-      const check=document.createElement("input");
-      check.type="checkbox";
-      check.checked=section.enabled;
-      check.style.width="auto";
-
-      const save=document.createElement("button");
-      save.textContent="Save";
-
-      save.onclick=async()=>{
-        try{
-          await apiCall({
-            action:"save_sections",
-            sections:[{
-              section_key:section.section_key,
-              title:section.title,
-              subtitle:section.subtitle,
-              body:section.body,
-              enabled:check.checked,
-              sort_order:section.sort_order
-            }]
-          });
-          status("Section updated successfully");
-        }catch(error){
-          status("Error: "+error.message);
-        }
-      };
-
-      row.append(label,check,save);
-      box.appendChild(row);
-    });
-
-    if(!result.sections?.length){
-      box.textContent="No sections found";
-    }
-  }catch(error){
-    box.textContent=error.message;
-  }
-}
-
-document.getElementById("loadSections")
-.addEventListener("click",loadSections);
-</script>
- 
-<div class="card">
-  <h2>💰 Wallet Deposit Requests</h2>
-  <button id="walletRefresh">Refresh Requests</button>
-  <div id="walletRequests">Loading...</div>
-</div>
-
-<script>
-async function loadWalletRequests(){
-  const box=document.getElementById("walletRequests");
-  box.textContent="Loading...";
-
-  try{
-    const {data:{session}}=await client.auth.getSession();
-
-    if(!session) throw new Error("Please login first");
-
-    const {data,error}=await client.functions.invoke("wallet-admin",{
-      body:{action:"list"}
-    });
-
-    if(error) throw error;
-    if(!data?.requests) throw new Error(data?.error||"Unable to load");
-
-    box.innerHTML="";
-
-    data.requests.forEach(item=>{
-      const row=document.createElement("div");
-      row.style.cssText="padding:14px;border-bottom:1px solid #49345f";
-
-      const details=document.createElement("p");
-      details.textContent=
-        "Amount: ₹"+(item.amount_paise/100).toFixed(2)+
-        " | UTR: "+item.payment_reference+
-        " | Status: "+item.status;
-
-      row.append(details);
-
-      if(item.status==="pending"){
-        ["Approve","Reject"].forEach(action=>{
-          const btn=document.createElement("button");
-          btn.textContent=action;
-          btn.style.margin="5px";
-          btn.onclick=()=>reviewWallet(item.id,action==="Approve");
-          row.append(btn);
-        });
-      }
-
-      box.append(row);
-    });
-
-    if(!data.requests.length) box.textContent="No deposit requests";
-  }catch(error){
-    box.textContent="Error: "+error.message;
-  }
-}
-
-async function reviewWallet(id,approve){
-  if(approve && !confirm("Bank record se payment verify kiya hai?")) return;
-  if(!approve && !confirm("Reject this request?")) return;
-
-  try{
-    const {data,error}=await client.functions.invoke("wallet-admin",{
-      body:{
-        action:"review",
-        transaction_id:id,
-        approve:approve
-      }
-    });
-
-    if(error) throw error;
-    if(!data?.success) throw new Error(data?.error||"Review failed");
-
-    alert(approve?"Deposit approved":"Deposit rejected");
-    loadWalletRequests();
-  }catch(error){
-    alert("Error: "+error.message);
-  }
-}
-
-document.getElementById("walletRefresh")
-.addEventListener("click",loadWalletRequests);
-
-loadWalletRequests();
-</script>
- 
 </body>
 </html>
