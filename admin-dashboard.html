@@ -1,69 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VIHUHUHU | Admin Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VIHUHUHU | Study Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b18;color:#f5f5ff;font-family:Arial,sans-serif}
-header{padding:20px;background:#11152a;border-bottom:1px solid #292e49}
-header h2{margin:0;color:#a78bfa}
-header p{color:#aaa;font-size:13px}
-.container{padding:18px;max-width:1000px;margin:auto}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.card{background:#141a30;border:1px solid #292f4c;padding:17px;border-radius:14px}
-.card small{color:#aaa}
-.card h2{margin:10px 0 0;color:#55e6df}
-h3{margin-top:25px;color:#a78bfa}
-input,select,textarea{
-width:100%;padding:13px;margin:7px 0 12px;
-background:#0c1124;border:1px solid #343b5d;
-border-radius:9px;color:white;font-size:14px
-}
-textarea{min-height:85px}
-button{
-border:0;padding:12px 16px;border-radius:9px;
-background:#8b5cf6;color:white;font-weight:bold;
-cursor:pointer;margin:4px
-}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.menu button{background:#202744}
-.item{background:#141a30;border:1px solid #303653;padding:14px;border-radius:12px;margin:10px 0}
-.item p{color:#aaa;font-size:13px;overflow-wrap:anywhere}
+body{margin:0;background:#080b18;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;background:#141a30;border-bottom:1px solid #303653}
+header h2{color:#a78bfa;margin:0}
+main{max-width:850px;margin:auto;padding:18px}
+.card,.item{background:#141a30;border:1px solid #303653;padding:16px;border-radius:13px;margin:12px 0}
+input,select,textarea{width:100%;padding:13px;margin:7px 0 13px;background:#090e20;border:1px solid #343b5d;border-radius:9px;color:white}
+textarea{min-height:80px}
+button{padding:12px 16px;border:0;border-radius:8px;background:#8b5cf6;color:white;font-weight:bold;margin:4px;cursor:pointer}
 .delete{background:#dc3545}
-#status{color:#55e6df;font-size:13px}
+.edit{background:#087e8b}
+small,p{color:#bbb}
+#status{color:#55e6df}
 </style>
 </head>
 <body>
-
 <header>
 <h2>VIHUHUHU ADMIN</h2>
-<p>Study Zone Management Panel</p>
+<p>Study Zone Management</p>
 </header>
 
-<div class="container">
-
-<div class="stats">
-<div class="card"><small>Total Content</small><h2 id="total">0</h2></div>
-<div class="card"><small>Study Sections</small><h2>8</h2></div>
+<main>
+<div class="card">
+<h3>Admin Dashboard</h3>
+<p id="adminEmail">Checking login...</p>
+<button onclick="logout()">Logout</button>
 </div>
 
-<h3>Manage Study Zone</h3>
-<div class="menu">
-<button onclick="setType('Classes')">Classes</button>
-<button onclick="setType('Subjects')">Subjects</button>
-<button onclick="setType('Notes & PDF')">Notes & PDF</button>
-<button onclick="setType('Quiz')">Quiz</button>
-<button onclick="setType('Test Series')">Test Series</button>
-<button onclick="setType('YouTube Classes')">YouTube Classes</button>
-<button onclick="setType('Courses')">Courses</button>
-<button onclick="setType('Current Affairs')">Current Affairs</button>
-</div>
-
-<h3>Add New Content</h3>
-
+<div class="card">
+<h3 id="formHeading">Add Study Content</h3>
 <form id="contentForm">
 <label>Content Type</label>
 <select id="type">
@@ -78,90 +50,187 @@ cursor:pointer;margin:4px
 </select>
 
 <label>Title</label>
-<input id="title" placeholder="Content title" required>
+<input id="title" required placeholder="Enter title">
 
 <label>Description</label>
-<textarea id="description" placeholder="Description"></textarea>
+<textarea id="description" placeholder="Enter description"></textarea>
 
 <label>Class</label>
 <select id="className">
-<option value="">Select Class</option>
-<option>Class 6</option>
-<option>Class 7</option>
-<option>Class 8</option>
-<option>Class 9</option>
-<option>Class 10</option>
-<option>Class 11</option>
+<option value="">All Classes</option>
+<option>Class 6</option><option>Class 7</option>
+<option>Class 8</option><option>Class 9</option>
+<option>Class 10</option><option>Class 11</option>
 <option>Class 12</option>
 </select>
 
 <label>Subject</label>
-<input id="subject" placeholder="e.g. Mathematics">
+<input id="subject" placeholder="Mathematics, Science...">
 
 <label>PDF / Video / Content URL</label>
 <input id="url" type="url" placeholder="https://...">
 
-<button type="submit">Save Content</button>
+<button type="submit" id="saveBtn">Save Content</button>
+<button type="button" onclick="resetForm()">Cancel Edit</button>
 </form>
-
 <p id="status"></p>
-
-<h3>Saved Content</h3>
-<div id="contentList"></div>
-
 </div>
 
-<script>
-const KEY="vihuStudyAdmin";
-let content=JSON.parse(localStorage.getItem(KEY)||"[]");
+<div class="card">
+<h3>Saved Content: <span id="total">0</span></h3>
+<div id="contentList">Loading...</div>
+</div>
+</main>
 
-function render(){
-document.getElementById("total").textContent=content.length;
-document.getElementById("contentList").innerHTML=
-content.map((item,i)=>`
-<div class="item">
-<strong>${escapeHTML(item.title)}</strong>
-<p>${escapeHTML(item.type)} | ${escapeHTML(item.className||"All Classes")} | ${escapeHTML(item.subject||"No Subject")}</p>
-<p>${escapeHTML(item.description||"")}</p>
-${item.url?`<p>${escapeHTML(item.url)}</p>`:""}
-<button class="delete" onclick="removeItem(${i})">Delete</button>
-</div>`).join("")||"<p>No content added yet.</p>";
+<script>
+const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+const ADMIN_EMAIL="vishalyadav8423743184vp@gmail.com";
+
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let editingId=null;
+
+const $=id=>document.getElementById(id);
+
+function message(text){
+$("status").textContent=text;
 }
 
-function escapeHTML(value){
-return String(value).replace(/[&<>"']/g,c=>({
+async function start(){
+const {data:{user},error}=await db.auth.getUser();
+
+if(error || !user){
+location.href="login.html";
+return;
+}
+
+if((user.email||"").toLowerCase()!==ADMIN_EMAIL){
+document.querySelector("main").innerHTML="<h2>Access Denied</h2><p>Admin permission required.</p>";
+return;
+}
+
+$("adminEmail").textContent="Logged in: "+user.email;
+loadContent();
+}
+
+async function loadContent(){
+$("contentList").textContent="Loading...";
+
+const {data,error}=await db
+.from("study_content")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+$("contentList").textContent="Error: "+error.message;
+return;
+}
+
+$("total").textContent=data.length;
+
+if(!data.length){
+$("contentList").textContent="No content added yet.";
+return;
+}
+
+$("contentList").innerHTML=data.map(item=>`
+<div class="item">
+<strong>${safe(item.title)}</strong>
+<p>${safe(item.type)} | ${safe(item.class_name||"All Classes")} | ${safe(item.subject||"")}</p>
+<p>${safe(item.description||"")}</p>
+${item.url?`<p><a href="${safe(item.url)}" target="_blank" rel="noopener" style="color:#55e6df">Open Content</a></p>`:""}
+<button class="edit" onclick="editContent(${Number(item.id)})">Edit</button>
+<button class="delete" onclick="deleteContent(${Number(item.id)})">Delete</button>
+</div>`).join("");
+}
+
+function safe(value){
+return String(value??"").replace(/[&<>"']/g,c=>({
 "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
 }[c]));
 }
 
-function setType(value){
-document.getElementById("type").value=value;
-document.getElementById("title").focus();
-}
-
-document.getElementById("contentForm").addEventListener("submit",function(e){
+$("contentForm").addEventListener("submit",async e=>{
 e.preventDefault();
-content.push({
-type:document.getElementById("type").value,
-title:document.getElementById("title").value.trim(),
-description:document.getElementById("description").value.trim(),
-className:document.getElementById("className").value,
-subject:document.getElementById("subject").value.trim(),
-url:document.getElementById("url").value.trim()
-});
-localStorage.setItem(KEY,JSON.stringify(content));
-this.reset();
-document.getElementById("status").textContent="Content saved on this browser.";
-render();
+$("saveBtn").disabled=true;
+message("Saving...");
+
+const record={
+type:$("type").value,
+title:$("title").value.trim(),
+description:$("description").value.trim(),
+class_name:$("className").value,
+subject:$("subject").value.trim(),
+url:$("url").value.trim()
+};
+
+let result;
+
+if(editingId){
+result=await db.from("study_content").update(record).eq("id",editingId);
+}else{
+result=await db.from("study_content").insert(record);
+}
+
+$("saveBtn").disabled=false;
+
+if(result.error){
+message("Error: "+result.error.message);
+return;
+}
+
+message("Successfully saved!");
+resetForm();
+loadContent();
 });
 
-function removeItem(i){
-if(!confirm("Delete this content?"))return;
-content.splice(i,1);
-localStorage.setItem(KEY,JSON.stringify(content));
-render();
+async function editContent(id){
+const {data,error}=await db.from("study_content").select("*").eq("id",id).single();
+
+if(error){
+message(error.message);
+return;
 }
-render();
+
+editingId=id;
+$("type").value=data.type;
+$("title").value=data.title;
+$("description").value=data.description||"";
+$("className").value=data.class_name||"";
+$("subject").value=data.subject||"";
+$("url").value=data.url||"";
+$("formHeading").textContent="Edit Study Content";
+$("saveBtn").textContent="Update Content";
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteContent(id){
+if(!confirm("Delete this content?"))return;
+
+const {error}=await db.from("study_content").delete().eq("id",id);
+
+if(error){
+message("Delete error: "+error.message);
+return;
+}
+
+message("Content deleted.");
+loadContent();
+}
+
+function resetForm(){
+editingId=null;
+$("contentForm").reset();
+$("formHeading").textContent="Add Study Content";
+$("saveBtn").textContent="Save Content";
+}
+
+async function logout(){
+await db.auth.signOut();
+location.href="login.html";
+}
+
+start();
 </script>
 </body>
 </html>
