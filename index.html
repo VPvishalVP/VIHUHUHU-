@@ -492,5 +492,67 @@ renderTasks();
 })();
 </script>
 
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function(){
+
+const db = window.supabase.createClient(
+"https://piagvuicgazqgjkgrvjr.supabase.co",
+"sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+);
+
+const sections = document.querySelectorAll(
+"#study-zone, #studyZone, .study-zone"
+);
+
+if(!sections.length) return;
+
+const target = sections[0];
+
+const {data,error} = await db
+.from("study_content")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+console.error(error.message);
+return;
+}
+
+const wrapper = document.createElement("section");
+wrapper.innerHTML = `
+<h2 style="color:#a78bfa">Study Zone Content</h2>
+<div id="vihu-study-content"></div>
+`;
+
+target.appendChild(wrapper);
+
+const list = wrapper.querySelector("#vihu-study-content");
+
+if(!data.length){
+list.innerHTML="<p>अभी कोई Study Content उपलब्ध नहीं है।</p>";
+return;
+}
+
+list.innerHTML=data.map(item=>`
+<div style="background:#141a30;padding:16px;margin:12px 0;border-radius:12px;color:white">
+<h3>${escapeHTML(item.title)}</h3>
+<p>${escapeHTML(item.type)} | ${escapeHTML(item.class_name||"All Classes")}</p>
+<p>${escapeHTML(item.subject||"")}</p>
+<p>${escapeHTML(item.description||"")}</p>
+${item.url?`<a href="${escapeHTML(item.url)}" target="_blank" rel="noopener" style="color:#55e6df">Open Content</a>`:""}
+</div>
+`).join("");
+
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+}
+
+})();
+</script>
+  
 </body>
 </html>
