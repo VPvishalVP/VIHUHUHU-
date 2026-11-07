@@ -1,52 +1,90 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#100b20">
-<title>VIHUHUHU Wallet Admin</title>
+<title>VIHUHUHU | Wallet Control Center</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:18px;background:#100b20;color:white;
- font-family:Arial,sans-serif;
+ margin:0;padding:16px;
+ background:radial-gradient(circle at top,#251044,#100b20 55%);
+ color:#fff;font-family:Arial,sans-serif;
 }
-.wrap{max-width:900px;margin:auto}
-header{text-align:center;padding:20px}
+.wrap{max-width:950px;margin:auto}
+header{text-align:center;padding:25px 10px}
 .logo{
- width:60px;height:60px;margin:auto;
- display:grid;place-items:center;border-radius:18px;
+ width:68px;height:68px;margin:auto;
+ display:grid;place-items:center;border-radius:22px;
  background:linear-gradient(135deg,#9333ea,#06b6d4);
- font-size:32px;font-weight:bold
+ font-size:36px;font-weight:900;
+ box-shadow:0 0 30px #9333ea55;
 }
-h1{color:#d8b4fe}
+h1{color:#d8b4fe;margin:15px 0 5px}
+.subtitle{color:#aaa;font-size:13px}
 .card{
- background:#ffffff10;border:1px solid #ffffff20;
- border-radius:16px;padding:18px;margin:15px 0;
+ background:#ffffff0d;
+ border:1px solid #ffffff20;
+ border-radius:18px;padding:19px;
+ margin:16px 0;
+ box-shadow:0 10px 30px #0003;
 }
+h2,h3{margin-top:0}
 input{
- width:100%;padding:12px;margin:8px 0;
- border:1px solid #ffffff30;border-radius:9px;
- background:#080614;color:white;
+ width:100%;padding:14px;margin:8px 0;
+ border:1px solid #ffffff25;border-radius:10px;
+ background:#080614;color:white;font-size:15px;
 }
 button{
- border:0;padding:11px 15px;border-radius:8px;
- color:white;background:#7c3aed;font-weight:bold;
- margin:5px;cursor:pointer;
+ border:0;padding:12px 17px;border-radius:10px;
+ color:white;background:#7c3aed;
+ font-weight:bold;cursor:pointer;margin:5px 3px;
 }
-.reject{background:#dc2626}
+button:disabled{opacity:.5;cursor:not-allowed}
 .approve{background:#059669}
-.item{
- border-bottom:1px solid #ffffff25;
- padding:15px 0;overflow-wrap:anywhere;
+.reject{background:#dc2626}
+.refresh{background:#0891b2}
+.logout{background:#475569}
+.notice{
+ background:#f59e0b12;
+ border:1px solid #f59e0b66;
+ border-radius:12px;padding:14px;
+ color:#fcd34d;font-size:13px;line-height:1.7;
 }
-.small{color:#aaa;font-size:13px;line-height:1.7}
-.status{color:#67e8f9}
-#message{color:#67e8f9;margin:10px 0}
-a{color:#67e8f9}
+.info{
+ background:#06b6d410;
+ border:1px solid #06b6d455;
+ padding:13px;border-radius:12px;
+ color:#a5f3fc;font-size:13px;line-height:1.7;
+}
+.item{
+ background:#ffffff08;
+ border:1px solid #ffffff18;
+ border-radius:14px;
+ padding:16px;margin:13px 0;
+ overflow-wrap:anywhere;
+}
+.amount{
+ color:#86efac;font-size:25px;
+ font-weight:bold;margin:8px 0;
+}
+.small{color:#aaa;font-size:13px;line-height:1.8}
+.status{
+ display:inline-block;padding:5px 10px;
+ border-radius:20px;background:#ffffff15;
+ font-size:12px;margin:7px 0;
+}
+.pending{color:#fbbf24}
+.approved{color:#86efac}
+.rejected{color:#fca5a5}
+#message{margin-top:12px;color:#67e8f9;font-size:14px}
+a{color:#67e8f9;text-decoration:none}
+.empty{text-align:center;padding:25px;color:#aaa}
+.footer{text-align:center;color:#777;font-size:12px;padding:25px}
 </style>
 </head>
 
@@ -55,28 +93,48 @@ a{color:#67e8f9}
 
 <header>
  <div class="logo">V</div>
- <h1>VIHUHUHU WALLET ADMIN</h1>
- <p class="small">Deposit Request Management</p>
+ <h1>VIHUHUHU WALLET</h1>
+ <div class="subtitle">ADMIN CONTROL CENTER • DEPOSIT MANAGEMENT</div>
 </header>
 
 <div class="card">
- <h3>Admin Login</h3>
+ <h3>🔐 Admin Authentication</h3>
  <input id="email" type="email" placeholder="Admin Email">
  <input id="password" type="password" placeholder="Password">
- <button onclick="login()">Login</button>
- <button onclick="logout()">Logout</button>
- <div id="message"></div>
+ <button id="loginBtn" onclick="login()">Login</button>
+ <button class="logout" onclick="logout()">Logout</button>
+ <div id="message">Please login with your admin account.</div>
 </div>
 
 <div class="card">
- <h3>Wallet Requests</h3>
- <button onclick="loadRequests()">Refresh Requests</button>
+ <h3>⚠️ महत्वपूर्ण Payment Verification</h3>
+ <div class="notice">
+  किसी भी Deposit Request को Approve करने से पहले अपने बैंक/UPI खाते में भुगतान वास्तव में प्राप्त होने की पुष्टि करें।
+  <br><br>
+  केवल UTR नंबर या Screenshot देखकर पैसे Credit न करें।
+  भुगतान की पुष्टि न हो तो Request को Approve न करें।
+ </div>
+</div>
+
+<div class="card">
+ <h3>📊 Deposit Management</h3>
+ <div class="info">
+  यहाँ सभी Deposit Requests दिखाई देंगी। केवल Pending Request पर ही Approve या Reject किया जा सकता है।
+ </div>
+ <br>
+ <button class="refresh" onclick="loadRequests()">↻ Refresh Requests</button>
  <div id="requests" class="small">Please login first.</div>
 </div>
 
 <div class="card">
- <h3>Admin Dashboard</h3>
+ <h3>⚙️ Admin Navigation</h3>
  <p><a href="admin-dashboard.html">← Back to Admin Dashboard</a></p>
+ <p><a href="index.html">🏠 Visit Website</a></p>
+</div>
+
+<div class="footer">
+ VIHUHUHU • WALLET ADMIN PANEL<br>
+ Secure Deposit Request Management
 </div>
 
 </div>
@@ -85,24 +143,59 @@ a{color:#67e8f9}
 const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
 const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
 
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const sb=window.supabase.createClient(
+ SUPABASE_URL,SUPABASE_KEY
+);
+
 const ADMIN_EMAIL="vishalyadav8423743184vp@gmail.com";
 
-function msg(t){
- document.getElementById("message").textContent=t;
+const message=document.getElementById("message");
+const requests=document.getElementById("requests");
+
+function msg(text){
+ message.textContent=text;
+}
+
+function money(paise){
+ return "₹"+(Number(paise||0)/100).toLocaleString("en-IN",{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+ });
+}
+
+async function checkAdmin(){
+ const {data,error}=await sb.auth.getUser();
+
+ if(error || !data.user) return false;
+
+ return data.user.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();
 }
 
 async function login(){
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
 
- const {error}=await sb.auth.signInWithPassword({email,password});
+ if(!email || !password){
+  msg("Email और Password दोनों भरें।");
+  return;
+ }
 
- if(error){msg(error.message);return;}
+ const btn=document.getElementById("loginBtn");
+ btn.disabled=true;
+ msg("Logging in...");
 
- const {data}=await sb.auth.getUser();
+ const {error}=await sb.auth.signInWithPassword({
+  email,password
+ });
 
- if(data.user?.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+ btn.disabled=false;
+
+ if(error){
+  msg("Login Error: "+error.message);
+  return;
+ }
+
+ if(!(await checkAdmin())){
   await sb.auth.signOut();
   msg("Admin access denied.");
   return;
@@ -114,105 +207,141 @@ async function login(){
 
 async function logout(){
  await sb.auth.signOut();
- document.getElementById("requests").textContent="Logged out.";
- msg("Logged out.");
-}
-
-async function checkAdmin(){
- const {data}=await sb.auth.getUser();
- if(data.user?.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
-  return false;
- }
- return true;
+ requests.textContent="Please login first.";
+ msg("Successfully logged out.");
 }
 
 async function loadRequests(){
- const allowed=await checkAdmin();
-
- if(!allowed){
-  msg("Please login with admin account.");
+ if(!(await checkAdmin())){
+  requests.textContent="Please login with admin account.";
+  msg("Admin login required.");
   return;
  }
 
- const box=document.getElementById("requests");
- box.textContent="Loading...";
+ requests.textContent="Loading requests...";
 
  const {data,error}=await sb
   .from("wallet_deposit_requests")
-  .select("*")
+  .select("id,user_id,amount_paise,utr,status,created_at")
   .order("created_at",{ascending:false});
 
  if(error){
-  box.textContent="Error: "+error.message+
-   " | Check table name and RLS policies.";
+  requests.textContent="Error: "+error.message;
   return;
  }
 
  if(!data || data.length===0){
-  box.textContent="No deposit requests found.";
+  requests.innerHTML='<div class="empty">📭 अभी कोई Deposit Request नहीं है।</div>';
   return;
  }
 
- box.innerHTML="";
+ requests.innerHTML="";
 
  data.forEach(row=>{
   const div=document.createElement("div");
   div.className="item";
 
-  const title=document.createElement("h3");
-  title.textContent="₹"+(row.amount || 0);
+  const heading=document.createElement("h3");
+  heading.textContent="💰 Deposit Request";
+
+  const amount=document.createElement("div");
+  amount.className="amount";
+  amount.textContent=money(row.amount_paise);
+
+  const status=document.createElement("div");
+  const currentStatus=(row.status||"pending").toLowerCase();
+
+  status.className="status "+currentStatus;
+  status.textContent="STATUS: "+currentStatus.toUpperCase();
 
   const details=document.createElement("p");
   details.className="small";
   details.textContent=
-   "UTR: "+(row.utr || "Not available")+
-   "\nStatus: "+(row.status || "pending")+
-   "\nUser ID: "+(row.user_id || "Not available")+
-   "\nDate: "+(row.created_at || "");
+   "Request ID: "+row.id+
+   "\nUTR: "+(row.utr||"Not available")+
+   "\nUser ID: "+(row.user_id||"Not available")+
+   "\nDate: "+(row.created_at?new Date(row.created_at).toLocaleString("en-IN"):"Not available");
 
-  div.append(title,details);
+  div.append(heading,amount,status,details);
 
-  if((row.status || "pending")==="pending"){
+  if(currentStatus==="pending"){
    const approve=document.createElement("button");
    approve.className="approve";
-   approve.textContent="Approve";
-
-   approve.onclick=()=>updateRequest(row.id,"approve");
+   approve.textContent="✓ Approve";
 
    const reject=document.createElement("button");
    reject.className="reject";
-   reject.textContent="Reject";
+   reject.textContent="✕ Reject";
 
-   reject.onclick=()=>updateRequest(row.id,"reject");
+   approve.onclick=()=>updateRequest(row.id,"approve",approve,reject);
+   reject.onclick=()=>updateRequest(row.id,"reject",approve,reject);
 
    div.append(approve,reject);
   }
 
-  box.append(div);
+  requests.append(div);
  });
-
 }
 
-async function updateRequest(id,action){
- const allowed=await checkAdmin();
-
- if(!allowed){
+async function updateRequest(id,action,approveBtn,rejectBtn){
+ if(!(await checkAdmin())){
   msg("Admin access denied.");
   return;
  }
 
- msg("Request sent to server. This panel does not credit balances directly.");
+ const confirmation=action==="approve"
+  ? "क्या आपने बैंक/UPI खाते में यह भुगतान वास्तव में प्राप्त होने की पुष्टि कर ली है? पुष्टि के बाद ही Approve करें।"
+  : "क्या आप इस Deposit Request को Reject करना चाहते हैं?";
 
- // Secure server-side verification and balance crediting
- // must be implemented in an authenticated Edge Function.
- msg("Approve/Reject Edge Function अभी configure नहीं है।");
+ if(!confirm(confirmation)) return;
+
+ approveBtn.disabled=true;
+ rejectBtn.disabled=true;
+ msg("Processing request...");
+
+ const {data,error}=await sb.rpc(
+  "admin_review_wallet_deposit",
+  {
+   p_request_id:id,
+   p_action:action
+  }
+ );
+
+ if(error){
+  msg("Request failed: "+error.message);
+  approveBtn.disabled=false;
+  rejectBtn.disabled=false;
+  return;
+ }
+
+ msg(
+  action==="approve"
+   ? "Deposit approved successfully."
+   : "Deposit request rejected successfully."
+ );
+
+ await loadRequests();
 }
 
 sb.auth.onAuthStateChange((_event,session)=>{
  if(!session){
-  document.getElementById("requests").textContent="Please login first.";
+  requests.textContent="Please login first.";
  }
 });
+
+(async function(){
+ const {data}=await sb.auth.getSession();
+
+ if(data.session){
+  if(await checkAdmin()){
+   msg("Admin session restored.");
+   await loadRequests();
+  }else{
+   await sb.auth.signOut();
+   msg("Admin access denied.");
+  }
+ }
+})();
 </script>
 </body>
 </html>
