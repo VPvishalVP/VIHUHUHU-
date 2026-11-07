@@ -23,13 +23,15 @@ body {
     linear-gradient(135deg, #080b19, #17102c 55%, #080d20);
 }
 
-.container { max-width: 500px; margin: 35px auto; }
+.container {
+  max-width: 500px;
+  margin: 35px auto;
+}
 
 h1 {
   text-align: center;
   font-size: 29px;
   letter-spacing: 2px;
-  font-weight: 800;
   overflow-wrap: anywhere;
 }
 
@@ -37,8 +39,7 @@ h1 {
   text-align: center;
   color: #b9b3d0;
   font-size: 13px;
-  margin-top: -12px;
-  margin-bottom: 25px;
+  margin: -12px 0 25px;
 }
 
 .card {
@@ -60,7 +61,6 @@ h1 {
   font-size: 38px;
   background: linear-gradient(135deg,#a855f7,#4f46e5);
   border: 3px solid #ffffff70;
-  box-shadow: 0 0 28px #914cff70;
 }
 
 .name {
@@ -84,12 +84,14 @@ h1 {
   border-radius: 12px;
   background: rgba(255,255,255,.06);
   border: 1px solid #ffffff15;
-  color: #e8e5f5;
   font-size: 14px;
   overflow-wrap: anywhere;
 }
 
-h3 { margin-top: 28px; font-size: 19px; }
+h3 {
+  margin-top: 28px;
+  font-size: 19px;
+}
 
 label {
   display: block;
@@ -124,12 +126,14 @@ button {
   color: white;
   font-weight: 700;
   font-size: 14px;
-  letter-spacing: 1px;
   background: linear-gradient(100deg,#9333ea,#4f46e5);
   cursor: pointer;
 }
 
-button:disabled { opacity: .6; }
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
 
 .logout {
   background: #29243b;
@@ -150,12 +154,12 @@ button:disabled { opacity: .6; }
   color: #c4b5fd;
   text-decoration: none;
   margin-top: 20px;
-  font-size: 14px;
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
   <h1 id="topUserName">Loading...</h1>
@@ -174,19 +178,25 @@ button:disabled { opacity: .6; }
     <h3>✦ Edit Profile</h3>
 
     <label>Full Name</label>
-    <input type="text" id="fullName" placeholder="Enter your full name">
+    <input type="text" id="fullName" maxlength="80"
+      placeholder="Enter your full name">
 
     <label>Username</label>
-    <input type="text" id="username" placeholder="Enter username">
+    <input type="text" id="username" maxlength="30"
+      placeholder="Enter username">
 
     <label>Phone Number</label>
     <input type="tel" id="phone" maxlength="10"
       inputmode="numeric" placeholder="10 digit mobile number">
 
-    <button id="saveButton" onclick="saveProfile()">SAVE PROFILE</button>
+    <button id="saveButton" onclick="saveProfile()">
+      SAVE PROFILE
+    </button>
+
     <button class="logout" onclick="logout()">LOGOUT</button>
 
     <div id="message"></div>
+
   </div>
 
   <a class="back" href="index.html">← Back to Home</a>
@@ -200,6 +210,17 @@ const client = supabase.createClient(
 );
 
 let currentUser = null;
+
+function showMessage(message, success = false) {
+  const el = document.getElementById("message");
+  el.textContent = message;
+  el.style.color = success ? "#a7f3d0" : "#fca5a5";
+}
+
+function showName(name) {
+  document.getElementById("topUserName").textContent = name;
+  document.getElementById("displayName").textContent = name;
+}
 
 async function loadProfile() {
   const { data: authData, error: authError } =
@@ -218,14 +239,21 @@ async function loadProfile() {
   document.getElementById("userId").textContent =
     "User ID: " + currentUser.id;
 
-  const joinedDate = new Date(currentUser.created_at);
-
   document.getElementById("joined").textContent =
-    "Joined: " + joinedDate.toLocaleDateString("en-IN");
+    "Joined: " +
+    new Date(currentUser.created_at).toLocaleDateString("en-IN");
+
+  const fallbackName =
+    currentUser.user_metadata?.full_name ||
+    currentUser.user_metadata?.name ||
+    currentUser.email?.split("@")[0] ||
+    "User";
+
+  showName(fallbackName);
 
   const { data, error } = await client
     .from("profiles")
-    .select("username, full_name, phone, created_at")
+    .select("username, full_name, phone")
     .eq("id", currentUser.id)
     .maybeSingle();
 
@@ -233,20 +261,6 @@ async function loadProfile() {
     showMessage("Profile load error: " + error.message);
     return;
   }
-
-  const profileName =
-    data?.full_name ||
-    currentUser.user_metadata?.full_name ||
-    currentUser.user_metadata?.name ||
-    data?.username ||
-    currentUser.email?.split("@")[0] ||
-    "User";
-
-  document.getElementById("topUserName").textContent =
-    profileName;
-
-  document.getElementById("displayName").textContent =
-    profileName;
 
   if (data) {
     document.getElementById("fullName").value =
@@ -257,11 +271,16 @@ async function loadProfile() {
 
     document.getElementById("phone").value =
       data.phone || "";
+
+    showName(data.full_name || data.username || fallbackName);
   }
 }
 
 async function saveProfile() {
-  if (!currentUser) return;
+  if (!currentUser) {
+    showMessage("Please login first.");
+    return;
+  }
 
   const fullName =
     document.getElementById("fullName").value.trim();
@@ -273,7 +292,7 @@ async function saveProfile() {
     document.getElementById("phone").value.trim();
 
   if (!fullName || !username) {
-    showMessage("Please enter name and username.");
+    showMessage("Name and username are required.");
     return;
   }
 
@@ -288,43 +307,32 @@ async function saveProfile() {
 
   const { data, error } = await client
     .from("profiles")
-    .update({
+    .upsert({
+      id: currentUser.id,
       full_name: fullName,
       username: username,
       phone: phone || null
+    }, {
+      onConflict: "id"
     })
-    .eq("id", currentUser.id)
-    .select();
+    .select()
+    .single();
 
   button.disabled = false;
   button.textContent = "SAVE PROFILE";
 
   if (error) {
-    showMessage("Error: " + error.message);
+    showMessage("Save error: " + error.message);
     return;
   }
 
-  if (!data || data.length === 0) {
-    showMessage("Profile not found or update not allowed.");
-    return;
-  }
-
-  document.getElementById("topUserName").textContent =
-    fullName;
-
-  document.getElementById("displayName").textContent =
-    fullName;
-
-  showMessage("Profile updated successfully!");
+  showName(data.full_name || data.username || fullName);
+  showMessage("Profile saved successfully!", true);
 }
 
 async function logout() {
   await client.auth.signOut();
   window.location.href = "login.html";
-}
-
-function showMessage(message) {
-  document.getElementById("message").textContent = message;
 }
 
 loadProfile();
