@@ -1,85 +1,147 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VIHUHUHU | Study Admin</title>
+<meta name="theme-color" content="#080b18">
+<title>VIHUHUHU | Admin Dashboard</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b18;color:#fff;font-family:Arial,sans-serif}
-header{padding:20px;background:#141a30;border-bottom:1px solid #303653}
+body{
+ margin:0;background:#080b18;color:#fff;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:22px 18px;
+ background:linear-gradient(120deg,#17132e,#102536);
+ border-bottom:1px solid #303653;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+ width:48px;height:48px;display:grid;place-items:center;
+ border-radius:15px;
+ background:linear-gradient(135deg,#a78bfa,#55e6df);
+ color:#080b18;font-size:26px;font-weight:bold;
+}
 header h2{color:#a78bfa;margin:0}
-main{max-width:850px;margin:auto;padding:18px}
-.card,.item{background:#141a30;border:1px solid #303653;padding:16px;border-radius:13px;margin:12px 0}
-input,select,textarea{width:100%;padding:13px;margin:7px 0 13px;background:#090e20;border:1px solid #343b5d;border-radius:9px;color:white}
+header p{color:#aaa;margin:5px 0 0}
+main{max-width:900px;margin:auto;padding:18px}
+.card,.item{
+ background:#141a30;border:1px solid #303653;
+ padding:17px;border-radius:14px;margin:13px 0;
+}
+h3{color:#c4b5fd;margin-top:0}
+input,select,textarea{
+ width:100%;padding:13px;margin:7px 0 13px;
+ background:#090e20;border:1px solid #343b5d;
+ border-radius:9px;color:white;
+}
 textarea{min-height:80px}
-button{padding:12px 16px;border:0;border-radius:8px;background:#8b5cf6;color:white;font-weight:bold;margin:4px;cursor:pointer}
+button,.menu-link{
+ display:inline-block;padding:12px 16px;
+ border:0;border-radius:9px;
+ background:linear-gradient(90deg,#8b5cf6,#0891b2);
+ color:white;font-weight:bold;text-decoration:none;
+ margin:4px;cursor:pointer;
+}
+.menu-link{margin:5px 5px 5px 0}
 .delete{background:#dc3545}
 .edit{background:#087e8b}
 small,p{color:#bbb}
 #status{color:#55e6df}
+.item p{line-height:1.5}
+.menu{display:flex;flex-wrap:wrap;gap:7px}
 </style>
 </head>
+
 <body>
+
 <header>
-<h2>VIHUHUHU ADMIN</h2>
-<p>Study Zone Management</p>
+ <div class="brand">
+  <div class="logo">V</div>
+  <div>
+   <h2>VIHUHUHU ADMIN</h2>
+   <p>Official Admin Dashboard</p>
+  </div>
+ </div>
 </header>
 
 <main>
+
 <div class="card">
-<h3>Admin Dashboard</h3>
-<p id="adminEmail">Checking login...</p>
-<button onclick="logout()">Logout</button>
+ <h3>👤 Admin Account</h3>
+ <p id="adminEmail">Checking login...</p>
+ <button onclick="logout()">Logout</button>
 </div>
 
 <div class="card">
-<h3 id="formHeading">Add Study Content</h3>
-<form id="contentForm">
-<label>Content Type</label>
-<select id="type">
-<option>Classes</option>
-<option>Subjects</option>
-<option>Notes & PDF</option>
-<option>Quiz</option>
-<option>Test Series</option>
-<option>YouTube Classes</option>
-<option>Courses</option>
-<option>Current Affairs</option>
-</select>
-
-<label>Title</label>
-<input id="title" required placeholder="Enter title">
-
-<label>Description</label>
-<textarea id="description" placeholder="Enter description"></textarea>
-
-<label>Class</label>
-<select id="className">
-<option value="">All Classes</option>
-<option>Class 6</option><option>Class 7</option>
-<option>Class 8</option><option>Class 9</option>
-<option>Class 10</option><option>Class 11</option>
-<option>Class 12</option>
-</select>
-
-<label>Subject</label>
-<input id="subject" placeholder="Mathematics, Science...">
-
-<label>PDF / Video / Content URL</label>
-<input id="url" type="url" placeholder="https://...">
-
-<button type="submit" id="saveBtn">Save Content</button>
-<button type="button" onclick="resetForm()">Cancel Edit</button>
-</form>
-<p id="status"></p>
+ <h3>⚡ Admin Management</h3>
+ <div class="menu">
+  <a class="menu-link" href="admin.html">⚙️ Main Admin</a>
+  <a class="menu-link" href="admin-wallet.html">💰 Wallet Management</a>
+  <a class="menu-link" href="admin-activity.html">📊 Activity</a>
+  <a class="menu-link" href="admin-notifications.html">🔔 Notifications</a>
+  <a class="menu-link" href="index.html">🏠 Visit Website</a>
+ </div>
 </div>
 
 <div class="card">
-<h3>Saved Content: <span id="total">0</span></h3>
-<div id="contentList">Loading...</div>
+ <h3 id="formHeading">📚 Add Study Content</h3>
+
+ <form id="contentForm">
+
+  <label>Content Type</label>
+  <select id="type">
+   <option>Classes</option>
+   <option>Subjects</option>
+   <option>Notes & PDF</option>
+   <option>Quiz</option>
+   <option>Test Series</option>
+   <option>YouTube Classes</option>
+   <option>Courses</option>
+   <option>Current Affairs</option>
+  </select>
+
+  <label>Title</label>
+  <input id="title" required placeholder="Enter title">
+
+  <label>Description</label>
+  <textarea id="description" placeholder="Enter description"></textarea>
+
+  <label>Class</label>
+  <select id="className">
+   <option value="">All Classes</option>
+   <option>Class 6</option>
+   <option>Class 7</option>
+   <option>Class 8</option>
+   <option>Class 9</option>
+   <option>Class 10</option>
+   <option>Class 11</option>
+   <option>Class 12</option>
+  </select>
+
+  <label>Subject</label>
+  <input id="subject" placeholder="Mathematics, Science...">
+
+  <label>PDF / Video / Content URL</label>
+  <input id="url" type="url" placeholder="https://...">
+
+  <button type="submit" id="saveBtn">Save Content</button>
+  <button type="button" onclick="resetForm()">Cancel Edit</button>
+ </form>
+
+ <p id="status"></p>
 </div>
+
+<div class="card">
+ <h3>📖 Saved Content: <span id="total">0</span></h3>
+ <div id="contentList">Loading...</div>
+</div>
+
 </main>
 
 <script>
@@ -87,150 +149,161 @@ const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
 const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
 const ADMIN_EMAIL="vishalyadav8423743184vp@gmail.com";
 
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let editingId=null;
+const db=window.supabase.createClient(
+ SUPABASE_URL,SUPABASE_KEY
+);
 
+let editingId=null;
 const $=id=>document.getElementById(id);
 
 function message(text){
-$("status").textContent=text;
+ $("status").textContent=text;
 }
 
 async function start(){
-const {data:{user},error}=await db.auth.getUser();
+ const {data:{user},error}=await db.auth.getUser();
 
-if(error || !user){
-location.href="login.html";
-return;
-}
+ if(error || !user){
+  location.href="login.html";
+  return;
+ }
 
-if((user.email||"").toLowerCase()!==ADMIN_EMAIL){
-document.querySelector("main").innerHTML="<h2>Access Denied</h2><p>Admin permission required.</p>";
-return;
-}
+ if((user.email||"").toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+  document.querySelector("main").innerHTML=
+   "<div class='card'><h2>Access Denied</h2><p>Admin permission required.</p></div>";
+  return;
+ }
 
-$("adminEmail").textContent="Logged in: "+user.email;
-loadContent();
+ $("adminEmail").textContent="Logged in: "+user.email;
+ loadContent();
 }
 
 async function loadContent(){
-$("contentList").textContent="Loading...";
+ $("contentList").textContent="Loading...";
 
-const {data,error}=await db
-.from("study_content")
-.select("*")
-.order("created_at",{ascending:false});
+ const {data,error}=await db
+  .from("study_content")
+  .select("*")
+  .order("created_at",{ascending:false});
 
-if(error){
-$("contentList").textContent="Error: "+error.message;
-return;
-}
+ if(error){
+  $("contentList").textContent="Error: "+error.message;
+  return;
+ }
 
-$("total").textContent=data.length;
+ $("total").textContent=data.length;
 
-if(!data.length){
-$("contentList").textContent="No content added yet.";
-return;
-}
+ if(!data.length){
+  $("contentList").textContent="No content added yet.";
+  return;
+ }
 
-$("contentList").innerHTML=data.map(item=>`
-<div class="item">
-<strong>${safe(item.title)}</strong>
-<p>${safe(item.type)} | ${safe(item.class_name||"All Classes")} | ${safe(item.subject||"")}</p>
-<p>${safe(item.description||"")}</p>
-${item.url?`<p><a href="${safe(item.url)}" target="_blank" rel="noopener" style="color:#55e6df">Open Content</a></p>`:""}
-<button class="edit" onclick="editContent(${Number(item.id)})">Edit</button>
-<button class="delete" onclick="deleteContent(${Number(item.id)})">Delete</button>
-</div>`).join("");
+ $("contentList").innerHTML=data.map(item=>`
+  <div class="item">
+   <strong>${safe(item.title)}</strong>
+   <p>${safe(item.type)} | ${safe(item.class_name||"All Classes")} | ${safe(item.subject||"")}</p>
+   <p>${safe(item.description||"")}</p>
+   ${item.url?`<p><a href="${safe(item.url)}" target="_blank" rel="noopener" style="color:#55e6df">Open Content</a></p>`:""}
+   <button class="edit" onclick="editContent(${Number(item.id)})">Edit</button>
+   <button class="delete" onclick="deleteContent(${Number(item.id)})">Delete</button>
+  </div>
+ `).join("");
 }
 
 function safe(value){
-return String(value??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
 }
 
 $("contentForm").addEventListener("submit",async e=>{
-e.preventDefault();
-$("saveBtn").disabled=true;
-message("Saving...");
+ e.preventDefault();
 
-const record={
-type:$("type").value,
-title:$("title").value.trim(),
-description:$("description").value.trim(),
-class_name:$("className").value,
-subject:$("subject").value.trim(),
-url:$("url").value.trim()
-};
+ $("saveBtn").disabled=true;
+ message("Saving...");
 
-let result;
+ const record={
+  type:$("type").value,
+  title:$("title").value.trim(),
+  description:$("description").value.trim(),
+  class_name:$("className").value,
+  subject:$("subject").value.trim(),
+  url:$("url").value.trim()
+ };
 
-if(editingId){
-result=await db.from("study_content").update(record).eq("id",editingId);
-}else{
-result=await db.from("study_content").insert(record);
-}
+ let result;
 
-$("saveBtn").disabled=false;
+ if(editingId){
+  result=await db.from("study_content")
+   .update(record).eq("id",editingId);
+ }else{
+  result=await db.from("study_content").insert(record);
+ }
 
-if(result.error){
-message("Error: "+result.error.message);
-return;
-}
+ $("saveBtn").disabled=false;
 
-message("Successfully saved!");
-resetForm();
-loadContent();
+ if(result.error){
+  message("Error: "+result.error.message);
+  return;
+ }
+
+ message("Successfully saved!");
+ resetForm();
+ loadContent();
 });
 
 async function editContent(id){
-const {data,error}=await db.from("study_content").select("*").eq("id",id).single();
+ const {data,error}=await db.from("study_content")
+  .select("*").eq("id",id).single();
 
-if(error){
-message(error.message);
-return;
-}
+ if(error){
+  message(error.message);
+  return;
+ }
 
-editingId=id;
-$("type").value=data.type;
-$("title").value=data.title;
-$("description").value=data.description||"";
-$("className").value=data.class_name||"";
-$("subject").value=data.subject||"";
-$("url").value=data.url||"";
-$("formHeading").textContent="Edit Study Content";
-$("saveBtn").textContent="Update Content";
-window.scrollTo({top:0,behavior:"smooth"});
+ editingId=id;
+ $("type").value=data.type;
+ $("title").value=data.title;
+ $("description").value=data.description||"";
+ $("className").value=data.class_name||"";
+ $("subject").value=data.subject||"";
+ $("url").value=data.url||"";
+
+ $("formHeading").textContent="Edit Study Content";
+ $("saveBtn").textContent="Update Content";
+
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 
 async function deleteContent(id){
-if(!confirm("Delete this content?"))return;
+ if(!confirm("Delete this content?"))return;
 
-const {error}=await db.from("study_content").delete().eq("id",id);
+ const {error}=await db.from("study_content")
+  .delete().eq("id",id);
 
-if(error){
-message("Delete error: "+error.message);
-return;
-}
+ if(error){
+  message("Delete error: "+error.message);
+  return;
+ }
 
-message("Content deleted.");
-loadContent();
+ message("Content deleted.");
+ loadContent();
 }
 
 function resetForm(){
-editingId=null;
-$("contentForm").reset();
-$("formHeading").textContent="Add Study Content";
-$("saveBtn").textContent="Save Content";
+ editingId=null;
+ $("contentForm").reset();
+ $("formHeading").textContent="📚 Add Study Content";
+ $("saveBtn").textContent="Save Content";
 }
 
 async function logout(){
-await db.auth.signOut();
-location.href="login.html";
+ await db.auth.signOut();
+ location.href="login.html";
 }
 
 start();
 </script>
+
 </body>
 </html>
