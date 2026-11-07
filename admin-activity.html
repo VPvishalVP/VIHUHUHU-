@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Activity | VIHUHUHU</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;padding:20px;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#080b18,#17113a,#071d2c);
+  color:white;min-height:100vh
+}
+.container{max-width:850px;margin:30px auto}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:25px}
+a,button{
+  background:linear-gradient(90deg,#7c3aed,#06b6d4);
+  color:white;padding:11px 15px;border:0;
+  border-radius:9px;text-decoration:none;cursor:pointer
+}
+.card{
+  background:#ffffff10;border:1px solid #ffffff25;
+  padding:17px;border-radius:13px;margin:14px 0;
+  overflow-wrap:anywhere
+}
+small{color:#a5b4fc}
+#status{margin:20px 0;color:#67e8f9}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>📊 User Activity</h1>
+    <a href="admin-dashboard.html">← Dashboard</a>
+  </div>
+
+  <button onclick="loadActivity()">↻ Refresh Activity</button>
+  <div id="status">Loading...</div>
+  <div id="activity"></div>
+</div>
+
+<script>
+const client = supabase.createClient(
+  "https://piagvuicgazqgjkgrvjr.supabase.co",
+  "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+);
+
+async function loadActivity(){
+  const status=document.getElementById("status");
+  const list=document.getElementById("activity");
+  list.replaceChildren();
+  status.textContent="Checking admin access...";
+
+  const {data:{user},error:authError}=await client.auth.getUser();
+
+  if(authError || !user){
+    location.href="admin.html";
+    return;
+  }
+
+  const {data:profile,error:profileError}=await client
+    .from("profiles")
+    .select("role")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if(profileError || profile?.role!=="admin"){
+    status.textContent="Access denied. Admin only.";
+    return;
+  }
+
+  status.textContent="Loading activities...";
+
+  const {data,error}=await client
+    .from("user_activity")
+    .select("id,user_id,activity_type,created_at")
+    .order("created_at",{ascending:false})
+    .limit(100);
+
+  if(error){
+    status.textContent="Error: "+error.message;
+    return;
+  }
+
+  if(!data || data.length===0){
+    status.textContent="No activity records found.";
+    return;
+  }
+
+  status.textContent=data.length+" activity records";
+
+  data.forEach(item=>{
+    const card=document.createElement("div");
+    card.className="card";
+
+    const heading=document.createElement("h3");
+    heading.textContent=
+      item.activity_type==="register" ? "🆕 New Registration" : "🔐 User Login";
+
+    const id=document.createElement("p");
+    id.textContent="User ID: "+item.user_id;
+
+    const date=document.createElement("small");
+    date.textContent=new Date(item.created_at).toLocaleString();
+
+    card.append(heading,id,date);
+    list.appendChild(card);
+  });
+}
+
+loadActivity();
+</script>
+</body>
+</html>
