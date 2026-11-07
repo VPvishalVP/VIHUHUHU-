@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIHUHUHU | User Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090b16;color:#f5f5ff;font-family:Arial,sans-serif}
+:root{--purple:#8b5cf6;--card:#131629;--muted:#9298b5}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#101326;border-right:1px solid #252943;padding:25px 16px;position:fixed;inset:0 auto 0 0}
+.brand{font-size:23px;font-weight:800;color:#b69aff;margin:8px 10px 35px}
+.nav{display:block;width:100%;padding:14px;margin:7px 0;border:0;border-radius:11px;background:transparent;color:#b8bdd3;text-align:left;font-size:14px;cursor:pointer}
+.nav:hover,.nav.active{background:#292044;color:white}
+.main{margin-left:245px;width:calc(100% - 245px);padding:28px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px}
+.top h2{margin:0;font-size:23px}
+.small{color:var(--muted);font-size:13px;margin-top:7px}
+.avatar{width:42px;height:42px;border-radius:50%;background:#7046c7;display:grid;place-items:center;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--card);border:1px solid #252943;border-radius:16px;padding:20px;margin-bottom:17px}
+.stat{font-size:27px;font-weight:bold;margin-top:13px}
+.muted{color:var(--muted);font-size:13px}
+.section{display:none}
+.section.show{display:block}
+h3{margin:0 0 18px;font-size:17px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-bottom:1px solid #272b43;font-size:14px}
+input,textarea{width:100%;padding:13px;margin:8px 0 15px;background:#0c1020;color:white;border:1px solid #303653;border-radius:9px}
+button.primary{background:linear-gradient(120deg,#7046d5,#a855f7);border:0;border-radius:9px;padding:12px 18px;color:white;font-weight:bold;cursor:pointer}
+button.logout{background:#39202b;color:#ff9bad;border:0;padding:11px 15px;border-radius:9px}
+.notice{padding:13px;background:#1d1932;border-radius:10px;margin:10px 0}
+.empty{color:var(--muted);font-size:13px;padding:12px 0}
+#message{font-size:13px;color:#b69aff;margin-top:10px}
+@media(max-width:750px){
+.sidebar{width:65px;padding:20px 7px}
+.brand{font-size:0;margin:5px 0 28px;text-align:center}
+.brand:first-letter{font-size:22px}
+.nav{font-size:0;text-align:center;padding:14px 4px}
+.nav span{font-size:19px}
+.main{margin-left:65px;width:calc(100% - 65px);padding:17px 12px}
+.grid{grid-template-columns:1fr}
+.top h2{font-size:19px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">VIHUHUHU</div>
+  <button class="nav active" onclick="showSection('home',this)"><span>⌂</span> &nbsp; Dashboard</button>
+  <button class="nav" onclick="showSection('profile',this)"><span>👤</span> &nbsp; My Profile</button>
+  <button class="nav" onclick="showSection('activity',this)"><span>📊</span> &nbsp; My Activity</button>
+  <button class="nav" onclick="showSection('notifications',this)"><span>🔔</span> &nbsp; Notifications</button>
+  <button class="nav" onclick="showSection('support',this)"><span>💬</span> &nbsp; Support</button>
+  <button class="nav" onclick="logout()"><span>↪</span> &nbsp; Logout</button>
+</aside>
+
+<main class="main">
+<header class="top">
+ <div><h2 id="heading">Dashboard</h2><div class="small">Your personal account overview</div></div>
+ <div class="avatar" id="avatar">U</div>
+</header>
+
+<section id="home" class="section show">
+ <div class="card">
+  <div class="muted">WELCOME BACK</div>
+  <h2 id="welcome">Hello, User 👋</h2>
+  <div class="small">Welcome to your VIHUHUHU account.</div>
+ </div>
+ <div class="grid">
+  <div class="card"><div class="muted">ACCOUNT STATUS</div><div class="stat" style="color:#54d6a1">Active</div></div>
+  <div class="card"><div class="muted">MY PROFILE</div><div class="stat">100%</div></div>
+  <div class="card"><div class="muted">NOTIFICATIONS</div><div class="stat" id="noticeCount">0</div></div>
+ </div>
+ <div class="card"><h3>Account Overview</h3>
+  <div class="row"><span>Full Name</span><b id="homeName">Loading...</b></div>
+  <div class="row"><span>Email</span><b id="homeEmail">Loading...</b></div>
+  <div class="row"><span>Username</span><b id="homeUsername">Loading...</b></div>
+ </div>
+</section>
+
+<section id="profile" class="section">
+ <div class="card"><h3>My Profile</h3>
+  <label class="muted">Full Name</label>
+  <input id="fullName" placeholder="Enter your full name">
+  <label class="muted">Username</label>
+  <input id="username" placeholder="Enter username">
+  <label class="muted">Mobile Number</label>
+  <input id="phone" placeholder="10 digit mobile number" maxlength="10">
+  <label class="muted">Email Address</label>
+  <input id="email" disabled>
+  <button class="primary" onclick="saveProfile()">Save Profile</button>
+  <div id="message"></div>
+ </div>
+</section>
+
+<section id="activity" class="section">
+ <div class="card"><h3>My Recent Activity</h3>
+  <div id="activityList" class="empty">Loading activity...</div>
+ </div>
+</section>
+
+<section id="notifications" class="section">
+ <div class="card"><h3>Notifications</h3>
+  <div id="notificationsList" class="empty">Loading notifications...</div>
+ </div>
+</section>
+
+<section id="support" class="section">
+ <div class="card"><h3>Help & Support</h3>
+  <p class="muted">For assistance, contact the website administrator.</p>
+  <label class="muted">Subject</label>
+  <input id="supportSubject" placeholder="Enter subject">
+  <label class="muted">Your Message</label>
+  <textarea id="supportMessage" rows="5" placeholder="Describe your issue"></textarea>
+  <button class="primary" onclick="sendSupport()">Prepare Support Message</button>
+  <div id="supportResult" class="small"></div>
+ </div>
+</section>
+</main>
+</div>
+
+<script>
+const client = supabase.createClient(
+ "https://piagvuicgazqgjkgrvjr.supabase.co",
+ "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+);
+
+let currentUser=null;
+
+function showSection(id,btn){
+ document.querySelectorAll('.section').forEach(x=>x.classList.remove('show'));
+ document.getElementById(id).classList.add('show');
+ document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ const titles={home:'Dashboard',profile:'My Profile',activity:'My Activity',notifications:'Notifications',support:'Help & Support'};
+ document.getElementById('heading').textContent=titles[id];
+}
+
+async function init(){
+ const {data,error}=await client.auth.getUser();
+ if(error||!data.user){
+  alert('Please login first.');
+  location.href='login.html';
+  return;
+ }
+ currentUser=data.user;
+ document.getElementById('email').value=currentUser.email||'';
+ document.getElementById('homeEmail').textContent=currentUser.email||'—';
+ await loadProfile();
+ await loadActivity();
+ await loadNotifications();
+}
+
+async function loadProfile(){
+ const {data,error}=await client.from('profiles')
+  .select('full_name,username,phone')
+  .eq('id',currentUser.id).maybeSingle();
+
+ if(error){console.error(error);return;}
+ if(data){
+  document.getElementById('fullName').value=data.full_name||'';
+  document.getElementById('username').value=data.username||'';
+  document.getElementById('phone').value=data.phone||'';
+ }
+ const name=data?.full_name||currentUser.email?.split('@')[0]||'User';
+ document.getElementById('welcome').textContent='Hello, '+name+' 👋';
+ document.getElementById('homeName').textContent=data?.full_name||'Not set';
+ document.getElementById('homeUsername').textContent=data?.username||'Not set';
+ document.getElementById('avatar').textContent=name.charAt(0).toUpperCase();
+}
+
+async function saveProfile(){
+ const full_name=document.getElementById('fullName').value.trim();
+ const username=document.getElementById('username').value.trim();
+ const phone=document.getElementById('phone').value.trim();
+ const msg=document.getElementById('message');
+ if(phone && !/^[0-9]{10}$/.test(phone)){
+  msg.textContent='Enter a valid 10 digit mobile number.';return;
+ }
+ msg.textContent='Saving...';
+ const {error}=await client.from('profiles').upsert({
+  id:currentUser.id,full_name,username,phone
+ },{onConflict:'id'});
+ if(error){msg.textContent='Error: '+error.message;return;}
+ msg.textContent='Profile updated successfully!';
+ await loadProfile();
+}
+
+async function loadActivity(){
+ const box=document.getElementById('activityList');
+ const {data,error}=await client.from('user_activity')
+  .select('activity_type,created_at')
+  .eq('user_id',currentUser.id)
+  .order('created_at',{ascending:false}).limit(20);
+ if(error){box.textContent='Activity could not be loaded.';return;}
+ if(!data.length){box.textContent='No activity found yet.';return;}
+ box.innerHTML=data.map(x=>`<div class="row"><span>${escapeHTML(x.activity_type)}</span><span>${new Date(x.created_at).toLocaleString()}</span></div>`).join('');
+}
+
+async function loadNotifications(){
+ const box=document.getElementById('notificationsList');
+ const {data,error}=await client.from('notifications')
+  .select('title,message,created_at')
+  .eq('is_active',true)
+  .order('created_at',{ascending:false}).limit(30);
+ if(error){box.textContent='Notifications could not be loaded.';return;}
+ document.getElementById('noticeCount').textContent=data.length;
+ if(!data.length){box.textContent='No new notifications.';return;}
+ box.innerHTML=data.map(x=>`<div class="notice"><b>${escapeHTML(x.title)}</b><p>${escapeHTML(x.message)}</p><small class="muted">${new Date(x.created_at).toLocaleString()}</small></div>`).join('');
+}
+
+function escapeHTML(value){
+ return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function sendSupport(){
+ const subject=document.getElementById('supportSubject').value.trim();
+ const message=document.getElementById('supportMessage').value.trim();
+ if(!subject||!message){
+  document.getElementById('supportResult').textContent='Please enter subject and message.';
+  return;
+ }
+ const body='Account: '+(currentUser.email||'')+'\n\n'+message;
+ const url='mailto:?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ document.getElementById('supportResult').innerHTML='Your email draft is ready. <a style="color:#b69aff" href="'+url+'">Open email</a>';
+}
+
+async function logout(){
+ await client.auth.signOut();
+ location.href='login.html';
+}
+init();
+</script>
+</body>
+  </html>
+  
