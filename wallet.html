@@ -1,30 +1,94 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b20">
 <title>VIHUHUHU Wallet</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#100b20;color:white;font-family:Arial;padding:18px}
+body{
+ margin:0;
+ background:#100b20;
+ color:white;
+ font-family:Arial,sans-serif;
+ padding:18px;
+ overflow-x:hidden;
+}
+body:before{
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-2;
+ background:
+ linear-gradient(#100b20bb,#100b20dd),
+ url("./anime-bg.png") center center/cover no-repeat;
+}
 .container{max-width:500px;margin:auto}
 h1{text-align:center;color:#d8a5ff}
-.card{background:#211535;border:1px solid #68418b;border-radius:18px;padding:20px;margin:18px 0}
-.balance{font-size:35px;color:#61f5d0;font-weight:bold}
-input{width:100%;padding:14px;margin:9px 0;border:0;border-radius:9px}
-button{width:100%;padding:14px;border:0;border-radius:10px;background:#a855f7;color:white;font-weight:bold}
-.qr{width:220px;max-width:100%;background:white;padding:10px;border-radius:12px}
+.card{
+ background:#211535dd;
+ border:1px solid #a855f777;
+ border-radius:18px;
+ padding:20px;
+ margin:18px 0;
+ backdrop-filter:blur(12px);
+}
+.balance{
+ font-size:35px;
+ color:#61f5d0;
+ font-weight:bold;
+}
+input{
+ width:100%;
+ padding:14px;
+ margin:9px 0;
+ border:1px solid #68418b;
+ border-radius:9px;
+ background:#100b20;
+ color:white;
+}
+button{
+ width:100%;
+ padding:14px;
+ border:0;
+ border-radius:10px;
+ background:linear-gradient(100deg,#a855f7,#22d3ee);
+ color:#100b20;
+ font-weight:bold;
+ cursor:pointer;
+ margin-top:8px;
+}
+.qr{
+ width:220px;
+ max-width:100%;
+ background:white;
+ padding:10px;
+ border-radius:12px;
+}
 .item{padding:12px 0;border-bottom:1px solid #49345f}
 small{color:#bbb}
 .pending{color:#ffd166}
 .approved{color:#61f5d0}
 .rejected{color:#ff7777}
+#message{line-height:1.6}
+.upi{
+ background:#100b20;
+ padding:13px;
+ border-radius:10px;
+ text-align:center;
+ color:#22d3ee;
+ overflow-wrap:anywhere;
+}
 </style>
 </head>
+
 <body>
 <div class="container">
+
 <h1>💜 VIHUHUHU WALLET</h1>
 
 <div class="card">
@@ -34,18 +98,40 @@ small{color:#bbb}
 
 <div class="card">
 <h3>📷 Scan & Pay</h3>
+
 <center>
-<img class="qr" src="YOUR_QR_IMAGE_URL" alt="UPI QR Code">
-<p>Scan QR and make payment</p>
+<img class="qr"
+ src="./upi-qr.png"
+ alt="UPI QR Code">
+
+<p>Scan QR Code to make payment</p>
 </center>
 
+<p><b>UPI ID</b></p>
+<div class="upi" id="upiId">YOUR_UPI_ID</div>
+
+<button onclick="copyUPI()">📋 Copy UPI ID</button>
+
+<p><small>Payment details अपने अभिभावक की अनुमति से इस्तेमाल करें।</small></p>
+</div>
+
+<div class="card">
+<h3>💰 Submit Deposit</h3>
+
 <label>Deposit Amount (₹)</label>
-<input id="amount" type="number" min="1" max="100000" placeholder="Enter amount">
+<input id="amount" type="number"
+ min="1" max="100000"
+ placeholder="Enter amount">
 
 <label>UTR / Transaction Reference</label>
-<input id="utr" type="text" maxlength="64" placeholder="Enter UTR number">
+<input id="utr" type="text"
+ maxlength="64"
+ placeholder="Enter UTR number">
 
-<button onclick="submitDeposit()">Submit Deposit Request</button>
+<button onclick="submitDeposit()">
+Submit Deposit Request
+</button>
+
 <p id="message"></p>
 </div>
 
@@ -53,22 +139,29 @@ small{color:#bbb}
 <h3>📜 Deposit History</h3>
 <div id="history">Loading...</div>
 </div>
+
 </div>
 
 <script>
 const client=window.supabase.createClient(
-"https://piagvuicgazqgjkgrvjr.supabase.co",
-"sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+ "https://piagvuicgazqgjkgrvjr.supabase.co",
+ "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
 );
 
 let currentUser=null;
 
 async function loadWallet(){
- const {data:{session}}=await client.auth.getSession();
- if(!session){
-  document.getElementById("history").textContent="Please login first.";
+ const history=document.getElementById("history");
+
+ const {data:{session},error:sessionError}=
+ await client.auth.getSession();
+
+ if(sessionError||!session){
+  currentUser=null;
+  history.textContent="Please login first.";
   return;
  }
+
  currentUser=session.user;
 
  const {data:wallet,error}=await client
@@ -78,7 +171,7 @@ async function loadWallet(){
  .maybeSingle();
 
  if(error){
-  document.getElementById("history").textContent=error.message;
+  history.textContent="Wallet load error: "+error.message;
   return;
  }
 
@@ -92,19 +185,20 @@ async function loadWallet(){
  .order("created_at",{ascending:false});
 
  if(txError){
-  document.getElementById("history").textContent=txError.message;
+  history.textContent=txError.message;
   return;
  }
 
- const box=document.getElementById("history");
- box.innerHTML="";
+ history.innerHTML="";
 
  (rows||[]).forEach(tx=>{
   const div=document.createElement("div");
   div.className="item";
 
   const title=document.createElement("b");
-  title.textContent=tx.transaction_type.toUpperCase()+" - ₹"+(tx.amount_paise/100).toFixed(2);
+  title.textContent=
+   tx.transaction_type.toUpperCase()+
+   " - ₹"+(tx.amount_paise/100).toFixed(2);
 
   const status=document.createElement("p");
   status.className=tx.status;
@@ -114,10 +208,28 @@ async function loadWallet(){
   ref.textContent="UTR: "+(tx.payment_reference||"Not provided");
 
   div.append(title,status,ref);
-  box.append(div);
+  history.append(div);
  });
 
- if(!rows?.length)box.textContent="No deposits yet.";
+ if(!rows?.length){
+  history.textContent="No deposits yet.";
+ }
+}
+
+async function copyUPI(){
+ const upi=document.getElementById("upiId").textContent.trim();
+
+ if(upi==="8115743185@fam"){
+  alert("पहले अपनी सही UPI ID सेट करें।");
+  return;
+ }
+
+ try{
+  await navigator.clipboard.writeText(upi);
+  alert("UPI ID copied!");
+ }catch(e){
+  alert("UPI ID: "+upi);
+ }
 }
 
 async function submitDeposit(){
@@ -144,11 +256,10 @@ async function submitDeposit(){
 
  message.textContent="Submitting...";
 
- const {data:{session}}=await client.auth.getSession();
-
- const {data,error}=await client.functions.invoke("wallet-deposit",{
-  body:{amount,utr}
- });
+ const {data,error}=await client.functions.invoke(
+  "wallet-deposit",
+  {body:{amount,utr}}
+ );
 
  if(error){
   message.textContent="Error: "+error.message;
@@ -156,36 +267,22 @@ async function submitDeposit(){
  }
 
  if(!data?.success){
-  message.textContent=data?.error||"Request failed";
+  message.textContent=data?.error||"Request failed.";
   return;
  }
 
- message.textContent="Deposit request submitted. Status: PENDING";
+ message.textContent=
+ "Deposit request submitted. Status: PENDING";
+
+ document.getElementById("amount").value="";
+ document.getElementById("utr").value="";
+
  await loadWallet();
 }
- const message=document.getElementById("message");
- const amount=Number(document.getElementById("amount").value);
- const utr=document.getElementById("utr").value.trim();
 
- message.textContent="";
-
- if(!currentUser){
-  message.textContent="Please login first.";
-  return;
- }
-
- if(!Number.isSafeInteger(amount)||amount<1||amount>100000){
-  message.textContent="Enter a valid amount.";
-  return;
- }
-
- if(!/^[A-Za-z0-9]{8,64}$/.test(utr)){
-  message.textContent="Enter a valid UTR reference.";
-  return;
- }
-
- message.textContent="This demo form is not connected to secure deposit verification. No money or wallet balance has been changed.";
-}
+client.auth.onAuthStateChange(()=>{
+ setTimeout(loadWallet,0);
+});
 
 loadWallet();
 </script>
