@@ -144,6 +144,23 @@ form.addEventListener('submit', async (e) => {
 
     if (error) throw error;
 
+    // Record login activity
+    const { data: userData, error: userError } =
+      await supabase.auth.getUser();
+
+    if (!userError && userData.user) {
+      const { error: activityError } = await supabase
+        .from('user_activity')
+        .insert({
+          user_id: userData.user.id,
+          activity_type: 'login'
+        });
+
+      if (activityError) {
+        console.warn('Activity recording failed:', activityError.message);
+      }
+    }
+
     message.textContent = 'Login successful!';
 
     window.location.href = 'index.html';
@@ -158,5 +175,3 @@ form.addEventListener('submit', async (e) => {
 
 </body>
 </html>
-
-
