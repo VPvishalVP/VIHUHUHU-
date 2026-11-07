@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -123,6 +124,21 @@ button:disabled{opacity:.5;cursor:not-allowed}
  border:1px solid #aaa;
 }
 
+.home-btn{
+ display:block;
+ width:100%;
+ padding:14px;
+ margin-bottom:18px;
+ border:1px solid #ddd;
+ border-radius:12px;
+ background:rgba(0,0,0,.85);
+ color:#fff;
+ text-align:center;
+ text-decoration:none;
+ font-weight:bold;
+ font-size:15px;
+}
+
 #upiId{
  padding:12px;
  border-radius:10px;
@@ -193,6 +209,11 @@ footer{
  <div class="logo">VIHUHUHU</div>
  <p class="small">GOTHIC DARK • DIGITAL WALLET</p>
 </header>
+
+<!-- HOME BUTTON -->
+<a class="home-btn" href="./index.html">
+ ← Back to Home
+</a>
 
 <div class="card balance">
  <p>AVAILABLE BALANCE</p>
@@ -479,5 +500,4 @@ supabaseClient.auth.onAuthStateChange(
 </script>
 
 </body>
- </html>
- 
+</html>
