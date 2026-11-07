@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b20">
+<title>VIHUHUHU Wallet Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;padding:18px;background:#100b20;color:white;
+ font-family:Arial,sans-serif;
+}
+.wrap{max-width:900px;margin:auto}
+header{text-align:center;padding:20px}
+.logo{
+ width:60px;height:60px;margin:auto;
+ display:grid;place-items:center;border-radius:18px;
+ background:linear-gradient(135deg,#9333ea,#06b6d4);
+ font-size:32px;font-weight:bold
+}
+h1{color:#d8b4fe}
+.card{
+ background:#ffffff10;border:1px solid #ffffff20;
+ border-radius:16px;padding:18px;margin:15px 0;
+}
+input{
+ width:100%;padding:12px;margin:8px 0;
+ border:1px solid #ffffff30;border-radius:9px;
+ background:#080614;color:white;
+}
+button{
+ border:0;padding:11px 15px;border-radius:8px;
+ color:white;background:#7c3aed;font-weight:bold;
+ margin:5px;cursor:pointer;
+}
+.reject{background:#dc2626}
+.approve{background:#059669}
+.item{
+ border-bottom:1px solid #ffffff25;
+ padding:15px 0;overflow-wrap:anywhere;
+}
+.small{color:#aaa;font-size:13px;line-height:1.7}
+.status{color:#67e8f9}
+#message{color:#67e8f9;margin:10px 0}
+a{color:#67e8f9}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<header>
+ <div class="logo">V</div>
+ <h1>VIHUHUHU WALLET ADMIN</h1>
+ <p class="small">Deposit Request Management</p>
+</header>
+
+<div class="card">
+ <h3>Admin Login</h3>
+ <input id="email" type="email" placeholder="Admin Email">
+ <input id="password" type="password" placeholder="Password">
+ <button onclick="login()">Login</button>
+ <button onclick="logout()">Logout</button>
+ <div id="message"></div>
+</div>
+
+<div class="card">
+ <h3>Wallet Requests</h3>
+ <button onclick="loadRequests()">Refresh Requests</button>
+ <div id="requests" class="small">Please login first.</div>
+</div>
+
+<div class="card">
+ <h3>Admin Dashboard</h3>
+ <p><a href="admin-dashboard.html">← Back to Admin Dashboard</a></p>
+</div>
+
+</div>
+
+<script>
+const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const ADMIN_EMAIL="vishalyadav8423743184vp@gmail.com";
+
+function msg(t){
+ document.getElementById("message").textContent=t;
+}
+
+async function login(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+
+ const {error}=await sb.auth.signInWithPassword({email,password});
+
+ if(error){msg(error.message);return;}
+
+ const {data}=await sb.auth.getUser();
+
+ if(data.user?.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+  await sb.auth.signOut();
+  msg("Admin access denied.");
+  return;
+ }
+
+ msg("Admin login successful.");
+ await loadRequests();
+}
+
+async function logout(){
+ await sb.auth.signOut();
+ document.getElementById("requests").textContent="Logged out.";
+ msg("Logged out.");
+}
+
+async function checkAdmin(){
+ const {data}=await sb.auth.getUser();
+ if(data.user?.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+  return false;
+ }
+ return true;
+}
+
+async function loadRequests(){
+ const allowed=await checkAdmin();
+
+ if(!allowed){
+  msg("Please login with admin account.");
+  return;
+ }
+
+ const box=document.getElementById("requests");
+ box.textContent="Loading...";
+
+ const {data,error}=await sb
+  .from("wallet_deposit_requests")
+  .select("*")
+  .order("created_at",{ascending:false});
+
+ if(error){
+  box.textContent="Error: "+error.message+
+   " | Check table name and RLS policies.";
+  return;
+ }
+
+ if(!data || data.length===0){
+  box.textContent="No deposit requests found.";
+  return;
+ }
+
+ box.innerHTML="";
+
+ data.forEach(row=>{
+  const div=document.createElement("div");
+  div.className="item";
+
+  const title=document.createElement("h3");
+  title.textContent="₹"+(row.amount || 0);
+
+  const details=document.createElement("p");
+  details.className="small";
+  details.textContent=
+   "UTR: "+(row.utr || "Not available")+
+   "\nStatus: "+(row.status || "pending")+
+   "\nUser ID: "+(row.user_id || "Not available")+
+   "\nDate: "+(row.created_at || "");
+
+  div.append(title,details);
+
+  if((row.status || "pending")==="pending"){
+   const approve=document.createElement("button");
+   approve.className="approve";
+   approve.textContent="Approve";
+
+   approve.onclick=()=>updateRequest(row.id,"approve");
+
+   const reject=document.createElement("button");
+   reject.className="reject";
+   reject.textContent="Reject";
+
+   reject.onclick=()=>updateRequest(row.id,"reject");
+
+   div.append(approve,reject);
+  }
+
+  box.append(div);
+ });
+
+}
+
+async function updateRequest(id,action){
+ const allowed=await checkAdmin();
+
+ if(!allowed){
+  msg("Admin access denied.");
+  return;
+ }
+
+ msg("Request sent to server. This panel does not credit balances directly.");
+
+ // Secure server-side verification and balance crediting
+ // must be implemented in an authenticated Edge Function.
+ msg("Approve/Reject Edge Function अभी configure नहीं है।");
+}
+
+sb.auth.onAuthStateChange((_event,session)=>{
+ if(!session){
+  document.getElementById("requests").textContent="Please login first.";
+ }
+});
+</script>
+</body>
+</html>
