@@ -52,7 +52,10 @@ footer{margin-top:40px;padding:25px 0;text-align:center;border-top:1px solid #ff
   <span id="indexProfileName">My Profile</span>
   </>
   <div class="brand">
-    <div class="logo">V</div>
+    <img id="indexProfilePhoto"
+     src=""
+     alt="Profile Photo"
+     style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #9b5cff;">
     <span>VIHUHUHU</span>
   </div>
 
@@ -260,6 +263,7 @@ applyWebsiteSettings();
 
   if (!error && data?.signedUrl) {
     document.getElementById("indexProfilePhoto").src = data.signedUrl;
+    document.getElementById('indexProfilePhoto').style.display = 'block';
     document.getElementById('indexProfilePhoto').style.display = 'block';
   }
 })();
