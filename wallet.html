@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -11,280 +12,292 @@
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- background:#100b20;
- color:white;
+ margin:0;padding:18px;
+ background:#100b20;color:white;
  font-family:Arial,sans-serif;
- padding:18px;
- overflow-x:hidden;
+ min-height:100vh;
 }
 body:before{
- content:"";
- position:fixed;
- inset:0;
- z-index:-2;
+ content:"";position:fixed;inset:0;z-index:-2;
  background:
- linear-gradient(#100b20bb,#100b20dd),
- url("./anime-bg.png") center center/cover no-repeat;
+ linear-gradient(#100b20d9,#100b20ed),
+ url("./anime-bg.png") center/cover no-repeat;
 }
 .container{max-width:500px;margin:auto}
-h1{text-align:center;color:#d8a5ff}
+header{text-align:center;margin:15px 0 25px}
+.logo{
+ width:65px;height:65px;margin:auto;
+ display:grid;place-items:center;
+ border-radius:20px;
+ background:linear-gradient(135deg,#a855f7,#06b6d4);
+ font-size:35px;font-weight:bold;
+}
+h1{margin:12px 0 5px;color:#d8b4fe}
+.subtitle{color:#aaa;font-size:13px}
 .card{
- background:#211535dd;
- border:1px solid #a855f777;
- border-radius:18px;
- padding:20px;
- margin:18px 0;
+ background:#ffffff10;
+ border:1px solid #ffffff20;
+ border-radius:18px;padding:20px;
+ margin-bottom:16px;
  backdrop-filter:blur(12px);
 }
-.balance{
- font-size:35px;
- color:#61f5d0;
- font-weight:bold;
+.balance{text-align:center}
+.balance small{color:#bbb}
+.amount{font-size:35px;font-weight:bold;color:#67e8f9;margin:10px}
+h3{margin-top:0;color:#d8b4fe}
+.qr{
+ display:block;width:190px;height:190px;
+ object-fit:contain;background:white;
+ padding:8px;border-radius:12px;
+ margin:15px auto;
 }
-input{
- width:100%;
- padding:14px;
- margin:9px 0;
- border:1px solid #68418b;
- border-radius:9px;
- background:#100b20;
- color:white;
+.upi{
+ background:#080614;padding:13px;
+ border-radius:10px;text-align:center;
+ word-break:break-all;color:#67e8f9;
+ font-weight:bold;margin:12px 0;
 }
 button{
- width:100%;
- padding:14px;
- border:0;
+ width:100%;border:0;padding:13px;
  border-radius:10px;
- background:linear-gradient(100deg,#a855f7,#22d3ee);
- color:#100b20;
- font-weight:bold;
- cursor:pointer;
- margin-top:8px;
+ background:linear-gradient(90deg,#9333ea,#0891b2);
+ color:white;font-weight:bold;font-size:15px;
+ margin-top:10px;cursor:pointer;
 }
-.qr{
- width:220px;
- max-width:100%;
- background:white;
- padding:10px;
- border-radius:12px;
+input{
+ width:100%;padding:14px;
+ border:1px solid #ffffff30;
+ background:#080614;color:white;
+ border-radius:10px;margin:8px 0;
+ font-size:15px;outline:none;
 }
-.item{padding:12px 0;border-bottom:1px solid #49345f}
-small{color:#bbb}
-.pending{color:#ffd166}
-.approved{color:#61f5d0}
-.rejected{color:#ff7777}
-#message{line-height:1.6}
-.upi{
- background:#100b20;
- padding:13px;
- border-radius:10px;
- text-align:center;
- color:#22d3ee;
- overflow-wrap:anywhere;
+.note{font-size:12px;color:#bbb;line-height:1.6}
+.message{font-size:13px;margin-top:12px;color:#67e8f9}
+.history-item{
+ padding:12px 0;border-bottom:1px solid #ffffff20;
+ display:flex;justify-content:space-between;
+ gap:10px;font-size:13px;
 }
+.back{display:block;text-align:center;color:#67e8f9;margin:20px}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1>💜 VIHUHUHU WALLET</h1>
+<header>
+ <div class="logo">V</div>
+ <h1>VIHUHUHU WALLET</h1>
+ <div class="subtitle">Your Digital Wallet</div>
+</header>
 
-<div class="card">
-<small>MY WALLET BALANCE</small>
-<div class="balance" id="balance">₹0.00</div>
+<div class="card balance">
+ <small>Available Balance</small>
+ <div class="amount" id="balance">₹0.00</div>
+ <small id="accountStatus">Checking account...</small>
 </div>
 
 <div class="card">
-<h3>📷 Scan & Pay</h3>
+ <h3>💰 Add Money</h3>
+ <p class="note">नीचे दिए गए UPI ID पर भुगतान करने से पहले अपने अभिभावक की अनुमति लें।</p>
 
-<center>
-<img class="qr"
- src="./upi-qr.png"
- alt="UPI QR Code">
+ <div class="upi" id="upiId">8115743185@fam</div>
+ <button onclick="copyUPI()">📋 Copy UPI ID</button>
 
-<p>Scan QR Code to make payment</p>
-</center>
+ <img class="qr" src="./upi-qr.png"
+ alt="UPI QR Code"
+ onerror="this.style.display='none'">
 
-<p><b>UPI ID</b></p>
-<div class="upi" id="upiId">YOUR_UPI_ID</div>
+ <p class="note">QR Code से भुगतान करें। भुगतान के बाद UTR नंबर भरें।</p>
 
-<button onclick="copyUPI()">📋 Copy UPI ID</button>
+ <input type="number" id="depositAmount"
+ placeholder="Amount (₹)" min="1" step="1">
 
-<p><small>Payment details अपने अभिभावक की अनुमति से इस्तेमाल करें।</small></p>
+ <input type="text" id="utr"
+ placeholder="UTR / Transaction Reference Number"
+ maxlength="64">
+
+ <button id="submitBtn" onclick="submitDeposit()">
+ Submit Deposit Request
+ </button>
+
+ <div class="message" id="message"></div>
 </div>
 
 <div class="card">
-<h3>💰 Submit Deposit</h3>
-
-<label>Deposit Amount (₹)</label>
-<input id="amount" type="number"
- min="1" max="100000"
- placeholder="Enter amount">
-
-<label>UTR / Transaction Reference</label>
-<input id="utr" type="text"
- maxlength="64"
- placeholder="Enter UTR number">
-
-<button onclick="submitDeposit()">
-Submit Deposit Request
-</button>
-
-<p id="message"></p>
+ <h3>📜 Transaction History</h3>
+ <div id="history" class="note">Loading history...</div>
 </div>
 
-<div class="card">
-<h3>📜 Deposit History</h3>
-<div id="history">Loading...</div>
-</div>
-
+<a class="back" href="index.html">← Back to Home</a>
 </div>
 
 <script>
-const client=window.supabase.createClient(
- "https://piagvuicgazqgjkgrvjr.supabase.co",
- "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ"
+const SUPABASE_URL = "https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+
+const supabaseClient = window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
 );
 
-let currentUser=null;
+let currentUser = null;
 
-async function loadWallet(){
- const history=document.getElementById("history");
-
- const {data:{session},error:sessionError}=
- await client.auth.getSession();
-
- if(sessionError||!session){
-  currentUser=null;
-  history.textContent="Please login first.";
-  return;
- }
-
- currentUser=session.user;
-
- const {data:wallet,error}=await client
- .from("wallets")
- .select("balance_paise")
- .eq("user_id",currentUser.id)
- .maybeSingle();
-
- if(error){
-  history.textContent="Wallet load error: "+error.message;
-  return;
- }
-
- document.getElementById("balance").textContent=
- "₹"+((wallet?.balance_paise||0)/100).toFixed(2);
-
- const {data:rows,error:txError}=await client
- .from("wallet_transactions")
- .select("amount_paise,transaction_type,status,payment_reference,created_at")
- .eq("user_id",currentUser.id)
- .order("created_at",{ascending:false});
-
- if(txError){
-  history.textContent=txError.message;
-  return;
- }
-
- history.innerHTML="";
-
- (rows||[]).forEach(tx=>{
-  const div=document.createElement("div");
-  div.className="item";
-
-  const title=document.createElement("b");
-  title.textContent=
-   tx.transaction_type.toUpperCase()+
-   " - ₹"+(tx.amount_paise/100).toFixed(2);
-
-  const status=document.createElement("p");
-  status.className=tx.status;
-  status.textContent="Status: "+tx.status.toUpperCase();
-
-  const ref=document.createElement("small");
-  ref.textContent="UTR: "+(tx.payment_reference||"Not provided");
-
-  div.append(title,status,ref);
-  history.append(div);
- });
-
- if(!rows?.length){
-  history.textContent="No deposits yet.";
- }
+function showMessage(text){
+ document.getElementById("message").textContent = text;
 }
 
 async function copyUPI(){
- const upi=document.getElementById("upiId").textContent.trim();
+ const upi = document.getElementById("upiId").textContent;
+ try{
+  await navigator.clipboard.writeText(upi);
+  showMessage("UPI ID copied!");
+ }catch(error){
+  showMessage("Copy नहीं हुआ। UPI ID को manually copy करें।");
+ }
+}
 
- if(upi==="8115743185@fam"){
-  alert("पहले अपनी सही UPI ID सेट करें।");
+function formatMoney(paise){
+ return "₹" + (Number(paise || 0)/100).toFixed(2);
+}
+
+async function loadWallet(){
+ if(!currentUser) return;
+
+ const {data:wallet,error} = await supabaseClient
+  .from("wallets")
+  .select("balance_paise")
+  .eq("user_id",currentUser.id)
+  .maybeSingle();
+
+ if(error){
+  document.getElementById("accountStatus").textContent =
+   "Wallet load नहीं हो पाया";
+ }else{
+  document.getElementById("balance").textContent =
+   formatMoney(wallet?.balance_paise || 0);
+  document.getElementById("accountStatus").textContent =
+   "Account connected";
+ }
+
+ const {data:transactions,error:historyError} =
+  await supabaseClient
+   .from("wallet_transactions")
+   .select("*")
+   .eq("user_id",currentUser.id)
+   .order("created_at",{ascending:false})
+   .limit(20);
+
+ const history = document.getElementById("history");
+
+ if(historyError){
+  history.textContent = "History load नहीं हो पाई।";
   return;
  }
 
- try{
-  await navigator.clipboard.writeText(upi);
-  alert("UPI ID copied!");
- }catch(e){
-  alert("UPI ID: "+upi);
+ if(!transactions || transactions.length===0){
+  history.textContent = "अभी कोई transaction नहीं है।";
+  return;
  }
+
+ history.innerHTML = "";
+
+ transactions.forEach(item=>{
+  const div = document.createElement("div");
+  div.className = "history-item";
+
+  const left = document.createElement("span");
+  left.textContent =
+   (item.type || "Transaction") + " • " +
+   new Date(item.created_at).toLocaleDateString("en-IN");
+
+  const right = document.createElement("span");
+  right.textContent =
+   formatMoney(item.amount_paise || 0);
+
+  div.append(left,right);
+  history.appendChild(div);
+ });
 }
 
 async function submitDeposit(){
- const message=document.getElementById("message");
- const amount=Number(document.getElementById("amount").value);
- const utr=document.getElementById("utr").value.trim();
-
- message.textContent="";
+ const amount = Number(
+  document.getElementById("depositAmount").value
+ );
+ const utr = document.getElementById("utr").value.trim();
 
  if(!currentUser){
-  message.textContent="Please login first.";
+  showMessage("पहले Login करें।");
   return;
  }
 
- if(!Number.isSafeInteger(amount)||amount<1||amount>100000){
-  message.textContent="Enter a valid amount.";
+ if(!Number.isInteger(amount) || amount<1){
+  showMessage("सही Amount भरें।");
   return;
  }
 
- if(!/^[A-Za-z0-9]{8,64}$/.test(utr)){
-  message.textContent="Enter a valid UTR.";
+ if(!/^[a-zA-Z0-9]{8,64}$/.test(utr)){
+  showMessage("सही UTR नंबर भरें (8-64 अक्षर)।");
   return;
  }
 
- message.textContent="Submitting...";
+ const btn = document.getElementById("submitBtn");
+ btn.disabled = true;
+ btn.textContent = "Submitting...";
+ showMessage("Request भेजी जा रही है...");
 
- const {data,error}=await client.functions.invoke(
-  "wallet-deposit",
-  {body:{amount,utr}}
- );
+ try{
+  const {data,error} = await supabaseClient.functions.invoke(
+   "wallet-deposit",
+   {body:{amount,utr}}
+  );
 
- if(error){
-  message.textContent="Error: "+error.message;
+  if(error) throw error;
+
+  showMessage(
+   data?.message || "Deposit request भेज दी गई। Verification बाकी है।"
+  );
+
+  document.getElementById("depositAmount").value = "";
+  document.getElementById("utr").value = "";
+
+  await loadWallet();
+
+ }catch(error){
+  console.error(error);
+  showMessage("Request failed: " + (error.message || "Server error"));
+ }finally{
+  btn.disabled = false;
+  btn.textContent = "Submit Deposit Request";
+ }
+}
+
+async function init(){
+ const {data,error} = await supabaseClient.auth.getSession();
+
+ if(error || !data.session){
+  document.getElementById("accountStatus").textContent =
+   "Please login first";
+  showMessage("Wallet इस्तेमाल करने के लिए Login करें।");
   return;
  }
 
- if(!data?.success){
-  message.textContent=data?.error||"Request failed.";
-  return;
- }
-
- message.textContent=
- "Deposit request submitted. Status: PENDING";
-
- document.getElementById("amount").value="";
- document.getElementById("utr").value="";
-
+ currentUser = data.session.user;
  await loadWallet();
 }
 
-client.auth.onAuthStateChange(()=>{
- setTimeout(loadWallet,0);
-});
+init();
 
-loadWallet();
+supabaseClient.auth.onAuthStateChange((_event,session)=>{
+ if(session){
+  currentUser = session.user;
+  loadWallet();
+ }else{
+  currentUser = null;
+  document.getElementById("accountStatus").textContent =
+   "Please login first";
+ }
+});
 </script>
 </body>
 </html>
