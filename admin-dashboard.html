@@ -1,507 +1,167 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIHUHUHU PRO ADMIN</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIHUHUHU | Admin Dashboard</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:16px;background:#100b20;color:white;font-family:Arial,sans-serif}
-header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-h1{color:#d6a6ff}
-.card{background:#211638;padding:18px;border-radius:15px;margin-top:18px;border:1px solid #49345f}
-h2{color:#d6a6ff}
-input,select,textarea{width:100%;padding:12px;margin:8px 0 14px;background:#160e27;color:white;border:1px solid #76539b;border-radius:8px}
-textarea{min-height:90px;resize:vertical}
-label{display:block;color:#e9d5ff;margin-top:8px}
-button{border:0;padding:12px 16px;border-radius:9px;background:#a855f7;color:white;font-weight:bold;cursor:pointer;margin:5px 3px}
-button.secondary{background:#49345f}
-.stats{font-size:26px;color:#d6a6ff;font-weight:bold}
-#status{color:#facc15;white-space:pre-wrap}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:600px}
-th,td{padding:11px;text-align:left;border-bottom:1px solid #49345f}
-th{color:#d6a6ff}
-small{color:#c4b5d9}
-.checkrow{display:flex;align-items:center;gap:10px;margin:12px 0}
-.checkrow input{width:auto;margin:0}
-.quick-buttons{display:flex;flex-wrap:wrap;gap:8px}
-.quick-buttons button{flex:1;min-width:180px;padding:15px}
+body{margin:0;background:#080b18;color:#f5f5ff;font-family:Arial,sans-serif}
+header{padding:20px;background:#11152a;border-bottom:1px solid #292e49}
+header h2{margin:0;color:#a78bfa}
+header p{color:#aaa;font-size:13px}
+.container{padding:18px;max-width:1000px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:#141a30;border:1px solid #292f4c;padding:17px;border-radius:14px}
+.card small{color:#aaa}
+.card h2{margin:10px 0 0;color:#55e6df}
+h3{margin-top:25px;color:#a78bfa}
+input,select,textarea{
+width:100%;padding:13px;margin:7px 0 12px;
+background:#0c1124;border:1px solid #343b5d;
+border-radius:9px;color:white;font-size:14px
+}
+textarea{min-height:85px}
+button{
+border:0;padding:12px 16px;border-radius:9px;
+background:#8b5cf6;color:white;font-weight:bold;
+cursor:pointer;margin:4px
+}
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.menu button{background:#202744}
+.item{background:#141a30;border:1px solid #303653;padding:14px;border-radius:12px;margin:10px 0}
+.item p{color:#aaa;font-size:13px;overflow-wrap:anywhere}
+.delete{background:#dc3545}
+#status{color:#55e6df;font-size:13px}
 </style>
 </head>
-
 <body>
 
 <header>
-<h1>👑 VIHUHUHU PRO ADMIN</h1>
-<button id="logout">LOGOUT</button>
+<h2>VIHUHUHU ADMIN</h2>
+<p>Study Zone Management Panel</p>
 </header>
 
-<div class="card">
-<h2>⚡ Quick Admin Access</h2>
-<div class="quick-buttons">
-<button onclick="location.href='admin-activity.html'">📊 User Activity</button>
-<button onclick="location.href='admin-notifications.html'">🔔 Notifications Manager</button>
-<button onclick="location.href='user-notifications.html'">👁 View Notifications</button>
-</div>
+<div class="container">
+
+<div class="stats">
+<div class="card"><small>Total Content</small><h2 id="total">0</h2></div>
+<div class="card"><small>Study Sections</small><h2>8</h2></div>
 </div>
 
-<p id="status">Checking admin access...</p>
-
-<div class="card">
-<h2>📊 Users Management</h2>
-<div class="stats" id="total">Loading...</div>
-<p>Total Registered Users</p>
-<button id="refresh">Refresh Users</button>
-<input id="search" placeholder="Search users...">
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th>
-</tr>
-</thead>
-<tbody id="users">
-<tr><td colspan="5">Loading...</td></tr>
-</tbody>
-</table>
-</div>
+<h3>Manage Study Zone</h3>
+<div class="menu">
+<button onclick="setType('Classes')">Classes</button>
+<button onclick="setType('Subjects')">Subjects</button>
+<button onclick="setType('Notes & PDF')">Notes & PDF</button>
+<button onclick="setType('Quiz')">Quiz</button>
+<button onclick="setType('Test Series')">Test Series</button>
+<button onclick="setType('YouTube Classes')">YouTube Classes</button>
+<button onclick="setType('Courses')">Courses</button>
+<button onclick="setType('Current Affairs')">Current Affairs</button>
 </div>
 
-<div class="card">
-<h2>🌐 Website Editor</h2>
+<h3>Add New Content</h3>
 
-<label>Website Main Title</label>
-<input id="hero_title" placeholder="Welcome to VIHUHUHU">
-
-<label>Website Description</label>
-<textarea id="hero_description" placeholder="Write website description"></textarea>
-
-<label>Background Theme</label>
-<select id="background">
-<option value="rainbow">🌈 Rainbow</option>
-<option value="purple">💜 Purple Neon</option>
-<option value="ocean">🌊 Ocean Blue</option>
-<option value="dark">🌑 Dark Black</option>
-<option value="galaxy">🌌 Galaxy Space</option>
-<option value="fire">🔥 Fire Red</option>
-<option value="sunset">🌅 Sunset</option>
-<option value="aurora">🌈 Northern Lights</option>
-<option value="cyber">⚡ Cyberpunk</option>
-<option value="matrix">💚 Matrix Green</option>
-<option value="gold">✨ Luxury Gold</option>
-<option value="pink">💗 Pink Dream</option>
-<option value="ice">❄️ Ice Blue</option>
-<option value="3d">🪩 3D Colorful</option>
-<option value="emerald">💎 Emerald Green</option>
+<form id="contentForm">
+<label>Content Type</label>
+<select id="type">
+<option>Classes</option>
+<option>Subjects</option>
+<option>Notes & PDF</option>
+<option>Quiz</option>
+<option>Test Series</option>
+<option>YouTube Classes</option>
+<option>Courses</option>
+<option>Current Affairs</option>
 </select>
 
-<label>Logo Image URL</label>
-<input id="logo_url" placeholder="https://example.com/logo.png">
+<label>Title</label>
+<input id="title" placeholder="Content title" required>
 
-<label>Telegram URL</label>
-<input id="telegram_url" placeholder="https://t.me/yourusername">
+<label>Description</label>
+<textarea id="description" placeholder="Description"></textarea>
 
-<label>Contact Button Text</label>
-<input id="contact_label" placeholder="Contact VIHUHUHU">
+<label>Class</label>
+<select id="className">
+<option value="">Select Class</option>
+<option>Class 6</option>
+<option>Class 7</option>
+<option>Class 8</option>
+<option>Class 9</option>
+<option>Class 10</option>
+<option>Class 11</option>
+<option>Class 12</option>
+</select>
 
-<h2>🔗 Primary Button</h2>
-<label>Button Text</label>
-<input id="primary_button_text" placeholder="Get Started">
-<label>Button URL</label>
-<input id="primary_button_url" placeholder="https://example.com">
+<label>Subject</label>
+<input id="subject" placeholder="e.g. Mathematics">
 
-<h2>🔗 Secondary Button</h2>
-<label>Button Text</label>
-<input id="secondary_button_text" placeholder="Contact Us">
-<label>Button URL</label>
-<input id="secondary_button_url" placeholder="https://t.me/yourusername">
+<label>PDF / Video / Content URL</label>
+<input id="url" type="url" placeholder="https://...">
 
-<button id="saveSettings">💾 SAVE WEBSITE SETTINGS</button>
-</div>
+<button type="submit">Save Content</button>
+</form>
 
-<div class="card">
-<h2>➕ Add Website Section</h2>
-<small>यहाँ नया Section बना सकते हो। Section Key English में लिखना।</small>
+<p id="status"></p>
 
-<label>Section Key</label>
-<input id="section_key" placeholder="example: portfolio">
+<h3>Saved Content</h3>
+<div id="contentList"></div>
 
-<label>Section Title</label>
-<input id="section_title" placeholder="My Portfolio">
-
-<label>Section Subtitle</label>
-<input id="section_subtitle" placeholder="Our latest work">
-
-<label>Section Description</label>
-<textarea id="section_body" placeholder="Write section details"></textarea>
-
-<label class="checkrow">
-<input type="checkbox" id="section_enabled" checked>
-Section Enabled
-</label>
-
-<button id="saveSection">➕ SAVE NEW SECTION</button>
-</div>
-
-<div class="card">
-<h2>🧩 Website Sections Manager</h2>
-<div id="sectionList">Loading sections...</div>
-<button id="loadSections">Refresh Sections</button>
-</div>
-
-<div class="card">
-<h2>💰 Wallet Deposit Requests</h2>
-<button id="walletRefresh">Refresh Requests</button>
-<div id="walletRequests">Loading...</div>
 </div>
 
 <script>
-const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
-const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+const KEY="vihuStudyAdmin";
+let content=JSON.parse(localStorage.getItem(KEY)||"[]");
 
-const SETTINGS_API=SUPABASE_URL+"/functions/v1/admin-settings";
-const USERS_API=SUPABASE_URL+"/functions/v1/clever-endpoint";
-
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-let session=null;
-let allUsers=[];
-
-function status(message){
- document.getElementById("status").textContent=message;
+function render(){
+document.getElementById("total").textContent=content.length;
+document.getElementById("contentList").innerHTML=
+content.map((item,i)=>`
+<div class="item">
+<strong>${escapeHTML(item.title)}</strong>
+<p>${escapeHTML(item.type)} | ${escapeHTML(item.className||"All Classes")} | ${escapeHTML(item.subject||"No Subject")}</p>
+<p>${escapeHTML(item.description||"")}</p>
+${item.url?`<p>${escapeHTML(item.url)}</p>`:""}
+<button class="delete" onclick="removeItem(${i})">Delete</button>
+</div>`).join("")||"<p>No content added yet.</p>";
 }
 
-async function getSession(){
- const {data,error}=await client.auth.getSession();
-
- if(error || !data.session){
-  location.href="admin.html";
-  return null;
- }
-
- session=data.session;
- return session;
+function escapeHTML(value){
+return String(value).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
 }
 
-async function apiCall(payload){
- const current=await getSession();
- if(!current) throw new Error("Login required");
-
- const response=await fetch(SETTINGS_API,{
-  method:"POST",
-  headers:{
-   "Authorization":"Bearer "+current.access_token,
-   "apikey":SUPABASE_KEY,
-   "Content-Type":"application/json"
-  },
-  body:JSON.stringify(payload)
- });
-
- const result=await response.json();
-
- if(!response.ok){
-  throw new Error(result.error || "Request failed");
- }
-
- return result;
+function setType(value){
+document.getElementById("type").value=value;
+document.getElementById("title").focus();
 }
 
-async function loadSettings(){
- const {data,error}=await client
-  .from("site_settings")
-  .select("*")
-  .eq("id",1)
-  .single();
-
- if(error){
-  status("Settings load error: "+error.message);
-  return;
- }
-
- [
-  "hero_title","hero_description","background","logo_url",
-  "telegram_url","contact_label","primary_button_text",
-  "primary_button_url","secondary_button_text","secondary_button_url"
- ].forEach(key=>{
-  const element=document.getElementById(key);
-  if(element && data[key]!==null){
-   element.value=data[key] || "";
-  }
- });
-}
-
-async function saveSettings(){
- const button=document.getElementById("saveSettings");
- button.disabled=true;
- button.textContent="Saving...";
-
- try{
-  const fields=[
-   "hero_title","hero_description","background","logo_url",
-   "telegram_url","contact_label","primary_button_text",
-   "primary_button_url","secondary_button_text","secondary_button_url"
-  ];
-
-  const payload={action:"save_settings"};
-
-  fields.forEach(key=>{
-   payload[key]=document.getElementById(key).value.trim();
-  });
-
-  await apiCall(payload);
-  status("✅ Website settings saved successfully!");
-
- }catch(error){
-  status("❌ "+error.message);
- }finally{
-  button.disabled=false;
-  button.textContent="💾 SAVE WEBSITE SETTINGS";
- }
-}
-
-async function saveSection(){
- const button=document.getElementById("saveSection");
- button.disabled=true;
-
- try{
-  const section={
-   section_key:document.getElementById("section_key").value.trim(),
-   title:document.getElementById("section_title").value.trim(),
-   subtitle:document.getElementById("section_subtitle").value.trim(),
-   body:document.getElementById("section_body").value.trim(),
-   enabled:document.getElementById("section_enabled").checked,
-   sort_order:0
-  };
-
-  if(!section.section_key) throw new Error("Section Key is required");
-
-  await apiCall({action:"save_sections",sections:[section]});
-
-  status("✅ Section saved successfully!");
-  ["section_key","section_title","section_subtitle","section_body"]
-   .forEach(id=>document.getElementById(id).value="");
-
-  loadSections();
-
- }catch(error){
-  status("❌ "+error.message);
- }finally{
-  button.disabled=false;
- }
-}
-
-async function loadUsers(){
- const tbody=document.getElementById("users");
-
- try{
-  const current=await getSession();
-  if(!current)return;
-
-  const response=await fetch(USERS_API,{
-   method:"POST",
-   headers:{
-    "Authorization":"Bearer "+current.access_token,
-    "apikey":SUPABASE_KEY,
-    "Content-Type":"application/json"
-   },
-   body:JSON.stringify({})
-  });
-
-  const result=await response.json();
-
-  if(!response.ok) throw new Error(result.error || "Could not load users");
-
-  allUsers=result.users || [];
-  document.getElementById("total").textContent=result.total ?? allUsers.length;
-
-  showUsers(allUsers);
-  status("✅ Admin access verified");
-
- }catch(error){
-  status("Users error: "+error.message);
-  tbody.innerHTML="<tr><td colspan='5'>Could not load users</td></tr>";
- }
-}
-
-function showUsers(list){
- const tbody=document.getElementById("users");
- tbody.innerHTML="";
-
- if(!list.length){
-  tbody.innerHTML="<tr><td colspan='5'>No users found</td></tr>";
-  return;
- }
-
- list.forEach(user=>{
-  const tr=document.createElement("tr");
-
-  [user.full_name,user.username,user.email,user.phone,user.role]
-   .forEach(value=>{
-    const td=document.createElement("td");
-    td.textContent=value || "—";
-    tr.appendChild(td);
-   });
-
-  tbody.appendChild(tr);
- });
-}
-
-document.getElementById("search").addEventListener("input",function(){
- const q=this.value.toLowerCase();
-
- showUsers(allUsers.filter(user=>
-  [user.full_name,user.username,user.email,user.phone,user.role]
-   .some(value=>(value || "").toLowerCase().includes(q))
- ));
+document.getElementById("contentForm").addEventListener("submit",function(e){
+e.preventDefault();
+content.push({
+type:document.getElementById("type").value,
+title:document.getElementById("title").value.trim(),
+description:document.getElementById("description").value.trim(),
+className:document.getElementById("className").value,
+subject:document.getElementById("subject").value.trim(),
+url:document.getElementById("url").value.trim()
+});
+localStorage.setItem(KEY,JSON.stringify(content));
+this.reset();
+document.getElementById("status").textContent="Content saved on this browser.";
+render();
 });
 
-async function loadSections(){
- const box=document.getElementById("sectionList");
- box.textContent="Loading...";
-
- try{
-  const result=await apiCall({action:"get_sections"});
-  box.innerHTML="";
-
-  (result.sections||[]).forEach(section=>{
-   const row=document.createElement("div");
-   row.style.cssText="padding:12px;border-bottom:1px solid #49345f";
-
-   const label=document.createElement("label");
-   label.textContent=section.title||section.section_key;
-
-   const check=document.createElement("input");
-   check.type="checkbox";
-   check.checked=section.enabled;
-   check.style.width="auto";
-
-   const save=document.createElement("button");
-   save.textContent="Save";
-
-   save.onclick=async()=>{
-    try{
-     await apiCall({
-      action:"save_sections",
-      sections:[{
-       section_key:section.section_key,
-       title:section.title,
-       subtitle:section.subtitle,
-       body:section.body,
-       enabled:check.checked,
-       sort_order:section.sort_order
-      }]
-     });
-     status("Section updated successfully");
-    }catch(error){
-     status("Error: "+error.message);
-    }
-   };
-
-   row.append(label,check,save);
-   box.appendChild(row);
-  });
-
-  if(!result.sections?.length) box.textContent="No sections found";
-
- }catch(error){
-  box.textContent=error.message;
- }
+function removeItem(i){
+if(!confirm("Delete this content?"))return;
+content.splice(i,1);
+localStorage.setItem(KEY,JSON.stringify(content));
+render();
 }
-
-async function loadWalletRequests(){
- const box=document.getElementById("walletRequests");
- box.textContent="Loading...";
-
- try{
-  const {data,error}=await client.functions.invoke("wallet-admin",{
-   body:{action:"list"}
-  });
-
-  if(error) throw error;
-  if(!data?.requests) throw new Error(data?.error||"Unable to load");
-
-  box.innerHTML="";
-
-  data.requests.forEach(item=>{
-   const row=document.createElement("div");
-   row.style.cssText="padding:14px;border-bottom:1px solid #49345f";
-
-   const details=document.createElement("p");
-   details.textContent=
-    "Amount: ₹"+(item.amount_paise/100).toFixed(2)+
-    " | UTR: "+item.payment_reference+
-    " | Status: "+item.status;
-
-   row.append(details);
-
-   if(item.status==="pending"){
-    ["Approve","Reject"].forEach(action=>{
-     const btn=document.createElement("button");
-     btn.textContent=action;
-     btn.onclick=()=>reviewWallet(item.id,action==="Approve");
-     row.append(btn);
-    });
-   }
-
-   box.append(row);
-  });
-
-  if(!data.requests.length) box.textContent="No deposit requests";
-
- }catch(error){
-  box.textContent="Error: "+error.message;
- }
-}
-
-async function reviewWallet(id,approve){
- if(approve && !confirm("Bank record se payment verify kiya hai?")) return;
- if(!approve && !confirm("Reject this request?")) return;
-
- try{
-  const {data,error}=await client.functions.invoke("wallet-admin",{
-   body:{action:"review",transaction_id:id,approve:approve}
-  });
-
-  if(error) throw error;
-  if(!data?.success) throw new Error(data?.error||"Review failed");
-
-  alert(approve?"Deposit approved":"Deposit rejected");
-  loadWalletRequests();
-
- }catch(error){
-  alert("Error: "+error.message);
- }
-}
-
-document.getElementById("saveSettings").addEventListener("click",saveSettings);
-document.getElementById("saveSection").addEventListener("click",saveSection);
-document.getElementById("refresh").addEventListener("click",loadUsers);
-document.getElementById("loadSections").addEventListener("click",loadSections);
-document.getElementById("walletRefresh").addEventListener("click",loadWalletRequests);
-
-document.getElementById("logout").addEventListener("click",async()=>{
- await client.auth.signOut();
- location.href="admin.html";
-});
-
-async function start(){
- const current=await getSession();
- if(!current)return;
-
- await Promise.all([
-  loadSettings(),
-  loadUsers(),
-  loadSections(),
-  loadWalletRequests()
- ]);
-}
-
-start();
+render();
 </script>
-
 </body>
 </html>
