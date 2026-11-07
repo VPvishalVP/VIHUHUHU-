@@ -1,45 +1,59 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b18">
 <title>VIHUHUHU | Study Portal</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
+:root{
+--bg:#080b18;--card:#11182b;--purple:#a78bfa;
+--cyan:#55e6df;--white:#f7f7ff;--muted:#aab2c8;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#080b18;color:#f5f5ff;font-family:Arial,sans-serif}
-header{background:#11162b;border-bottom:1px solid #292f4c;padding:15px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.logo{font-size:22px;font-weight:bold;color:#a78bfa}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-a{text-decoration:none;color:#ddd}
-nav a,.btn{padding:10px 13px;border-radius:8px;background:#202744;font-size:13px}
-.hero{padding:55px 6%;background:linear-gradient(120deg,#171536,#102c3b)}
-.hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 12px}
-.hero h1 span{color:#55e6df}
-.hero p{color:#c4c5d6;line-height:1.7;max-width:600px}
-.container{max-width:1100px;margin:auto;padding:22px 16px}
-.section-title{color:#a78bfa;margin:28px 0 14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
-.tile{background:#141a30;border:1px solid #2a3150;border-radius:13px;padding:17px;text-align:left;cursor:pointer;color:white}
-.tile:hover{border-color:#55e6df}
-.tile strong{display:block;margin-bottom:7px}
-.tile small{color:#aaa}
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:15px 0}
-input,select{width:100%;padding:13px;background:#10162a;color:white;border:1px solid #343b5d;border-radius:9px}
-.content-card{background:#141a30;border:1px solid #303653;padding:17px;border-radius:13px;margin:12px 0}
-.content-card h3{margin:0 0 10px;color:#55e6df}
-.content-card p{color:#bbb;line-height:1.5}
-.content-card a{display:inline-block;background:#7950d9;padding:10px 14px;border-radius:8px;margin-top:7px}
-.tag{font-size:11px;color:#c4b5fd;background:#29234b;padding:5px 8px;border-radius:20px;display:inline-block;margin:3px}
-#message{color:#55e6df;padding:10px 0}
-footer{text-align:center;padding:30px;color:#888;border-top:1px solid #252b43;margin-top:30px}
-button{font:inherit}
+body{margin:0;background:var(--bg);color:var(--white);
+font-family:Arial,sans-serif}
+header{padding:16px 5%;display:flex;justify-content:space-between;
+align-items:center;border-bottom:1px solid #252b40;
+position:sticky;top:0;background:#080b18ee;z-index:10}
+.logo{font-size:23px;font-weight:900;color:var(--purple)}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+a{color:var(--white);text-decoration:none}
+nav a{font-size:13px;color:var(--muted)}
+nav a:hover{color:var(--cyan)}
+.hero{text-align:center;padding:65px 15px 45px;
+background:radial-gradient(ellipse at top,#252052,#080b18 70%)}
+.hero h1{font-size:38px;margin:0 0 12px}
+.hero h1 span{color:var(--purple)}
+.hero p{color:var(--muted);line-height:1.6}
+.btn{display:inline-block;background:var(--purple);color:#080817;
+padding:12px 20px;border-radius:9px;font-weight:bold;margin:8px 4px}
+.btn2{background:#202941;color:white}
+.container{max-width:1150px;margin:auto;padding:25px 16px}
+.section-title{font-size:24px;margin:20px 0}
+.muted{color:var(--muted)}
+.search{width:100%;padding:15px;border-radius:10px;
+border:1px solid #303750;background:#11182b;color:white;
+font-size:15px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px}
+.card{background:var(--card);border:1px solid #252e48;
+border-radius:13px;padding:18px;transition:.2s}
+.card:hover{border-color:var(--purple);transform:translateY(-3px)}
+.card h3{margin:0 0 9px;font-size:16px}
+.card p{color:var(--muted);font-size:13px;line-height:1.5}
+.tag{font-size:11px;color:var(--cyan);margin-bottom:9px}
+.content-card{display:flex;flex-direction:column;gap:8px}
+.open-link{color:var(--cyan);font-size:13px;font-weight:bold}
+footer{text-align:center;padding:30px;color:var(--muted);
+border-top:1px solid #252b40;margin-top:35px}
+@media(max-width:600px){
+.hero h1{font-size:29px}
+header{align-items:flex-start;gap:12px}
+nav{gap:10px}
+}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -48,68 +62,46 @@ button{font:inherit}
 <a href="#home">Home</a>
 <a href="#classes">Classes</a>
 <a href="#subjects">Subjects</a>
-<a href="#study">Study Zone</a>
+<a href="#materials">Materials</a>
+<a href="login.html">Login</a>
 <a href="profile.html">Profile</a>
-<a href="login.html" id="loginLink">Login</a>
-<a href="register.html" id="registerLink">Register</a>
 </nav>
 </header>
 
 <section class="hero" id="home">
-<h1>Learn Better.<br><span>Achieve More.</span></h1>
-<p>Your complete digital learning platform. Access study materials, notes, quizzes, video lessons and courses in one place.</p>
-<a class="btn" href="#study">Explore Study Zone</a>
-<a class="btn" href="#subjects">Explore Subjects</a>
+<h1>Learn Better with <span>VIHUHUHU</span></h1>
+<p>Your Learning Journey Starts Here.<br>
+Explore classes, subjects, notes and study materials.</p>
+<a class="btn" href="#classes">Explore Classes</a>
+<a class="btn btn2" href="register.html">Create Account</a>
 </section>
 
 <main class="container">
 
-<h2 class="section-title" id="classes">Choose Your Class</h2>
+<section id="classes">
+<h2 class="section-title">Explore Classes</h2>
 <div class="grid" id="classGrid"></div>
+</section>
 
-<h2 class="section-title" id="subjects">Explore Subjects</h2>
+<section id="subjects">
+<h2 class="section-title">Popular Subjects</h2>
 <div class="grid" id="subjectGrid"></div>
+</section>
 
-<h2 class="section-title" id="study">Study Zone</h2>
-<div class="grid" id="typeGrid"></div>
-
-<h2 class="section-title">Find Study Materials</h2>
-
-<div class="filters">
-<input id="search" placeholder="Search notes, courses, topics...">
-<select id="classFilter">
-<option value="">All Classes</option>
-<option>Class 6</option>
-<option>Class 7</option>
-<option>Class 8</option>
-<option>Class 9</option>
-<option>Class 10</option>
-<option>Class 11</option>
-<option>Class 12</option>
-</select>
-<select id="subjectFilter">
-<option value="">All Subjects</option>
-</select>
-<select id="typeFilter">
-<option value="">All Categories</option>
-<option>Classes</option>
-<option>Subjects</option>
-<option>Notes & PDF</option>
-<option>Quiz</option>
-<option>Test Series</option>
-<option>YouTube Classes</option>
-<option>Courses</option>
-<option>Current Affairs</option>
-</select>
+<section id="materials">
+<h2 class="section-title">Study Materials</h2>
+<p class="muted">Find notes, PDFs, courses and learning resources.</p>
+<input class="search" id="searchInput"
+placeholder="Search notes, subjects, classes...">
+<div class="grid" id="contentGrid">
+<div class="card">Loading study materials...</div>
 </div>
-
-<div id="message">Connecting to Study Library...</div>
-<div id="contentList"></div>
+</section>
 
 </main>
 
 <footer>
-<strong>VIHUHUHU</strong>
+<div class="logo">VIHUHUHU</div>
 <p>Learn • Practice • Grow</p>
 <p>© 2026 VIHUHUHU. All Rights Reserved.</p>
 </footer>
@@ -117,147 +109,120 @@ button{font:inherit}
 <script>
 const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
 const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
-
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-let allContent=[];
-let selectedClass="";
-let selectedSubject="";
-let selectedType="";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const subjects=[
-"Mathematics","Physics","Chemistry","Biology",
-"Science","Social Science","History","Geography",
-"Civics","Economics","Political Science","English",
-"Hindi","Sanskrit","Computer Science","Information Technology",
-"Accountancy","Business Studies","Economics",
-"Statistics","Psychology","Sociology","Environmental Science",
-"General Knowledge","Reasoning","General Studies",
-"Current Affairs","Physical Education","Home Science"
+"Mathematics","Science","English","Hindi","Social Science",
+"Physics","Chemistry","Biology","History","Geography",
+"Civics","Economics","Computer Science","Sanskrit",
+"Accountancy","Business Studies","Political Science",
+"Psychology","Sociology","Statistics","Environmental Science",
+"Information Technology","General Knowledge","Reasoning",
+"Current Affairs","Physical Education","Agriculture",
+"Home Science","Drawing"
 ];
 
-const classes=["Class 6","Class 7","Class 8","Class 9","Class 10","Class 11","Class 12"];
-
-const types=[
-"Classes","Subjects","Notes & PDF","Quiz",
-"Test Series","YouTube Classes","Courses","Current Affairs"
-];
-
-function safe(v){
-return String(v??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
+const classGrid=document.getElementById("classGrid");
+for(let i=6;i<=12;i++){
+classGrid.innerHTML+=`
+<div class="card">
+<div class="tag">ACADEMIC PROGRAM</div>
+<h3>Class ${i}</h3>
+<p>Explore learning resources for Class ${i}.</p>
+<a class="open-link" href="#materials">Explore →</a>
+</div>`;
 }
 
-function makeTiles(){
-document.getElementById("classGrid").innerHTML=classes.map(c=>
-`<button class="tile" onclick="chooseClass('${c}')"><strong>${c}</strong><small>Explore learning materials</small></button>`
-).join("");
+const subjectGrid=document.getElementById("subjectGrid");
+subjects.forEach(s=>{
+subjectGrid.innerHTML+=`
+<div class="card">
+<h3>${s}</h3>
+<p>Study resources and learning materials.</p>
+</div>`;
+});
 
-document.getElementById("subjectGrid").innerHTML=subjects.map(s=>
-`<button class="tile" onclick="chooseSubject('${safe(s)}')"><strong>${safe(s)}</strong><small>Explore subject</small></button>`
-).join("");
-
-document.getElementById("typeGrid").innerHTML=types.map(t=>
-`<button class="tile" onclick="chooseType('${safe(t)}')"><strong>${safe(t)}</strong><small>Explore ${safe(t)}</small></button>`
-).join("");
-
-document.getElementById("subjectFilter").innerHTML=
-'<option value="">All Subjects</option>'+
-subjects.map(s=>`<option value="${safe(s)}">${safe(s)}</option>`).join("");
-}
-
-function chooseClass(c){
-selectedClass=c;
-document.getElementById("classFilter").value=c;
-showContent();
-document.getElementById("study").scrollIntoView({behavior:"smooth"});
-}
-
-function chooseSubject(s){
-selectedSubject=s;
-document.getElementById("subjectFilter").value=s;
-showContent();
-document.getElementById("study").scrollIntoView({behavior:"smooth"});
-}
-
-function chooseType(t){
-selectedType=t;
-document.getElementById("typeFilter").value=t;
-showContent();
-document.getElementById("study").scrollIntoView({behavior:"smooth"});
-}
+let allContent=[];
 
 async function loadContent(){
-const {data,error}=await db
-.from("study_content")
-.select("*")
-.order("created_at",{ascending:false});
+const grid=document.getElementById("contentGrid");
+grid.innerHTML='<div class="card">Loading...</div>';
+
+const {data,error}=await db.from("study_content")
+.select("*").order("created_at",{ascending:false});
 
 if(error){
-document.getElementById("message").textContent="Unable to load content: "+error.message;
+grid.innerHTML='<div class="card">Unable to load materials. Please try again later.</div>';
 return;
 }
 
 allContent=data||[];
-document.getElementById("message").textContent=
-allContent.length+" learning materials available.";
-showContent();
+renderContent(allContent);
 }
 
-function showContent(){
-const search=document.getElementById("search").value.toLowerCase();
-const cls=document.getElementById("classFilter").value;
-const sub=document.getElementById("subjectFilter").value;
-const typ=document.getElementById("typeFilter").value;
+function renderContent(items){
+const grid=document.getElementById("contentGrid");
+grid.innerHTML="";
 
-const filtered=allContent.filter(item=>{
-const text=[item.title,item.description,item.subject,item.type].join(" ").toLowerCase();
-
-return (!search||text.includes(search))
-&&(!cls||!item.class_name||item.class_name===cls)
-&&(!sub||String(item.subject||"").toLowerCase()===sub.toLowerCase())
-&&(!typ||item.type===typ);
-});
-
-const list=document.getElementById("contentList");
-
-if(!filtered.length){
-list.innerHTML="<p>No study materials found. Try another search or filter.</p>";
+if(!items.length){
+grid.innerHTML='<div class="card">No study materials available yet.</div>';
 return;
 }
 
-list.innerHTML=filtered.map(item=>`
-<div class="content-card">
-<span class="tag">${safe(item.type)}</span>
-${item.class_name?`<span class="tag">${safe(item.class_name)}</span>`:""}
-${item.subject?`<span class="tag">${safe(item.subject)}</span>`:""}
-<h3>${safe(item.title)}</h3>
-<p>${safe(item.description||"")}</p>
-${item.url?`<a href="${safe(item.url)}" target="_blank" rel="noopener noreferrer">Open Material</a>`:""}
-</div>
-`).join("");
+items.forEach(item=>{
+const card=document.createElement("div");
+card.className="card content-card";
+
+const tag=document.createElement("div");
+tag.className="tag";
+tag.textContent=item.type||"STUDY MATERIAL";
+
+const title=document.createElement("h3");
+title.textContent=item.title||"Untitled";
+
+const desc=document.createElement("p");
+desc.textContent=item.description||"Explore this learning resource.";
+
+const details=document.createElement("p");
+details.textContent=[item.class_name,item.subject].filter(Boolean).join(" • ");
+
+card.append(tag,title,desc,details);
+
+if(item.url){
+const link=document.createElement("a");
+link.className="open-link";
+link.href=item.url;
+link.target="_blank";
+link.rel="noopener noreferrer";
+link.textContent="Open Material →";
+card.appendChild(link);
 }
 
-["search","classFilter","subjectFilter","typeFilter"].forEach(id=>{
-document.getElementById(id).addEventListener("input",showContent);
-document.getElementById(id).addEventListener("change",showContent);
+grid.appendChild(card);
+});
+}
+
+document.getElementById("searchInput").addEventListener("input",e=>{
+const q=e.target.value.toLowerCase();
+renderContent(allContent.filter(item=>
+[item.title,item.description,item.type,item.subject,item.class_name]
+.join(" ").toLowerCase().includes(q)
+));
 });
 
-async function checkUser(){
-const {data:{user}}=await db.auth.getUser();
-
-if(user){
-document.getElementById("loginLink").textContent="Account";
-document.getElementById("loginLink").href="profile.html";
-document.getElementById("registerLink").style.display="none";
-}
-}
-
-makeTiles();
-checkUser();
 loadContent();
-</script>
 
+db.auth.getUser().then(({data})=>{
+const nav=document.querySelector("nav");
+if(data.user){
+const login=nav.querySelector('a[href="login.html"]');
+if(login){
+login.textContent="Dashboard";
+login.href="user-dashboard.html";
+}
+}
+});
+</script>
 </body>
-</html>
+  </html>
+  
