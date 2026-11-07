@@ -1,120 +1,391 @@
-<!-- VIHUHUHU COMPLETE STUDY PORTAL -->
-<section id="study-zone" class="study-portal">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070817">
+<title>VIHUHUHU | Study Portal</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-.study-portal{padding:35px 16px;background:#090d20;color:#fff;border-radius:22px;font-family:Arial,sans-serif}
-.study-portal *{box-sizing:border-box}
-.study-portal .hero{padding:30px 15px;text-align:center;background:linear-gradient(135deg,#27205b,#111b38);border-radius:20px}
-.study-portal h2{color:#c8aaff;font-size:29px}
-.study-portal p{color:#c5cbe0}
-.study-portal button,.study-portal select,.study-portal input{padding:12px;border-radius:10px;border:1px solid #6352a2;background:#191e3b;color:white}
-.study-portal button{cursor:pointer}
-.study-portal .active{background:#8155dc}
-.study-portal .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:22px 0}
-.study-portal .card{padding:18px 10px;background:#151a32;border:1px solid #343d66;border-radius:15px;text-align:center}
-.study-portal .card .emoji{font-size:30px}
-.study-portal .card h3{font-size:16px;color:#d4baff}
-.study-portal .card button{margin-top:8px;width:100%}
-.study-portal .panel{background:#151a32;padding:20px;border-radius:16px;margin-top:20px}
-.study-portal .panel h3{color:#c9aaff}
-.study-portal .tools{display:flex;gap:8px;flex-wrap:wrap}
-.study-portal .tools button{flex:1}
-.study-portal .result{padding:15px;background:#202849;border-radius:12px;margin-top:12px;line-height:1.7}
-.study-portal .search{width:100%;margin:12px 0}
-.study-portal .muted{font-size:12px;color:#aeb6d2}
+:root{
+--p:#a78bfa;
+--c:#55e6df;
+--w:#f7f7ff;
+--m:#aeb6d2;
+--bg:#070817;
+--card:#151a32;
+--border:#343d66;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+margin:0;background:var(--bg);color:var(--w);
+font-family:Arial,sans-serif;
+}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+header{
+position:sticky;top:0;z-index:100;
+display:flex;align-items:center;justify-content:space-between;
+gap:12px;padding:15px 5%;
+background:#090d20ed;
+border-bottom:1px solid #282e49;
+backdrop-filter:blur(12px);
+}
+.brand{font-size:22px;font-weight:900;color:var(--p)}
+nav{display:flex;gap:15px;flex-wrap:wrap}
+nav a{font-size:13px;color:var(--m)}
+nav a:hover{color:var(--c)}
+.hero{
+padding:65px 15px;text-align:center;
+background:radial-gradient(ellipse at top,#29205e,#070817 75%);
+}
+.hero .symbol{font-size:50px}
+.hero h1{font-size:37px;margin:12px 0}
+.hero h1 span{color:var(--p)}
+.hero p{color:var(--m);line-height:1.7}
+.btn{
+display:inline-block;padding:12px 19px;
+background:var(--p);color:#080817;
+border:0;border-radius:10px;font-weight:bold;
+cursor:pointer;margin:5px;
+}
+.btn.secondary{background:#202849;color:white}
+.container{max-width:1150px;margin:auto;padding:25px 16px}
+.section-title{font-size:24px;color:#d4baff;margin:25px 0 15px}
+.muted{color:var(--m)}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+gap:13px;margin:18px 0;
+}
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:15px;padding:18px 13px;
+transition:.2s;
+}
+.card:hover{border-color:var(--p);transform:translateY(-3px)}
+.card h3{font-size:16px;color:#d4baff;margin:9px 0}
+.card p{font-size:13px;color:var(--m);line-height:1.5}
+.emoji{font-size:30px}
+.card button{width:100%;margin-top:8px}
+.panel{
+background:var(--card);border:1px solid var(--border);
+border-radius:16px;padding:20px;margin:20px 0;
+}
+.panel h3{color:#c9aaff}
+input,select{
+width:100%;padding:13px;border-radius:10px;
+border:1px solid #6352a2;background:#191e3b;color:white;
+margin:8px 0;
+}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tools button{flex:1}
+button{
+padding:11px 13px;border-radius:10px;
+border:1px solid #6352a2;background:#252044;
+color:white;cursor:pointer;
+}
+button:hover{background:#8155dc}
+.result{
+background:#202849;border-radius:12px;
+padding:16px;margin-top:15px;line-height:1.7;
+}
+.result a{color:var(--c)}
+.tag{font-size:11px;color:var(--c);font-weight:bold}
+footer{
+text-align:center;padding:30px 15px;
+border-top:1px solid #282e49;color:var(--m);
+margin-top:35px;
+}
+footer .brand{margin-bottom:10px}
+@media(max-width:650px){
+header{align-items:flex-start;flex-direction:column}
+nav{gap:12px}
+.hero h1{font-size:29px}
+}
 </style>
+</head>
 
-<div class="hero">
-  <div style="font-size:42px">📚</div>
-  <h2 id="spTitle">VIHUHUHU STUDY PORTAL</h2>
-  <p id="spSub">Learn • Practice • Improve • Succeed</p>
-  <div class="tools" style="justify-content:center">
-    <button id="spHi" class="active" onclick="spLang('hi')">हिन्दी</button>
-    <button id="spEn" onclick="spLang('en')">English</button>
-  </div>
+<body>
+
+<header>
+<div class="brand">VIHUHUHU</div>
+<nav>
+<a href="#home">Home</a>
+<a href="#study-zone">Study</a>
+<a href="#subjects">Subjects</a>
+<a href="#materials">Materials</a>
+<a href="login.html" id="loginLink">Login</a>
+<a href="register.html">Register</a>
+<a href="profile.html">Profile</a>
+<a href="wallet.html">Wallet</a>
+</nav>
+</header>
+
+<section class="hero" id="home">
+<div class="symbol">📚</div>
+<h1>Welcome to <span>VIHUHUHU</span></h1>
+<p>Learn • Practice • Improve • Succeed</p>
+<a class="btn" href="#study-zone">Start Learning</a>
+<a class="btn secondary" href="register.html">Create Account</a>
+</section>
+
+<main class="container">
+
+<section class="panel">
+<h3>👤 Your Account</h3>
+<p class="muted" id="accountStatus">Welcome to VIHUHUHU Study Portal.</p>
+<div class="tools">
+<a class="btn" href="login.html">Login</a>
+<a class="btn secondary" href="register.html">Register</a>
+<a class="btn secondary" href="profile.html">My Profile</a>
+<a class="btn secondary" href="user-dashboard.html">Dashboard</a>
+</div>
+</section>
+
+<!-- STUDY PORTAL -->
+<section id="study-zone" class="study-portal">
+
+<div class="panel" style="text-align:center;background:linear-gradient(135deg,#27205b,#111b38)">
+<div style="font-size:42px">🎓</div>
+<h2 id="spTitle" style="color:#c8aaff">VIHUHUHU STUDY PORTAL</h2>
+<p id="spSub">Learn • Practice • Improve • Succeed</p>
+<div class="tools" style="justify-content:center">
+<button id="spHi" class="active" onclick="spLang('hi')">हिन्दी</button>
+<button id="spEn" onclick="spLang('en')">English</button>
+</div>
 </div>
 
 <div class="panel">
-  <h3 id="spWelcome">अपनी पढ़ाई शुरू करें 🎓</h3>
-  <p id="spChoose">अपनी कक्षा चुनें</p>
-  <select id="spClass" style="width:100%">
-    <option>Class 6</option><option>Class 7</option>
-    <option>Class 8</option><option selected>Class 9</option>
-    <option>Class 10</option><option>Class 11</option>
-    <option>Class 12</option>
-  </select>
-  <input class="search" id="spSearch" placeholder="Search subject / विषय खोजें..." oninput="spSearch()">
+<h3 id="spWelcome">अपनी पढ़ाई शुरू करें 🎓</h3>
+<p id="spChoose">अपनी कक्षा चुनें</p>
+<select id="spClass">
+<option>Class 6</option>
+<option>Class 7</option>
+<option>Class 8</option>
+<option selected>Class 9</option>
+<option>Class 10</option>
+<option>Class 11</option>
+<option>Class 12</option>
+</select>
+<input id="spSearch" placeholder="Search subject / विषय खोजें..." oninput="spSearch()">
 </div>
 
-<h3 id="spSubjects">📖 Study Subjects</h3>
+<h3 class="section-title" id="spSubjects">📖 Study Subjects</h3>
+
 <div class="grid" id="spGrid">
-  <div class="card"><div class="emoji">➗</div><h3>Mathematics</h3><p>Math & Formulas</p><button onclick="spOpen('math')">Open</button></div>
-  <div class="card"><div class="emoji">🔬</div><h3>Science</h3><p>Physics, Chemistry, Biology</p><button onclick="spOpen('science')">Open</button></div>
-  <div class="card"><div class="emoji">🌍</div><h3>Social Science</h3><p>History, Geography, Civics</p><button onclick="spOpen('sst')">Open</button></div>
-  <div class="card"><div class="emoji">🔤</div><h3>English</h3><p>Grammar & Literature</p><button onclick="spOpen('english')">Open</button></div>
-  <div class="card"><div class="emoji">📝</div><h3>Hindi</h3><p>व्याकरण और साहित्य</p><button onclick="spOpen('hindi')">Open</button></div>
-  <div class="card"><div class="emoji">💻</div><h3>Computer</h3><p>Computer Basics</p><button onclick="spOpen('computer')">Open</button></div>
+<div class="card" data-search="mathematics गणित math">
+<div class="emoji">➗</div>
+<h3>Mathematics</h3>
+<p>Math & Formulas</p>
+<button onclick="spOpen('math')">Open</button>
 </div>
 
-<h3 id="spFeatures">🚀 Learning Features</h3>
+<div class="card" data-search="science विज्ञान physics chemistry biology">
+<div class="emoji">🔬</div>
+<h3>Science</h3>
+<p>Physics, Chemistry, Biology</p>
+<button onclick="spOpen('science')">Open</button>
+</div>
+
+<div class="card" data-search="social science सामाजिक विज्ञान history geography civics">
+<div class="emoji">🌍</div>
+<h3>Social Science</h3>
+<p>History, Geography, Civics</p>
+<button onclick="spOpen('sst')">Open</button>
+</div>
+
+<div class="card" data-search="english अंग्रेजी grammar literature">
+<div class="emoji">🔤</div>
+<h3>English</h3>
+<p>Grammar & Literature</p>
+<button onclick="spOpen('english')">Open</button>
+</div>
+
+<div class="card" data-search="hindi हिन्दी हिंदी व्याकरण">
+<div class="emoji">📝</div>
+<h3>Hindi</h3>
+<p>व्याकरण और साहित्य</p>
+<button onclick="spOpen('hindi')">Open</button>
+</div>
+
+<div class="card" data-search="computer कंप्यूटर technology">
+<div class="emoji">💻</div>
+<h3>Computer</h3>
+<p>Computer Basics</p>
+<button onclick="spOpen('computer')">Open</button>
+</div>
+</div>
+
+<h3 class="section-title" id="spFeatures">🚀 Learning Features</h3>
+
 <div class="grid">
-  <div class="card"><div class="emoji">📚</div><h3 id="f1">Chapter Notes</h3><p id="d1">Chapter-wise Notes</p><button onclick="spOpen('notes')" id="b1">Open</button></div>
-  <div class="card"><div class="emoji">🧠</div><h3 id="f2">MCQ Quiz</h3><p id="d2">Test Your Knowledge</p><button onclick="spOpen('quiz')" id="b2">Start</button></div>
-  <div class="card"><div class="emoji">📝</div><h3 id="f3">Practice Papers</h3><p id="d3">Practice Questions</p><button onclick="spOpen('papers')" id="b3">Open</button></div>
-  <div class="card"><div class="emoji">📅</div><h3 id="f4">Study Planner</h3><p id="d4">Plan Your Study</p><button onclick="spOpen('planner')" id="b4">Open</button></div>
-  <div class="card"><div class="emoji">📖</div><h3 id="f5">Dictionary</h3><p id="d5">Word Meanings</p><button onclick="spOpen('dictionary')" id="b5">Open</button></div>
-  <div class="card"><div class="emoji">🎯</div><h3 id="f6">Exam Preparation</h3><p id="d6">Prepare for Exams</p><button onclick="spOpen('exam')" id="b6">Open</button></div>
-  <div class="card"><div class="emoji">🧮</div><h3 id="f7">Formula Library</h3><p id="d7">Important Formulas</p><button onclick="spOpen('formulas')" id="b7">Open</button></div>
-  <div class="card"><div class="emoji">📥</div><h3 id="f8">PDF Library</h3><p id="d8">Study PDF Resources</p><button onclick="spOpen('pdf')" id="b8">Open</button></div>
+<div class="card">
+<div class="emoji">📚</div>
+<h3 id="f1">Chapter Notes</h3>
+<p id="d1">Chapter-wise Notes</p>
+<button onclick="spOpen('notes')" id="b1">Open</button>
+</div>
+
+<div class="card">
+<div class="emoji">🧠</div>
+<h3 id="f2">MCQ Quiz</h3>
+<p id="d2">Test Your Knowledge</p>
+<button onclick="spOpen('quiz')" id="b2">Start</button>
+</div>
+
+<div class="card">
+<div class="emoji">📝</div>
+<h3 id="f3">Practice Papers</h3>
+<p id="d3">Practice Questions</p>
+<button onclick="spOpen('papers')" id="b3">Open</button>
+</div>
+
+<div class="card">
+<div class="emoji">📅</div>
+<h3 id="f4">Study Planner</h3>
+<p id="d4">Plan Your Study</p>
+<button onclick="spOpen('planner')" id="b4">Open</button>
+</div>
+
+<div class="card">
+<div class="emoji">📖</div>
+<h3 id="f5">Dictionary</h3>
+<p id="d5">Word Meanings</p>
+<button onclick="spOpen('dictionary')" id="b5">Open</button>
+</div>
+
+<div class="card">
+<div class="emoji">🎯</div>
+<h3 id="f6">Exam Preparation</h3>
+<p id="d6">Prepare for Exams</p>
+<button onclick="spOpen('exam')" id="b6">Open</button>
+</div>
+
+<div class="card">
+<div class="emoji">🧮</div>
+<h3 id="f7">Formula Library</h3>
+<p id="d7">Important Formulas</p>
+<button onclick="spOpen('formulas')" id="b7">Open</button>
+</div>
+
+<div class="card">
+<div class="emoji">📥</div>
+<h3 id="f8">PDF Library</h3>
+<p id="d8">Study PDF Resources</p>
+<button onclick="spOpen('pdf')" id="b8">Open</button>
+</div>
 </div>
 
 <div class="panel">
-  <h3 id="spQuick">⚡ Quick Study</h3>
-  <p id="spQuickText">Choose a topic to explore.</p>
-  <div class="tools">
-    <button onclick="spOpen('math')">➗ Math</button>
-    <button onclick="spOpen('science')">🔬 Science</button>
-    <button onclick="spOpen('english')">🔤 English</button>
-    <button onclick="spOpen('hindi')">📝 Hindi</button>
-  </div>
-  <div class="result" id="spResult">📌 Select any subject or feature above.</div>
+<h3 id="spQuick">⚡ Quick Study</h3>
+<p id="spQuickText">Choose a topic to explore.</p>
+<div class="tools">
+<button onclick="spOpen('math')">➗ Math</button>
+<button onclick="spOpen('science')">🔬 Science</button>
+<button onclick="spOpen('english')">🔤 English</button>
+<button onclick="spOpen('hindi')">📝 Hindi</button>
+</div>
+<div class="result" id="spResult">
+📌 Select any subject or feature above.
+</div>
 </div>
 
-<p class="muted" style="text-align:center;margin-top:25px">VIHUHUHU STUDY PORTAL • Learn Something New Every Day</p>
+</section>
+
+<!-- ADMIN ADDED CONTENT -->
+<section id="materials">
+<h2 class="section-title">📂 Study Materials</h2>
+<p class="muted">Notes, PDFs, courses and learning resources added by Admin.</p>
+<input id="materialSearch" placeholder="Search study materials..." oninput="filterMaterials()">
+<div class="grid" id="materialGrid">
+<div class="card">Loading materials...</div>
+</div>
+</section>
+
+<section class="panel">
+<h3>🌟 VIHUHUHU Learning Community</h3>
+<p class="muted">Keep learning and improve your knowledge every day.</p>
+<div class="tools">
+<a class="btn" href="user-dashboard.html">My Dashboard</a>
+<a class="btn secondary" href="profile.html">My Profile</a>
+<a class="btn secondary" href="wallet.html">My Wallet</a>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="brand">VIHUHUHU</div>
+<p>Learn • Practice • Improve • Succeed</p>
+<p>© 2026 VIHUHUHU. All Rights Reserved.</p>
+<a href="login.html">Login</a> ·
+<a href="register.html">Register</a> ·
+<a href="profile.html">Profile</a>
+</footer>
 
 <script>
-(function(){
-const data={
+/* SUPABASE CONNECTION */
+const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+/* LANGUAGE DATA */
+const languageData={
 hi:{
 sub:"सीखें • अभ्यास करें • आगे बढ़ें",
-welcome:"अपनी पढ़ाई शुरू करें 🎓",choose:"अपनी कक्षा चुनें",
-subjects:"📖 पढ़ाई के विषय",features:"🚀 पढ़ाई के फीचर्स",
-quick:"⚡ तुरंत पढ़ाई",quickText:"सीखने के लिए कोई विषय चुनें।",
+welcome:"अपनी पढ़ाई शुरू करें 🎓",
+choose:"अपनी कक्षा चुनें",
+subjects:"📖 पढ़ाई के विषय",
+features:"🚀 पढ़ाई के फीचर्स",
+quick:"⚡ तुरंत पढ़ाई",
+quickText:"सीखने के लिए कोई विषय चुनें।",
 names:["अध्याय नोट्स","MCQ क्विज़","अभ्यास पेपर","स्टडी प्लानर","शब्दकोश","परीक्षा की तैयारी","फॉर्मूला लाइब्रेरी","PDF लाइब्रेरी"],
 desc:["अध्याय के अनुसार नोट्स","अपना ज्ञान जाँचें","अभ्यास के प्रश्न","अपनी पढ़ाई की योजना","शब्दों के अर्थ","परीक्षा की तैयारी करें","महत्वपूर्ण सूत्र","पढ़ाई की PDF सामग्री"],
-buttons:["खोलें","शुरू करें","खोलें","खोलें","खोलें","खोलें","खोलें","खोलें"],
-msg:"यह फीचर अभी तैयार किया जाना बाकी है।"
+buttons:["खोलें","शुरू करें","खोलें","खोलें","खोलें","खोलें","खोलें","खोलें"]
 },
 en:{
 sub:"Learn • Practice • Improve • Succeed",
-welcome:"Start Your Learning Journey 🎓",choose:"Choose Your Class",
-subjects:"📖 Study Subjects",features:"🚀 Learning Features",
-quick:"⚡ Quick Study",quickText:"Choose a subject to explore.",
+welcome:"Start Your Learning Journey 🎓",
+choose:"Choose Your Class",
+subjects:"📖 Study Subjects",
+features:"🚀 Learning Features",
+quick:"⚡ Quick Study",
+quickText:"Choose a subject to explore.",
 names:["Chapter Notes","MCQ Quiz","Practice Papers","Study Planner","Dictionary","Exam Preparation","Formula Library","PDF Library"],
 desc:["Chapter-wise Notes","Test Your Knowledge","Practice Questions","Plan Your Study","Word Meanings","Prepare for Exams","Important Formulas","Study PDF Resources"],
-buttons:["Open","Start","Open","Open","Open","Open","Open","Open"],
-msg:"This feature is not available yet."
-}};
-const subjects={
-math:["गणित","Mathematics"],science:["विज्ञान","Science"],
-sst:["सामाजिक विज्ञान","Social Science"],english:["अंग्रेज़ी","English"],
-hindi:["हिन्दी","Hindi"],computer:["कंप्यूटर","Computer"],
-notes:["अध्याय नोट्स","Chapter Notes"],quiz:["MCQ क्विज़","MCQ Quiz"],
-papers:["अभ्यास पेपर","Practice Papers"],planner:["स्टडी प्लानर","Study Planner"],
-dictionary:["शब्दकोश","Dictionary"],exam:["परीक्षा तैयारी","Exam Preparation"],
-formulas:["फॉर्मूला लाइब्रेरी","Formula Library"],pdf:["PDF लाइब्रेरी","PDF Library"]
+buttons:["Open","Start","Open","Open","Open","Open","Open","Open"]
+}
 };
-window.spLang=function(lang){
-let t=data[lang];window.spCurrent=lang;
+
+const subjectNames={
+math:["गणित","Mathematics"],
+science:["विज्ञान","Science"],
+sst:["सामाजिक विज्ञान","Social Science"],
+english:["अंग्रेज़ी","English"],
+hindi:["हिन्दी","Hindi"],
+computer:["कंप्यूटर","Computer"],
+notes:["अध्याय नोट्स","Chapter Notes"],
+quiz:["MCQ क्विज़","MCQ Quiz"],
+papers:["अभ्यास पेपर","Practice Papers"],
+planner:["स्टडी प्लानर","Study Planner"],
+dictionary:["शब्दकोश","Dictionary"],
+exam:["परीक्षा की तैयारी","Exam Preparation"],
+formulas:["फॉर्मूला लाइब्रेरी","Formula Library"],
+pdf:["PDF लाइब्रेरी","PDF Library"]
+};
+
+let currentLanguage="hi";
+let allMaterials=[];
+
+function spLang(lang){
+currentLanguage=lang;
+const t=languageData[lang];
+
 document.getElementById("spSub").textContent=t.sub;
 document.getElementById("spWelcome").textContent=t.welcome;
 document.getElementById("spChoose").textContent=t.choose;
@@ -122,29 +393,204 @@ document.getElementById("spSubjects").textContent=t.subjects;
 document.getElementById("spFeatures").textContent=t.features;
 document.getElementById("spQuick").textContent=t.quick;
 document.getElementById("spQuickText").textContent=t.quickText;
+
 document.getElementById("spHi").classList.toggle("active",lang==="hi");
 document.getElementById("spEn").classList.toggle("active",lang==="en");
+
 for(let i=0;i<8;i++){
 document.getElementById("f"+(i+1)).textContent=t.names[i];
 document.getElementById("d"+(i+1)).textContent=t.desc[i];
 document.getElementById("b"+(i+1)).textContent=t.buttons[i];
 }
-};
-window.spOpen=function(key){
-let lang=window.spCurrent||"hi";
-let title=subjects[key][lang==="hi"?0:1];
-let cls=document.getElementById("spClass").value;
-document.getElementById("spResult").innerHTML="<b>"+title+"</b><br>"+cls+"<br>"+data[lang].msg;
-};
-window.spSearch=function(){
-let q=document.getElementById("spSearch").value.toLowerCase();
+}
+
+function spSearch(){
+const q=document.getElementById("spSearch").value.toLowerCase();
 document.querySelectorAll("#spGrid .card").forEach(card=>{
-card.style.display=card.innerText.toLowerCase().includes(q)?"block":"none";
+card.style.display=card.dataset.search.includes(q)?"block":"none";
 });
+}
+
+/* LOAD ADMIN CONTENT */
+async function loadMaterials(){
+const grid=document.getElementById("materialGrid");
+
+const {data,error}=await db
+.from("study_content")
+.select("*")
+.order("created_at",{ascending:false});
+
+if(error){
+grid.innerHTML='<div class="card">Unable to load materials. Please try again later.</div>';
+return;
+}
+
+allMaterials=data||[];
+renderMaterials(allMaterials);
+}
+
+function renderMaterials(items){
+const grid=document.getElementById("materialGrid");
+grid.innerHTML="";
+
+if(!items.length){
+grid.innerHTML='<div class="card">No study materials added yet.</div>';
+return;
+}
+
+items.forEach(item=>{
+const card=document.createElement("div");
+card.className="card";
+
+const tag=document.createElement("div");
+tag.className="tag";
+tag.textContent=item.type||"STUDY MATERIAL";
+
+const title=document.createElement("h3");
+title.textContent=item.title||"Untitled";
+
+const desc=document.createElement("p");
+desc.textContent=item.description||"Study material";
+
+const details=document.createElement("p");
+details.textContent=[item.class_name,item.subject].filter(Boolean).join(" • ");
+
+card.append(tag,title,desc,details);
+
+if(item.url){
+const link=document.createElement("a");
+link.href=item.url;
+link.target="_blank";
+link.rel="noopener noreferrer";
+link.className="btn";
+link.textContent="Open Material";
+card.appendChild(link);
+}
+
+grid.appendChild(card);
+});
+}
+
+function filterMaterials(){
+const q=document.getElementById("materialSearch").value.toLowerCase();
+const filtered=allMaterials.filter(item=>
+[
+item.title,item.description,item.type,
+item.subject,item.class_name
+].join(" ").toLowerCase().includes(q)
+);
+renderMaterials(filtered);
+}
+
+/* OPEN SUBJECT OR FEATURE */
+async function spOpen(key){
+const lang=currentLanguage;
+const title=subjectNames[key][lang==="hi"?0:1];
+const cls=document.getElementById("spClass").value;
+const result=document.getElementById("spResult");
+
+result.textContent=lang==="hi"?"लोड हो रहा है...":"Loading...";
+
+const {data,error}=await db
+.from("study_content")
+.select("*")
+.eq("class_name",cls)
+.order("created_at",{ascending:false});
+
+if(error){
+result.textContent=lang==="hi"?
+"सामग्री लोड नहीं हो सकी। बाद में कोशिश करें।":
+"Unable to load content. Please try again.";
+return;
+}
+
+const items=(data||[]).filter(item=>{
+const text=[
+item.title,item.description,item.type,item.subject
+].join(" ").toLowerCase();
+
+const keywords={
+math:["math","गणित","formula","सूत्र"],
+science:["science","विज्ञान","physics","chemistry","biology"],
+sst:["social","सामाजिक","history","geography","civics"],
+english:["english","अंग्रेज़ी"],
+hindi:["hindi","हिंदी","हिन्दी"],
+computer:["computer","कंप्यूटर"],
+notes:["note","नोट"],
+quiz:["quiz","mcq","क्विज"],
+papers:["paper","practice","अभ्यास"],
+planner:["planner","योजना"],
+dictionary:["dictionary","शब्दकोश"],
+exam:["exam","परीक्षा"],
+formulas:["formula","सूत्र"],
+pdf:["pdf"]
 };
-window.spLang("hi");
-})();
+
+return (keywords[key]||[key]).some(word=>text.includes(word));
+});
+
+result.innerHTML="";
+
+const heading=document.createElement("strong");
+heading.textContent=title+" — "+cls;
+result.appendChild(heading);
+
+if(!items.length){
+const msg=document.createElement("p");
+msg.textContent=lang==="hi"?
+"इस कक्षा के लिए अभी कोई सामग्री उपलब्ध नहीं है। Admin द्वारा सामग्री जोड़ने पर यहाँ दिखाई देगी।":
+"No content available for this class yet. Materials added by Admin will appear here.";
+result.appendChild(msg);
+return;
+}
+
+items.forEach(item=>{
+const box=document.createElement("div");
+box.style.borderTop="1px solid #465071";
+box.style.padding="12px 0";
+
+const name=document.createElement("b");
+name.textContent=item.title;
+box.appendChild(name);
+
+if(item.description){
+const description=document.createElement("p");
+description.textContent=item.description;
+box.appendChild(description);
+}
+
+if(item.url){
+const link=document.createElement("a");
+link.href=item.url;
+link.target="_blank";
+link.rel="noopener noreferrer";
+link.textContent=lang==="hi"?"सामग्री खोलें →":"Open Material →";
+box.appendChild(link);
+}
+
+result.appendChild(box);
+});
+}
+
+/* USER SESSION */
+async function checkUser(){
+const {data}=await db.auth.getUser();
+
+if(data.user){
+document.getElementById("accountStatus").textContent=
+"Logged in as "+data.user.email;
+
+document.getElementById("loginLink").textContent="Dashboard";
+document.getElementById("loginLink").href="user-dashboard.html";
+}
+}
+
+/* START */
+spLang("hi");
+loadMaterials();
+checkUser();
 </script>
-</section>
-<!-- END VIHUHUHU STUDY PORTAL -->
-                                                
+
+</body>
+  </html>
+  
