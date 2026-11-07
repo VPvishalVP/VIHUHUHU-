@@ -252,6 +252,21 @@ applyWebsiteSettings();
   }
 })();
   </script>
+<script>
+(async function () {
+  const { data: { user } } = await client.auth.getUser();
 
+  if (!user) return;
+
+  const { data } = await client.storage
+    .from('avatars')
+    .createSignedUrl(user.id + '/avatar', 3600);
+
+  if (data?.signedUrl) {
+    document.getElementById('indexProfilePhoto').src = data.signedUrl;
+    document.getElementById('profilePhotoBox').style.display = 'flex';
+  }
+})();
+</script>
 </body>
 </html>
