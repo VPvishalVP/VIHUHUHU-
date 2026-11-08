@@ -585,7 +585,97 @@ function openAIChat(id){
  document.getElementById("aiStatus").textContent="";
 }
 
+
 async function sendAIMessage(){
+ if(aiBusy || !currentAI) return;
+
+ const input=document.getElementById("aiInput");
+ const status=document.getElementById("aiStatus");
+ const sendBtn=document.getElementById("aiSendBtn");
+ const message=input.value.trim();
+
+ if(!message) return;
+
+ try{
+  const {data:sessionData,error:sessionError}=await db.auth.getSession();
+
+  if(sessionError || !sessionData.session){
+   status.textContent="पहले Login करें।";
+   return;
+  }
+
+  let chat=aiChats.find(c=>c.id===currentChatId);
+
+  if(!chat){
+   newAIChat();
+   chat=aiChats.find(c=>c.id===currentChatId);
+  }
+
+  chat.messages.push({role:"user",content:message});
+
+  if(chat.title==="New Chat"){
+   chat.title=message.slice(0,35);
+  }
+
+  chat.updated=Date.now();
+  input.value="";
+
+  saveAIChats();
+  renderAIHistory();
+  renderAIMessages(chat.messages);
+
+  aiBusy=true;
+  sendBtn.disabled=true;
+  status.textContent="AI जवाब तैयार कर रहा है...";
+
+  const {data,error}=await db.functions.invoke("ai-chat",{
+   body:{
+    persona:currentAI,
+    messages:chat.messages.slice(-12)
+   }
+  });
+
+  if(error) throw error;
+
+  const reply=data?.reply || data?.output_text || data?.text;
+
+  if(!reply) throw new Error("AI से जवाब नहीं मिला।");
+
+  chat.messages.push({
+   role:"assistant",
+   content:reply
+  });
+
+  chat.updated=Date.now();
+
+  saveAIChats();
+  renderAIMessages(chat.messages);
+  renderAIHistory();
+
+  status.textContent="";
+
+ }catch(error){
+  console.error("AI Chat Error:",error);
+  status.textContent="AI Error: "+(error.message || "फिर कोशिश करें।");
+ }finally{
+  aiBusy=false;
+  sendBtn.disabled=false;
+ }
+}
+
+document.getElementById("aiInput").addEventListener("keydown",function(e){
+ if(e.key==="Enter"){
+  e.preventDefault();
+  sendAIMessage();
+ }
+});
+
+loadMaterials();
+checkAccount();
+</script>
+</body>
+</html>
+
  if(aiBusy||!currentAI)return;
 
  const input=document.getElementById("aiInput");
