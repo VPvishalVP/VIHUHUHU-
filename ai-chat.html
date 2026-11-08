@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#09051d">
+<title>VIHUHUHU AI CHAT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#09051d;
+ color:white;
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+}
+header{
+ padding:17px;
+ display:flex;
+ align-items:center;
+ gap:14px;
+ background:#120b29;
+ border-bottom:1px solid #39245b;
+ position:sticky;
+ top:0;
+ z-index:5;
+}
+.back{
+ background:#281544;
+ color:white;
+ border:1px solid #7544a7;
+ padding:10px 15px;
+ border-radius:10px;
+ cursor:pointer;
+}
+.logo{
+ font-size:19px;
+ font-weight:bold;
+ color:#d8a5ff;
+}
+.container{
+ max-width:850px;
+ margin:auto;
+ padding:18px;
+}
+.choices{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:15px;
+ margin-top:45px;
+}
+.choice{
+ padding:25px 12px;
+ border-radius:18px;
+ background:#17102e;
+ border:1px solid #7544a7;
+ color:white;
+ cursor:pointer;
+ font-size:18px;
+}
+.choice span{
+ display:block;
+ font-size:40px;
+ margin-bottom:12px;
+}
+.panel{
+ background:#130d27;
+ border:1px solid #39245b;
+ border-radius:17px;
+ overflow:hidden;
+}
+.chat-head{
+ padding:16px;
+ border-bottom:1px solid #39245b;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+}
+.chat-head h3{margin:0;color:#d8a5ff}
+.new-btn{
+ background:#7c3aed;
+ color:white;
+ border:0;
+ padding:10px 13px;
+ border-radius:9px;
+ cursor:pointer;
+}
+.messages{
+ height:55vh;
+ min-height:300px;
+ overflow-y:auto;
+ padding:15px;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+}
+.msg{
+ padding:12px 15px;
+ border-radius:14px;
+ max-width:85%;
+ line-height:1.5;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+}
+.user{
+ align-self:flex-end;
+ background:#7136bd;
+}
+.ai{
+ align-self:flex-start;
+ background:#29203e;
+ border:1px solid #493267;
+}
+.input-area{
+ display:flex;
+ gap:9px;
+ padding:13px;
+ border-top:1px solid #39245b;
+}
+input{
+ flex:1;
+ min-width:0;
+ background:#211638;
+ border:1px solid #65428e;
+ color:white;
+ border-radius:11px;
+ padding:14px;
+ outline:none;
+}
+.send{
+ background:#9333ea;
+ color:white;
+ border:0;
+ padding:0 20px;
+ border-radius:11px;
+ cursor:pointer;
+}
+.send:disabled{opacity:.5}
+.status{
+ color:#d6b5ff;
+ font-size:13px;
+ padding:0 15px 12px;
+}
+.history{
+ padding:12px;
+ border-top:1px solid #39245b;
+}
+.history-title{
+ color:#c99cff;
+ margin-bottom:10px;
+ font-weight:bold;
+}
+.history-item{
+ display:flex;
+ gap:8px;
+ margin:7px 0;
+}
+.history-item button{
+ flex:1;
+ text-align:left;
+ background:#211638;
+ border:1px solid #493267;
+ color:white;
+ padding:10px;
+ border-radius:9px;
+ overflow:hidden;
+}
+.history-item .delete{
+ flex:0;
+ color:#ff8b8b;
+}
+.hidden{display:none!important}
+.note{
+ text-align:center;
+ color:#a99abf;
+ font-size:12px;
+ padding:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <button class="back" onclick="goBack()">← Back</button>
+ <div class="logo">VIHUHUHU AI</div>
+</header>
+
+<div class="container">
+
+ <div id="aiChoices">
+  <h2 style="text-align:center">अपना AI चुनें</h2>
+  <p style="text-align:center;color:#aaa">किससे बात करना चाहते हैं?</p>
+
+  <div class="choices">
+   <button class="choice" onclick="selectAI('VIHUHUHU')">
+    <span>🤖</span>
+    VIHUHUHU
+    <small style="display:block;margin-top:8px;color:#bbb">Boys AI</small>
+   </button>
+
+   <button class="choice" onclick="selectAI('AAIRA')">
+    <span>👩‍💻</span>
+    AAIRA
+    <small style="display:block;margin-top:8px;color:#bbb">Girls AI</small>
+   </button>
+  </div>
+ </div>
+
+ <div id="aiChatBox" class="panel hidden">
+
+  <div class="chat-head">
+   <h3 id="aiTitle">AI CHAT</h3>
+   <button class="new-btn" onclick="newChat()">+ New Chat</button>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-area">
+   <input id="aiInput" placeholder="अपना मैसेज लिखें..." maxlength="2000">
+   <button class="send" id="sendBtn" onclick="sendMessage()">Send</button>
+  </div>
+
+  <div class="status" id="aiStatus"></div>
+
+  <div class="history">
+   <div class="history-title">🕘 Chat History</div>
+   <div id="historyList"></div>
+  </div>
+
+ </div>
+
+ <div class="note">
+  यह AI है। इसके जवाब कभी-कभी गलत हो सकते हैं।
+ </div>
+
+</div>
+
+<script>
+const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
+const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
+
+const db=window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
+);
+
+let currentAI="";
+let currentChatId="";
+let aiChats=[];
+let aiBusy=false;
+let userId="guest";
+
+function goBack(){
+ window.location.href="index.html";
+}
+
+function storageKey(){
+ return "vihu_ai_chats_"+userId+"_"+currentAI;
+}
+
+function saveChats(){
+ try{
+  localStorage.setItem(storageKey(),JSON.stringify(aiChats));
+ }catch(e){
+  console.error(e);
+ }
+}
+
+function loadChats(){
+ try{
+  aiChats=JSON.parse(localStorage.getItem(storageKey())||"[]");
+  if(!Array.isArray(aiChats)) aiChats=[];
+ }catch(e){
+  aiChats=[];
+ }
+}
+
+async function selectAI(name){
+ currentAI=name;
+
+ try{
+  const {data}=await db.auth.getUser();
+  userId=data?.user?.id||"guest";
+ }catch(e){
+  userId="guest";
+ }
+
+ loadChats();
+
+ document.getElementById("aiChoices").classList.add("hidden");
+ document.getElementById("aiChatBox").classList.remove("hidden");
+
+ document.getElementById("aiTitle").textContent=
+  name==="VIHUHUHU"?"🤖 VIHUHUHU AI":"👩‍💻 AAIRA AI";
+
+ renderHistory();
+
+ if(aiChats.length){
+  openChat(aiChats[0].id);
+ }else{
+  newChat();
+ }
+}
+
+function newChat(){
+ const chat={
+  id:Date.now().toString(),
+  title:"New Chat",
+  messages:[],
+  updated:Date.now()
+ };
+
+ aiChats.unshift(chat);
+ currentChatId=chat.id;
+
+ saveChats();
+ renderHistory();
+ renderMessages([]);
+}
+
+function openChat(id){
+ const chat=aiChats.find(c=>c.id===id);
+ if(!chat)return;
+
+ currentChatId=id;
+ renderMessages(chat.messages);
+ renderHistory();
+}
+
+function deleteChat(id){
+ if(!confirm("इस चैट को हटाना है?"))return;
+
+ aiChats=aiChats.filter(c=>c.id!==id);
+
+ if(currentChatId===id)currentChatId="";
+
+ saveChats();
+
+ if(!aiChats.length){
+  newChat();
+ }else{
+  openChat(aiChats[0].id);
+ }
+ renderHistory();
+}
+
+function renderHistory(){
+ const box=document.getElementById("historyList");
+ box.innerHTML="";
+
+ aiChats.forEach(chat=>{
+  const row=document.createElement("div");
+  row.className="history-item";
+
+  const open=document.createElement("button");
+  open.textContent=chat.title||"New Chat";
+  open.onclick=()=>openChat(chat.id);
+
+  const del=document.createElement("button");
+  del.className="delete";
+  del.textContent="✕";
+  del.onclick=()=>deleteChat(chat.id);
+
+  row.append(open,del);
+  box.appendChild(row);
+ });
+}
+
+function renderMessages(messages){
+ const box=document.getElementById("messages");
+ box.innerHTML="";
+
+ if(!messages.length){
+  const welcome=document.createElement("div");
+  welcome.className="msg ai";
+  welcome.textContent="नमस्ते! मैं "+currentAI+" AI हूँ। बताइए, आज क्या बात करें?";
+  box.appendChild(welcome);
+  return;
+ }
+
+ messages.forEach(m=>{
+  const div=document.createElement("div");
+  div.className="msg "+(m.role==="user"?"user":"ai");
+  div.textContent=m.content;
+  box.appendChild(div);
+ });
+
+ box.scrollTop=box.scrollHeight;
+}
+
+async function sendMessage(){
+ if(aiBusy||!currentAI)return;
+
+ const input=document.getElementById("aiInput");
+ const status=document.getElementById("aiStatus");
+ const send=document.getElementById("sendBtn");
+ const message=input.value.trim();
+
+ if(!message)return;
+
+ const {data:sessionData,error:sessionError}=await db.auth.getSession();
+
+ if(sessionError||!sessionData.session){
+  status.textContent="पहले Login करें।";
+  return;
+ }
+
+ let chat=aiChats.find(c=>c.id===currentChatId);
+
+ if(!chat){
+  newChat();
+  chat=aiChats.find(c=>c.id===currentChatId);
+ }
+
+ chat.messages.push({
+  role:"user",
+  content:message
+ });
+
+ if(chat.title==="New Chat"){
+  chat.title=message.slice(0,35);
+ }
+
+ chat.updated=Date.now();
+ input.value="";
+
+ saveChats();
+ renderHistory();
+ renderMessages(chat.messages);
+
+ aiBusy=true;
+ send.disabled=true;
+ status.textContent="AI जवाब तैयार कर रहा है...";
+
+ try{
+  const {data,error}=await db.functions.invoke("ai-chat",{
+   body:{
+    persona:currentAI,
+    messages:chat.messages.slice(-12)
+   }
+  });
+
+  if(error)throw error;
+
+  const reply=data?.reply||data?.output_text||data?.text;
+
+  if(!reply)throw new Error("AI से जवाब नहीं मिला।");
+
+  chat.messages.push({
+   role:"assistant",
+   content:reply
+  });
+
+  chat.updated=Date.now();
+
+  saveChats();
+  renderMessages(chat.messages);
+  renderHistory();
+
+  status.textContent="";
+
+ }catch(error){
+  console.error("AI Error:",error);
+  status.textContent="AI Error: "+(error.message||"फिर कोशिश करें।");
+ }finally{
+  aiBusy=false;
+  send.disabled=false;
+ }
+}
+
+document.getElementById("aiInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter"){
+  e.preventDefault();
+  sendMessage();
+ }
+});
+
+// Dashboard से persona URL में आए तो सीधे वही AI खुले।
+const params=new URLSearchParams(window.location.search);
+const persona=params.get("persona");
+
+if(persona==="VIHUHUHU"||persona==="AAIRA"){
+ selectAI(persona);
+}
+</script>
+
+</body>
+  </html>
+  
