@@ -136,13 +136,14 @@ footer{
 }
 footer a{color:var(--c);margin:0 8px}
 
-/* AI CHAT */
+/* AI FRIENDS */
 .ai-choices{
  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
  gap:14px;margin:20px 0;
 }
 .ai-choice{
- padding:22px;border-radius:17px;
+ display:block;width:100%;padding:22px;
+ border-radius:17px;
  background:linear-gradient(145deg,#211342dd,#0d1532e8);
  border:1px solid #8b5cf677;color:white;text-align:center;
  cursor:pointer;transition:.2s;
@@ -150,46 +151,7 @@ footer a{color:var(--c);margin:0 8px}
 .ai-choice:hover{border-color:#22d3ee;transform:translateY(-3px)}
 .ai-choice .emoji{font-size:38px}
 .ai-choice h3{color:#e9d5ff;margin:10px}
-.ai-chat-box{display:none;margin-top:20px}
-.ai-chat-top{
- display:flex;justify-content:space-between;
- align-items:center;gap:10px;flex-wrap:wrap;
-}
-.ai-chat-top button,.ai-history button{
- padding:9px 13px;border:1px solid #8b5cf677;
- border-radius:20px;background:#7025d5;color:white;cursor:pointer;
-}
-.ai-history{
- display:flex;gap:8px;overflow-x:auto;margin:14px 0;padding:5px;
-}
-.ai-history button{white-space:nowrap;background:#15102c}
-.ai-history button.active{border-color:#22d3ee;background:#302052}
-.ai-messages{
- height:350px;overflow-y:auto;padding:14px;
- background:#09051d;border:1px solid #7651ad;
- border-radius:14px;margin:12px 0;
-}
-.ai-msg{
- padding:11px 14px;margin:9px 0;border-radius:13px;
- max-width:88%;line-height:1.6;white-space:pre-wrap;
- overflow-wrap:anywhere;
-}
-.ai-msg.user{margin-left:auto;background:#7025d5}
-.ai-msg.bot{margin-right:auto;background:#211342;border:1px solid #8b5cf655}
-.ai-input-row{display:flex;gap:9px}
-.ai-input-row input{min-width:0;width:100%}
-.ai-input-row button{
- border:0;border-radius:12px;padding:0 18px;
- background:linear-gradient(100deg,#a855f7,#22d3ee);
- font-weight:bold;cursor:pointer;
-}
-.ai-input-row button:disabled{opacity:.5}
-.ai-status{color:#c4b9df;font-size:13px;min-height:20px;margin:8px 0}
-.ai-back{
- margin-top:12px;background:transparent;color:#22d3ee;
- border:1px solid #22d3ee;border-radius:20px;
- padding:9px 15px;cursor:pointer;
-}
+.ai-choice p{color:var(--m);font-size:13px}
 @media(max-width:650px){
  .nav{padding:12px 0}
  nav{gap:12px}
@@ -202,6 +164,7 @@ footer a{color:var(--c);margin:0 8px}
 </head>
 
 <body>
+
 <header>
  <div class="wrap nav">
   <a class="brand" href="#home">
@@ -211,6 +174,7 @@ footer a{color:var(--c);margin:0 8px}
     <small>LEARN • PRACTICE • GROW</small>
    </div>
   </a>
+
   <nav>
    <a href="#home">Home</a>
    <a href="#study">Study</a>
@@ -227,6 +191,7 @@ footer a{color:var(--c);margin:0 8px}
 </header>
 
 <main class="wrap">
+
  <section class="hero" id="home">
   <div class="hero-content">
    <span class="tag">OFFICIAL LEARNING PLATFORM</span>
@@ -246,47 +211,67 @@ footer a{color:var(--c);margin:0 8px}
  <section id="study">
   <h2>🎓 VIHUHUHU Study Zone</h2>
   <p class="sub">Choose your class and subject • अपनी कक्षा और विषय चुनें</p>
+
   <div class="toolbar">
    <select id="classSelect">
-    <option>Class 6</option><option>Class 7</option>
-    <option>Class 8</option><option selected>Class 9</option>
-    <option>Class 10</option><option>Class 11</option>
+    <option>Class 6</option>
+    <option>Class 7</option>
+    <option>Class 8</option>
+    <option selected>Class 9</option>
+    <option>Class 10</option>
+    <option>Class 11</option>
     <option>Class 12</option>
    </select>
+
    <input id="subjectSearch" placeholder="Search subject / विषय खोजें">
   </div>
+
   <div class="grid" id="subjectGrid">
+
    <div class="card" data-search="mathematics maths गणित">
-    <div class="emoji">➗</div><h3>Mathematics</h3>
+    <div class="emoji">➗</div>
+    <h3>Mathematics</h3>
     <p>Maths and Formulas</p>
     <button onclick="openSubject('Mathematics')">Open</button>
    </div>
+
    <div class="card" data-search="science विज्ञान physics chemistry biology">
-    <div class="emoji">🔬</div><h3>Science</h3>
+    <div class="emoji">🔬</div>
+    <h3>Science</h3>
     <p>Physics, Chemistry, Biology</p>
     <button onclick="openSubject('Science')">Open</button>
    </div>
+
    <div class="card" data-search="social science sst इतिहास भूगोल">
-    <div class="emoji">🌍</div><h3>Social Science</h3>
+    <div class="emoji">🌍</div>
+    <h3>Social Science</h3>
     <p>History, Geography, Civics</p>
     <button onclick="openSubject('Social Science')">Open</button>
    </div>
+
    <div class="card" data-search="english अंग्रेजी grammar">
-    <div class="emoji">🔤</div><h3>English</h3>
+    <div class="emoji">🔤</div>
+    <h3>English</h3>
     <p>Grammar and Literature</p>
     <button onclick="openSubject('English')">Open</button>
    </div>
+
    <div class="card" data-search="hindi हिन्दी हिंदी">
-    <div class="emoji">📝</div><h3>Hindi</h3>
+    <div class="emoji">📝</div>
+    <h3>Hindi</h3>
     <p>व्याकरण और साहित्य</p>
     <button onclick="openSubject('Hindi')">Open</button>
    </div>
+
    <div class="card" data-search="computer कम्प्यूटर">
-    <div class="emoji">💻</div><h3>Computer</h3>
+    <div class="emoji">💻</div>
+    <h3>Computer</h3>
     <p>Computer Learning</p>
     <button onclick="openSubject('Computer')">Open</button>
    </div>
+
   </div>
+
   <div class="result" id="subjectResult">
    Select a subject to explore. / पढ़ने के लिए विषय चुनें।
   </div>
@@ -295,59 +280,96 @@ footer a{color:var(--c);margin:0 8px}
  <section id="features">
   <h2>🚀 Learning Features</h2>
   <p class="sub">Tools to help you learn better.</p>
+
   <div class="grid feature-grid">
-   <div class="card"><div class="emoji">📘</div><h3>Chapter Notes</h3><p>Chapter-wise notes</p><a href="#materials">Open</a></div>
-   <div class="card"><div class="emoji">🧠</div><h3>MCQ Quiz</h3><p>Test your knowledge</p><a href="#materials">Open</a></div>
-   <div class="card"><div class="emoji">📄</div><h3>Practice Papers</h3><p>Practice resources</p><a href="#materials">Open</a></div>
-   <div class="card"><div class="emoji">📅</div><h3>Study Planner</h3><p>Plan your study</p><a href="user-dashboard.html">Open</a></div>
-   <div class="card"><div class="emoji">📖</div><h3>Dictionary</h3><p>Word meanings</p><a href="#materials">Open</a></div>
-   <div class="card"><div class="emoji">🧮</div><h3>Formula Library</h3><p>Important formulas</p><a href="#materials">Open</a></div>
-   <div class="card"><div class="emoji">📚</div><h3>PDF Library</h3><p>Study PDFs</p><a href="#materials">Open</a></div>
-   <div class="card"><div class="emoji">🎯</div><h3>Exam Preparation</h3><p>Prepare for exams</p><a href="#materials">Open</a></div>
+   <div class="card">
+    <div class="emoji">📘</div>
+    <h3>Chapter Notes</h3>
+    <p>Chapter-wise notes</p>
+    <a href="#materials">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">🧠</div>
+    <h3>MCQ Quiz</h3>
+    <p>Test your knowledge</p>
+    <a href="#materials">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">📄</div>
+    <h3>Practice Papers</h3>
+    <p>Practice resources</p>
+    <a href="#materials">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">📅</div>
+    <h3>Study Planner</h3>
+    <p>Plan your study</p>
+    <a href="user-dashboard.html">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">📖</div>
+    <h3>Dictionary</h3>
+    <p>Word meanings</p>
+    <a href="#materials">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">🧮</div>
+    <h3>Formula Library</h3>
+    <p>Important formulas</p>
+    <a href="#materials">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">📚</div>
+    <h3>PDF Library</h3>
+    <p>Study PDFs</p>
+    <a href="#materials">Open</a>
+   </div>
+
+   <div class="card">
+    <div class="emoji">🎯</div>
+    <h3>Exam Preparation</h3>
+    <p>Prepare for exams</p>
+    <a href="#materials">Open</a>
+   </div>
   </div>
  </section>
 
- <!-- AI FRIENDS -->
+ <!-- AI FRIENDS: अलग पेज पर जाएंगे -->
  <section id="ai-friends">
   <h2>🤖 AI Friends</h2>
-  <p class="sub">अपना AI साथी चुनें और बातचीत शुरू करें।</p>
+  <p class="sub">अपना AI साथी चुनें और नए पेज पर बातचीत शुरू करें।</p>
 
   <div id="aiChoices" class="ai-choices">
-   <button class="ai-choice" onclick="selectAI('VIHUHUHU')">
+
+   <a class="ai-choice" href="ai-chat.html?persona=VIHUHUHU">
     <div class="emoji">🤖</div>
     <h3>VIHUHUHU</h3>
     <p>Boys AI Assistant</p>
-   </button>
-   <button class="ai-choice" onclick="selectAI('AAIRA')">
+   </a>
+
+   <a class="ai-choice" href="ai-chat.html?persona=AAIRA">
     <div class="emoji">👩‍💻</div>
     <h3>AAIRA</h3>
     <p>Girls AI Assistant</p>
-   </button>
-  </div>
+   </a>
 
-  <div class="panel ai-chat-box" id="aiChatBox">
-   <div class="ai-chat-top">
-    <h2 id="aiTitle">AI Chat</h2>
-    <button onclick="newAIChat()">＋ New Chat</button>
-   </div>
-   <p class="sub">तुम्हारी बातचीत सेव रहेगी।</p>
-   <div class="ai-history" id="aiHistory"></div>
-   <div class="ai-messages" id="aiMessages"></div>
-   <div class="ai-status" id="aiStatus"></div>
-   <div class="ai-input-row">
-    <input id="aiInput" type="text" placeholder="अपना मैसेज लिखें..." maxlength="2000">
-    <button id="aiSendBtn" onclick="sendAIMessage()">Send</button>
-   </div>
-   <button class="ai-back" onclick="backToAIChoices()">← Change AI</button>
   </div>
  </section>
 
  <section id="materials">
   <h2>📂 Study Materials</h2>
   <p class="sub">Admin द्वारा जोड़े गए Notes, PDFs और Links यहाँ दिखाई देंगे।</p>
+
   <div class="toolbar">
    <input id="materialSearch" placeholder="Search notes, subject or class...">
   </div>
+
   <div id="materialsList" class="grid">
    <div class="panel">Loading study materials...</div>
   </div>
@@ -360,14 +382,18 @@ footer a{color:var(--c);margin:0 8px}
    <a class="main-btn" href="register.html">Join VIHUHUHU</a>
   </div>
  </section>
+
 </main>
 
 <footer>
  <div class="wrap">
   <div class="brand" style="justify-content:center;margin-bottom:12px">
-   <div class="logo">V</div><span class="brand-name">VIHUHUHU</span>
+   <div class="logo">V</div>
+   <span class="brand-name">VIHUHUHU</span>
   </div>
+
   <p>Learn Something New Every Day.</p>
+
   <p>
    <a href="#home">Home</a>
    <a href="#study">Study</a>
@@ -375,6 +401,7 @@ footer a{color:var(--c);margin:0 8px}
    <a href="wallet.html">Wallet</a>
    <a href="admin.html">Admin</a>
   </p>
+
   <p>© 2026 VIHUHUHU. All Rights Reserved.</p>
  </div>
 </footer>
@@ -382,20 +409,31 @@ footer a{color:var(--c);margin:0 8px}
 <script>
 const SUPABASE_URL="https://piagvuicgazqgjkgrvjr.supabase.co";
 const SUPABASE_KEY="sb_publishable_CTnGMVV3LaZBrglKLxdkoA_KCTs7eHZ";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const db=window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
+);
 
 function openSubject(subject){
  const cls=document.getElementById("classSelect").value;
+
  document.getElementById("subjectResult").innerHTML=
   "<b>"+subject+"</b><br>"+cls+
   "<br>इस विषय की सामग्री नीचे Study Materials में देखें।";
+
  document.getElementById("materialSearch").value=subject;
+
  filterMaterials();
- document.getElementById("materials").scrollIntoView({behavior:"smooth"});
+
+ document.getElementById("materials").scrollIntoView({
+  behavior:"smooth"
+ });
 }
 
 document.getElementById("subjectSearch").addEventListener("input",function(){
  const q=this.value.toLowerCase().trim();
+
  document.querySelectorAll("#subjectGrid .card").forEach(card=>{
   card.style.display=card.dataset.search.includes(q)?"":"none";
  });
@@ -405,6 +443,7 @@ let allMaterials=[];
 
 async function loadMaterials(){
  const box=document.getElementById("materialsList");
+
  const {data,error}=await db.from("study_content")
   .select("id,type,title,description,class_name,subject,url,created_at")
   .order("created_at",{ascending:false});
@@ -414,29 +453,38 @@ async function loadMaterials(){
   console.error(error);
   return;
  }
+
  allMaterials=data||[];
  renderMaterials(allMaterials);
 }
 
 function renderMaterials(items){
  const box=document.getElementById("materialsList");
+
  if(!items.length){
   box.innerHTML='<div class="panel">अभी कोई Study Material उपलब्ध नहीं है।</div>';
   return;
  }
+
  box.innerHTML="";
+
  items.forEach(item=>{
   const card=document.createElement("div");
   card.className="card";
+
   const title=document.createElement("h3");
   title.textContent=item.title||"Study Material";
+
   const desc=document.createElement("p");
   desc.textContent=(item.description||"")+
    " • "+(item.class_name||"All Classes")+
    " • "+(item.subject||"General");
+
   const type=document.createElement("p");
   type.textContent=item.type||"Resource";
+
   card.append(type,title,desc);
+
   if(item.url){
    const link=document.createElement("a");
    link.href=item.url;
@@ -445,23 +493,28 @@ function renderMaterials(items){
    link.textContent="Open Material";
    card.appendChild(link);
   }
+
   box.appendChild(card);
  });
 }
 
 function filterMaterials(){
  const q=document.getElementById("materialSearch").value.toLowerCase().trim();
+
  const filtered=allMaterials.filter(item=>
   [item.title,item.description,item.type,item.subject,item.class_name]
   .join(" ").toLowerCase().includes(q)
  );
+
  renderMaterials(filtered);
 }
+
 document.getElementById("materialSearch").addEventListener("input",filterMaterials);
 
 async function checkAccount(){
  const {data}=await db.auth.getUser();
  const status=document.getElementById("accountStatus");
+
  if(status){
   if(data&&data.user){
    status.textContent="Logged in as "+data.user.email;
@@ -471,267 +524,10 @@ async function checkAccount(){
  }
 }
 
-/* AI CHAT SYSTEM */
-
-let currentAI="";
-let currentChatId="";
-let aiBusy=false;
-let aiChats=[];
-
-function aiStorageKey(){
- const userId = window.aiUserId || "guest";
- return "vihuhuhu_ai_chats_" + userId + "_" + currentAI;
-}
-
-async function loadAIChats(){
- aiChats=[];
- try{
-  const raw=localStorage.getItem(aiStorageKey());
-  const parsed=JSON.parse(raw||"[]");
-  aiChats=Array.isArray(parsed)?parsed:[];
- }catch(e){
-  aiChats=[];
- }
-}
-
-function saveAIChats(){
- try{
-  localStorage.setItem(aiStorageKey(),JSON.stringify(aiChats));
- }catch(e){
-  document.getElementById("aiStatus").textContent="Chat save नहीं हो पाई।";
- }
-}
-
-function renderAIHistory(){
- const box=document.getElementById("aiHistory");
- box.innerHTML="";
-
- aiChats.forEach(chat=>{
-  const btn=document.createElement("button");
-  btn.textContent=chat.title||"New Chat";
-  btn.className=chat.id===currentChatId?"active":"";
-  btn.onclick=()=>openAIChat(chat.id);
-  box.appendChild(btn);
- });
-}
-
-function renderAIMessages(messages){
- const box=document.getElementById("aiMessages");
- box.innerHTML="";
-
- messages.forEach(msg=>{
-  const div=document.createElement("div");
-  div.className="ai-msg "+(msg.role==="user"?"user":"bot");
-  div.textContent=msg.content;
-  box.appendChild(div);
- });
- box.scrollTop=box.scrollHeight;
-}
-
-async function selectAI(name){
- currentAI=name;
- currentChatId="";
-
- const {data}=await db.auth.getUser();
- window.aiUserId=data?.user?.id||"guest";
-
- await loadAIChats();
-
- document.getElementById("aiChoices").style.display="none";
- document.getElementById("aiChatBox").style.display="block";
- document.getElementById("aiTitle").textContent=
-  name==="VIHUHUHU"?"🤖 VIHUHUHU AI":"👩‍💻 AAIRA AI";
-
- renderAIHistory();
-
- if(aiChats.length){
-  openAIChat(aiChats[0].id);
- }else{
-  newAIChat();
- }
-}
-
-function backToAIChoices(){
- document.getElementById("aiChatBox").style.display="none";
- document.getElementById("aiChoices").style.display="grid";
- currentAI="";
- currentChatId="";
-}
-
-function newAIChat(){
- currentChatId=crypto.randomUUID();
-
- const chat={
-  id:currentChatId,
-  title:"New Chat",
-  messages:[],
-  updated:Date.now()
- };
-
- aiChats.unshift(chat);
- saveAIChats();
- renderAIHistory();
- renderAIMessages([]);
- document.getElementById("aiStatus").textContent="नई बातचीत शुरू करें।";
-}
-
-function openAIChat(id){
- const chat=aiChats.find(c=>c.id===id);
- if(!chat)return;
-
- currentChatId=id;
- renderAIHistory();
- renderAIMessages(chat.messages||[]);
- document.getElementById("aiStatus").textContent="";
-}
-
-
-async function sendAIMessage(){
- if(aiBusy || !currentAI) return;
-
- const input=document.getElementById("aiInput");
- const status=document.getElementById("aiStatus");
- const sendBtn=document.getElementById("aiSendBtn");
- const message=input.value.trim();
-
- if(!message) return;
-
- try{
-  const {data:sessionData,error:sessionError}=await db.auth.getSession();
-
-  if(sessionError || !sessionData.session){
-   status.textContent="पहले Login करें।";
-   return;
-  }
-
-  let chat=aiChats.find(c=>c.id===currentChatId);
-
-  if(!chat){
-   newAIChat();
-   chat=aiChats.find(c=>c.id===currentChatId);
-  }
-
-  chat.messages.push({role:"user",content:message});
-
-  if(chat.title==="New Chat"){
-   chat.title=message.slice(0,35);
-  }
-
-  chat.updated=Date.now();
-  input.value="";
-
-  saveAIChats();
-  renderAIHistory();
-  renderAIMessages(chat.messages);
-
-  aiBusy=true;
-  sendBtn.disabled=true;
-  status.textContent="AI जवाब तैयार कर रहा है...";
-
-  const {data,error}=await db.functions.invoke("ai-chat",{
-   body:{
-    persona:currentAI,
-    messages:chat.messages.slice(-12)
-   }
-  });
-
-  if(error) throw error;
-
-  const reply=data?.reply || data?.output_text || data?.text;
-
-  if(!reply) throw new Error("AI से जवाब नहीं मिला।");
-
-  chat.messages.push({
-   role:"assistant",
-   content:reply
-  });
-
-  chat.updated=Date.now();
-
-  saveAIChats();
-  renderAIMessages(chat.messages);
-  renderAIHistory();
-
-  status.textContent="";
-
- }catch(error){
-  console.error("AI Chat Error:",error);
-  status.textContent="AI Error: "+(error.message || "फिर कोशिश करें।");
- }finally{
-  aiBusy=false;
-  sendBtn.disabled=false;
- }
-}
-
-document.getElementById("aiInput").addEventListener("keydown",function(e){
- if(e.key==="Enter"){
-  e.preventDefault();
-  sendAIMessage();
- }
-});
-
+// Page start
 loadMaterials();
 checkAccount();
 </script>
+
 </body>
 </html>
-
- if(aiBusy||!currentAI)return;
-
- const input=document.getElementById("aiInput");
- const status=document.getElementById("aiStatus");
- const sendBtn=document.getElementById("aiSendBtn");
- const message=input.value.trim();
-
- if(!message)return;
-
- const {data:sessionData,error:sessionError}=await db.auth.getSession();
-
- if(sessionError||!sessionData.session){
-  status.textContent="पहले Login करें।";
-  return;
- }
-
- let chat=aiChats.find(c=>c.id===currentChatId);
-
- if(!chat){
-  newAIChat();
-  chat=aiChats.find(c=>c.id===currentChatId);
- }
-
- chat.messages.push({role:"user",content:message});
-
- if(chat.title==="New Chat"){
-  chat.title=message.slice(0,35);
- }
-
- chat.updated=Date.now();
- input.value="";
- saveAIChats();
- renderAIHistory();
- renderAIMessages(chat.messages);
-
- aiBusy=true;
- sendBtn.disabled=true;
- status.textContent="AI जवाब तैयार कर रहा है...";
-
- try{
-  const {data,error}=await db.functions.invoke("ai-chat",{
-   body:{
-    persona:currentAI,
-    messages:chat.messages.slice(-12)
-   }
-  });
-
-  if(error)throw error;
-
-  const reply=data?.reply||data?.output_text||data?.text;
-
-  if(!reply)throw new Error("AI से जवाब नहीं मिला।");
-
-  chat.messages.push({role:"assistant",content:reply});
-  chat.updated=Date.now();
-
-  saveAIChats();
-  renderAIMessages(chat.messages);
-  renderAIHis
